@@ -1,0 +1,14 @@
+dto\CourseDto.class
+dto\ProfessorDto.class
+dto\StudentDto.class
+controller\UserController.class
+model\Professor.class
+service\StudentService.class
+repository\ProfessorRepository.class
+controller\StudentController.class
+controller\ProfessorController.class
+converter\ProfessorConverter.class
+model\Student.class
+dto\UserDto.class
+repository\StudentRepository.class
+service\ProfessorService.class
