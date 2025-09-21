@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PersistenceUnitSettings">
+    <persistence-units>
+      <persistence-unit name="avisrent-pu" framework="JPA" ormUnit="custom_pu_1758417119254" defaultDataSourceId="019c69b6-cc30-4821-a862-148485b14563" />
+    </persistence-units>
+  </component>
+</project>
