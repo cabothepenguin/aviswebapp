@@ -29,7 +29,7 @@
                                     <span>Usuario</span>
                                     <ul class="sub-menu">
                                         <li class="sub-menu-item">
-                                            <h:link value="Listar" outcome="/Usuario/list-Usuario.xhtml?faces-redirect=true"/>
+                                            <h:link value="Listar" outcome="/Usuario/list-usuario.xhtml?faces-redirect=true"/>
                                         </li>
                                         <li class="sub-menu-item">
                                             <h:link value="Agregar" outcome="/Usuario/add-Usuario.xhtml?faces-redirect=true"/>
@@ -79,15 +79,15 @@
                 <h:messages id="msg" globalOnly="true"/>
                 <h:form styleClass="container">
                     <h:outputText value="Username"/>
-                    <h:inputText styleClass="form-control" value="#{usuarioController.newUser.username}"/>
+                    <h:inputText styleClass="form-control" value="#{usuarioController.usuarioDto.username}"/>
                     <h:outputText value="Password"/>
-                    <h:inputText styleClass="form-control" value="#{usuarioController.newUser.password}"/>
+                    <h:inputText styleClass="form-control" value="#{usuarioController.usuarioDto.password}"/>
                     <h:outputText value="Nombre"/>
-                    <h:inputText styleClass="form-control" value="#{usuarioController.newUser.nombre}"/>
+                    <h:inputText styleClass="form-control" value="#{usuarioController.usuarioDto.nombre}"/>
                     <h:outputText value="Apellido"/>
-                    <h:inputText styleClass="form-control" value="#{usuarioController.newUser.apellido}"/>
+                    <h:inputText styleClass="form-control" value="#{usuarioController.usuarioDto.apellido}"/>
                     <h:outputText value="Correo"/>
-                    <h:inputText styleClass="form-control" value="#{usuarioController.newUser.correo}"/>
+                    <h:inputText styleClass="form-control" value="#{usuarioController.usuarioDto.correo}"/>
                     <h:commandButton styleClass="btn btn-primary align-center" value="Guardar"
                                      action="#{usuarioController.add}"/>
                 </h:form>

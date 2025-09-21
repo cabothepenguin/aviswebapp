@@ -19,17 +19,16 @@ public class UsuarioController implements Serializable {
     @Inject
      UsuarioService service;
 
-    private UsuarioDto newUser = new UsuarioDto();
+    private UsuarioDto usuarioDto = new UsuarioDto();
     private List<UsuarioDto> usuarios;
 
 
 
     public void add() {
         try {
-            service.addUser(newUser);
+            service.addUser(usuarioDto);
             SuccessMessage("Guardado exitosamente");
-            loadUsers(); // refresca la lista
-            newUser = new UsuarioDto(); // limpia formulario
+
         } catch (Exception e) {
             ErrorMessage(e.getMessage());
         }
@@ -81,9 +80,11 @@ public class UsuarioController implements Serializable {
         FacesContext.getCurrentInstance().addMessage(null, msgF);
     }
 
-    public UsuarioDto getNewUser() { return newUser; }
-    public void setNewUser(UsuarioDto newUser) { this.newUser = newUser; }
 
     public List<UsuarioDto> getUsuarios() { return usuarios; }
+
+    public UsuarioDto getUsuarioDto() { return usuarioDto; }
+    public void setUsuarioDto(UsuarioDto usuarioDto) { this.usuarioDto = usuarioDto; }
+
 
 }

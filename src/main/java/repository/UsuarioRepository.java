@@ -14,7 +14,7 @@ import java.util.List;
 public class UsuarioRepository {
     @PersistenceContext(unitName = "avisrent-pu")
     private EntityManager em;
-
+    @Transactional
     public void addUser(UsuarioDto usuario ) {
         try {
             em.getTransaction().begin();
@@ -26,7 +26,7 @@ public class UsuarioRepository {
             query.setParameter(4,usuario.getApellido());
             query.setParameter(5,usuario.getCorreo());
 
-            query.executeUpdate();
+            query.exe;
             em.getTransaction().commit();
 
         }catch(Exception e){
