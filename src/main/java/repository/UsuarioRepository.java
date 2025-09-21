@@ -12,7 +12,7 @@ import java.util.List;
 
 @ApplicationScoped
 public class UsuarioRepository {
-    @PersistenceContext(unitName = "unaweb-pu")
+    @PersistenceContext(unitName = "avisrent-pu")
     private EntityManager em;
 
     public void addUser(UsuarioDto usuario ) {

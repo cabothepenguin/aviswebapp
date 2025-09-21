@@ -9,7 +9,7 @@ import model.Renta;
 import java.util.List;
 
 public class RentaRepository {
-    @PersistenceContext(unitName = "unaweb-pu")
+    @PersistenceContext(unitName = "avisrent-pu")
     private EntityManager em;
 
     @Transactional

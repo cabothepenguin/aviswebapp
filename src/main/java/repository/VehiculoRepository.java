@@ -11,7 +11,7 @@ import java.util.List;
 
 @ApplicationScoped
 public class VehiculoRepository {
-    @PersistenceContext(unitName = "unaweb-pu")
+    @PersistenceContext(unitName = "avisrent-pu")
     private EntityManager em;
 
 

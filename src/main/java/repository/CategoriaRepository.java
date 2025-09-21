@@ -13,7 +13,7 @@ import java.util.List;
 @ApplicationScoped
 public class CategoriaRepository {
 
-    @PersistenceContext(unitName = "unaweb-pu")
+    @PersistenceContext(unitName = "avisrent-pu")
     private EntityManager em;
 
     @Transactional

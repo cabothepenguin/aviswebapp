@@ -6,6 +6,7 @@ import jakarta.inject.Inject;
 import model.Renta;
 import repository.RentaRepository;
 
+
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
