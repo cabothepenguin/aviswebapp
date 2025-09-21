@@ -17,7 +17,7 @@ import java.util.List;
 public class UsuarioController implements Serializable {
 
     @Inject
-    private UsuarioService service;
+     UsuarioService service;
 
     private UsuarioDto newUser = new UsuarioDto();
     private List<UsuarioDto> usuarios;

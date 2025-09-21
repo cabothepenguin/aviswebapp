@@ -5,6 +5,7 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 <f:view>
+    <f:event type="preRenderView" listener="#{studentController.loadStudents()}"></f:event>
     <h:head>
         <title>UNA App - Principal</title>
         <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
@@ -29,15 +30,15 @@
                                     <span>Vehiculo</span>
                                     <ul class="sub-menu">
                                         <li class="sub-menu-item">
-                                            <h:link value="Listar" outcome="/student/list-students.xhtml?faces-redirect=true"/>
+                                            <h:link value="Listar" outcome="/Usuario/list-Usuario.xhtml?faces-redirect=true"/>
                                         </li>
                                         <li class="sub-menu-item">
-                                            <h:link value="Agregar" outcome="/student/add-student.xhtml?faces-redirect=true"/>
+                                            <h:link value="Agregar" outcome="/Usuario/add-Usuario.xhtml?faces-redirect=true"/>
                                         </li>
                                     </ul>
                                 </li>
                                 <li class="menu-item">
-                                    <span>Sucursal</span>
+                                    <span>Profesores</span>
                                     <ul class="sub-menu">
                                         <li class="sub-menu-item">
                                             <h:link value="Listar" outcome="/student/list-students.xhtml?faces-redirect=true"/>
@@ -75,22 +76,38 @@
                 </div><!--Menu end-->
             </div><!--Header app end-->
             <div style="min-height: 60vh"> <!--Content app-->
-                <h3>Agregar estudiante</h3>
-                <h:messages id="msg" globalOnly="true"/>
-                <h:form styleClass="container">
-                    <h:outputText value="Identificación"/>
-                    <h:inputText styleClass="form-control" value="#"/>
-                    <h:outputText value="Nombre"/>
-                    <h:inputText styleClass="form-control" value="#"/>
-                    <h:outputText value="Apellidos"/>
-                    <h:inputText styleClass="form-control" value="#"/>
-                    <h:outputText value="correo"/>
-                    <h:inputText styleClass="form-control" value="#"/>
-                    <h:outputText value="Telefono"/>
-                    <h:inputText styleClass="form-control" value="#"/>
-                    <h:commandButton styleClass="btn btn-primary align-center" value="Guardar"
-                                     action="#"/>
-                </h:form>
+               <h3>Lista de Usuario</h3>
+                <h:dataTable value="#{usuarioController.usuarios}" var="usuario" styleClass="table">
+                    <h:column headerClass="table-header">
+                        <f:facet name="header">username</f:facet>
+                        <h:outputText value="#{usuario.username}" styleClass="table-data"/>
+                    </h:column>
+                    <h:column headerClass="table-header">
+                        <f:facet name="header">Password</f:facet>
+                        <h:outputText value="#{usuario.password}" styleClass="table-data"/>
+                    </h:column>
+                    <h:column headerClass="table-header">
+                        <f:facet name="header">Nombre</f:facet>
+                        <h:outputText value="#{usuario.nombre}" styleClass="table-data"/>
+                    </h:column>
+                    <h:column headerClass="table-header">
+                        <f:facet name="header">Apellido</f:facet>
+                        <h:outputText value="#{usuario.apellido}" styleClass="table-data"/>
+                    </h:column>
+                    <h:column headerClass="table-header">
+                        <f:facet name="header">Correo</f:facet>
+                        <h:outputText value="#{usuario.correo}" styleClass="table-data"/>
+                    </h:column>
+                    <h:column headerClass="table-header">
+                        <f:facet name="header">ACCIONES</f:facet>
+                        <h:form >
+                            <h:link value="Editar" outcome="update-student" styleClass="btn btn-warning">
+                                <f:param name="Username" value="#{usuario.username}"/>
+                            </h:link>
+                            <h:commandButton value="Eliminar" styleClass="btn btn-danger m-5"/>
+                        </h:form>
+                    </h:column>
+                </h:dataTable>
             </div><!--Content app end-->
             <div> <!--Footer app-->
                 <hr/>
