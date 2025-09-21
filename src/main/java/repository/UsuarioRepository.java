@@ -24,7 +24,7 @@ public class UsuarioRepository {
             query.setParameter(2,usuario.getPassword());
             query.setParameter(3,usuario.getNombre());
             query.setParameter(4,usuario.getApellido());
-            query.setParameter(5,usuario.getApellido());
+            query.setParameter(5,usuario.getCorreo());
 
             query.executeUpdate();
             em.getTransaction().commit();

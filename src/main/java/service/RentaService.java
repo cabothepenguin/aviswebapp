@@ -18,8 +18,8 @@ public class RentaService {
     private static final Set<String> ESTADOS_VALIDOS =
             Set.of("activa", "finalizada", "cancelada");
 
-    @Inject
-    private RentaRepository repository;
+    //@Inject
+    public RentaRepository repository;
 
     /* ================== CREAR ================== */
     public void crear(RentasDto dto) {
