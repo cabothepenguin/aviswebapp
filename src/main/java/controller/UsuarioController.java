@@ -17,20 +17,20 @@ import java.util.List;
 public class UsuarioController implements Serializable {
 
     @Inject
-     UsuarioService service;
-
-    private UsuarioDto usuarioDto = new UsuarioDto();
+     private UsuarioService service;
     private List<UsuarioDto> usuarios;
 
 
 
-    public void add() {
+    public void add(UsuarioDto dto) {
         try {
-            service.addUser(usuarioDto);
+            service.addUser(dto);
             SuccessMessage("Guardado exitosamente");
 
         } catch (Exception e) {
             ErrorMessage(e.getMessage());
+            e.printStackTrace();
+
         }
     }
 
@@ -82,9 +82,5 @@ public class UsuarioController implements Serializable {
 
 
     public List<UsuarioDto> getUsuarios() { return usuarios; }
-
-    public UsuarioDto getUsuarioDto() { return usuarioDto; }
-    public void setUsuarioDto(UsuarioDto usuarioDto) { this.usuarioDto = usuarioDto; }
-
 
 }
