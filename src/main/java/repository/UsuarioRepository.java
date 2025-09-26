@@ -14,31 +14,28 @@ import java.util.List;
 public class UsuarioRepository {
     @PersistenceContext(unitName = "avisrent-pu")
     private EntityManager em;
-    @Transactional
-    public void addUser(UsuarioDto usuario ) {
-        try {
+
+
+    public void addUser(UsuarioDto usuario) {
+        try{
             em.getTransaction().begin();
-            String sql="insert into administracion_usuarios (username,password,nombre,apellido,correo) values (?,?,?,?,?)";
-            Query query=em.createNativeQuery(sql);
-            query.setParameter(1,usuario.getUsername());
-            query.setParameter(2,usuario.getPassword());
-            query.setParameter(3,usuario.getNombre());
-            query.setParameter(4,usuario.getApellido());
-            query.setParameter(5,usuario.getCorreo());
-
-            query.exe;
+            String sql = "INSERT INTO administracion_usuarios (username,password,nombre,apellido,correo) VALUES (?,?,?,?,?)";
+            Query query = em.createNativeQuery(sql);
+            query.setParameter(1, usuario.getUsername());
+            query.setParameter(2, usuario.getPassword());
+            query.setParameter(3, usuario.getNombre());
+            query.setParameter(4, usuario.getApellido());
+            query.setParameter(5, usuario.getCorreo());
+            query.executeUpdate();
             em.getTransaction().commit();
-
-        }catch(Exception e){
+    }catch(Exception e){
             em.getTransaction().rollback();
             e.printStackTrace();
-            throw  new RuntimeException(e);
-
+            throw new RuntimeException(e);
         }
-
-
     }
-//--------------actualizar usando username
+
+    //--------------actualizar usando username
     @Transactional
     public void updateUser(UsuarioDto usuario) {
         String sql = "UPDATE administracion_usuarios SET password = ?," +

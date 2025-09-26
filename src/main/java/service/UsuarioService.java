@@ -18,9 +18,7 @@ public class UsuarioService {
     /* ===== CREATE ===== */
     public void addUser(UsuarioDto dto) {
         try {
-
             repository.addUser(dto);
-
         } catch (Exception e) {
             throw new RuntimeException("No se puede agregar el usuario", e);
         }

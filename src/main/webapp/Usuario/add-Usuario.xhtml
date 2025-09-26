@@ -79,17 +79,17 @@
                 <h:messages id="msg" globalOnly="true"/>
                 <h:form styleClass="container">
                     <h:outputText value="Username"/>
-                    <h:inputText styleClass="form-control" value="#{usuarioController.usuarioDto.username}"/>
+                    <h:inputText styleClass="form-control" value="#{usuarioDto.username}"/>
                     <h:outputText value="Password"/>
-                    <h:inputText styleClass="form-control" value="#{usuarioController.usuarioDto.password}"/>
+                    <h:inputText styleClass="form-control" value="#{usuarioDto.password}"/>
                     <h:outputText value="Nombre"/>
-                    <h:inputText styleClass="form-control" value="#{usuarioController.usuarioDto.nombre}"/>
+                    <h:inputText styleClass="form-control" value="#{usuarioDto.nombre}"/>
                     <h:outputText value="Apellido"/>
-                    <h:inputText styleClass="form-control" value="#{usuarioController.usuarioDto.apellido}"/>
+                    <h:inputText styleClass="form-control" value="#{usuarioDto.apellido}"/>
                     <h:outputText value="Correo"/>
-                    <h:inputText styleClass="form-control" value="#{usuarioController.usuarioDto.correo}"/>
+                    <h:inputText styleClass="form-control" value="#{usuarioDto.correo}"/>
                     <h:commandButton styleClass="btn btn-primary align-center" value="Guardar"
-                                     action="#{usuarioController.add}"/>
+                                     action="#{usuarioController.add(usuarioDto)}"/>
                 </h:form>
             </div><!--Content app end-->
             <div> <!--Footer app-->
