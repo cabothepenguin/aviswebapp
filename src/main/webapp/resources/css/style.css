@@ -88,7 +88,7 @@ body{
     padding: 0;
     display: flex;
     gap:15px;
-    background-color: #81817b;
+    background-color: #d2002a;
     color: white;
 }
 .menu-item{
@@ -129,7 +129,7 @@ nav ul li:hover > ul{
 }
 
 .table-header{
-    background-color: #515253;
+    background-color: #951616;
     color: white;
 }
 

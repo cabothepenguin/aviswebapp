@@ -6,7 +6,7 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 <f:view>
     <h:head>
-        <title>UNA App - Principal</title>
+        <title>AVis App - Principal</title>
         <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
         <h:outputStylesheet library="css" name="style.css"/>
     </h:head>
@@ -15,7 +15,7 @@
             <div> <!--Header app-->
                 <div style="width: 100%;display: flex;align-items: flex-start"> <!--Encabezado-->
                     <div style="flex: 0 0 60%;">
-                        <h:graphicImage library="images" name="una.png" style="width: 100px;display: block"/>
+                        <h:graphicImage library="images" name="download.svg" style="width: 100px;display: block"/>
                     </div>
                     <div style="flex: 0 0 40%;">
                         <h1 style="margin-right: 10px">AVIS</h1>
@@ -33,6 +33,9 @@
                                         </li>
                                         <li class="sub-menu-item">
                                             <h:link value="Agregar" outcome="/Usuario/add-Usuario.xhtml?faces-redirect=true"/>
+                                        </li>
+                                        <li class="sub-menu-item">
+                                            <h:link value="Actualizar" outcome="/Usuario/update-usuario.xhtml?faces-redirect=true"/>
                                         </li>
                                     </ul>
                                 </li>
@@ -75,11 +78,11 @@
                 </div><!--Menu end-->
             </div><!--Header app end-->
             <div style="min-height: 60vh"> <!--Content app-->
-                <h:graphicImage styleClass="vertical-center" style="width: 60vw;" library="images" name="una-horizontal.png"/>
+                <h:graphicImage styleClass="vertical-center" style="width: 60vw;" library="images" name="background.webp"/>
             </div><!--Content app end-->
             <div> <!--Footer app-->
                 <hr/>
-                <p>Universidad Nacional. Todos los derechos reservado&copy; 2025</p>
+                <p>Avis Costa Rica. Todos los derechos reservado&copy; 2025</p>
             </div><!--Footer app end-->
         </div>
     </h:body>

@@ -19,6 +19,7 @@ public class UsuarioController implements Serializable {
     @Inject
      private UsuarioService service;
     private List<UsuarioDto> usuarios;
+    private UsuarioDto usuario = new UsuarioDto();
 
 
 
@@ -36,7 +37,7 @@ public class UsuarioController implements Serializable {
 
     /* ===== READ ALL ===== */
     public void loadUsers() {
-        if (usuarios != null) {
+        if (usuarios!= null) {
             usuarios.clear();
         }
         try {
@@ -83,4 +84,12 @@ public class UsuarioController implements Serializable {
 
     public List<UsuarioDto> getUsuarios() { return usuarios; }
 
+
+    public UsuarioDto getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(UsuarioDto usuario) {
+        this.usuario = usuario;
+    }
 }
