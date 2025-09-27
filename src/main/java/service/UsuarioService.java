@@ -2,14 +2,17 @@ package service;
 
 import dto.UsuarioDto;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
+
+import jakarta.inject.Named;
 import model.Usuario;
 import repository.UsuarioRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-
-@ApplicationScoped
+@Named
+@RequestScoped
 public class UsuarioService {
 
     @Inject
@@ -40,6 +43,7 @@ public class UsuarioService {
     }
 
     /* ===== UPDATE ===== */
+
     public void updateUser(UsuarioDto dto) {
         try {
             repository.updateUser(dto);                  // o repository.update(toEntity(dto));
@@ -68,7 +72,8 @@ public class UsuarioService {
     private UsuarioDto toDto(Usuario u) {
         UsuarioDto dto = new UsuarioDto();
         dto.setUsername(u.getUsername());
-        // Por seguridad NO  el password
+        dto.setPassword(u.getPassword());
+
         dto.setNombre(u.getNombre());
         dto.setApellido(u.getApellido());
         dto.setCorreo(u.getCorreo());

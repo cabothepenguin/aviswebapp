@@ -6,7 +6,7 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 <f:view>
-    <f:event type="preRenderView" listener="#{usuarioController.loadUsers()}"/>
+    <f:event type="preRenderView" listener="#{usuarioController.loadUserByUsername}"/>
     <h:head>
         <title>AVIS App - Principal</title>
         <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
@@ -88,30 +88,28 @@
                 <h:messages id="msg" globalOnly="true"/>
                 <h:form styleClass="container">
                     <h:outputText value="Username"/>
-                    <h:inputText styleClass="form-control" value="#{usuarioDto.username}"/>
+                    <h:inputText styleClass="form-control" value="#{usuarioController.usuario.username}" readonly="true"/>
 
                     <h:outputText value="Password"/>
-                    <h:inputSecret styleClass="form-control" value="#{usuarioDto.password}"/>
+                    <h:inputSecret styleClass="form-control" value="#{usuarioController.usuario.password}"/>
 
-                    <h:outputText value="Name"/>
-                    <h:inputText styleClass="form-control" value="#{usuarioDto.nombre}"/>
+                    <h:outputText value="Nombre"/>
+                    <h:inputText styleClass="form-control" value="#{usuarioController.usuario.nombre}"/>
 
                     <h:outputText value="Apellido"/>
-                    <h:inputText styleClass="form-control" value="#{usuarioDto.apellido}"/>
+                    <h:inputText  styleClass="form-control" value="#{usuarioController.usuario.apellido}"/>
 
                     <h:outputText value="Correo"/>
-                    <h:inputText styleClass="form-control" value="#{usuarioDto.correo}"/>
+                    <h:inputText styleClass="form-control" value="#{usuarioController.usuario.correo}"/>
 
-                    <h:commandButton styleClass="btn btn-primary align-center" value="Guardar"
-                                     action="#{usuarioController.update(usuarioDto)}"/>
+                    <h:commandButton value="Guardar"
+                                     action="#{usuarioController.update}"
+                                     styleClass="btn btn-primary"/>
 
                     <h:link value="Cancelar" outcome="/Usuario/list-usuario.xhtml?faces-redirect=true"
-                            styleClass="btn btn-warning align-center"/>
-
-
-
-
+                            styleClass="btn btn-warning"/>
                 </h:form>
+
 
             </div><!--Content app end-->
 
