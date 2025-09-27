@@ -16,29 +16,33 @@ public class CategoriaRepository {
     @PersistenceContext(unitName = "avisrent-pu")
     private EntityManager em;
 
-    @Transactional
+
     public void addCategory(CategoriaVehiculoDto categoria) {
+        em.getTransaction().begin();
         em.createNativeQuery(
                         "INSERT INTO administracion_categorias (descripcion, estado) VALUES (?, ?)")
                 .setParameter(1, categoria.getDescripcion())
                 .setParameter(2, categoria.getEstado())
                 .executeUpdate();
+        em.getTransaction().commit();
     }
 
 
 
 
     // --actualizar por codigo
-    @Transactional
+
     public void updateCategory(CategoriaVehiculoDto categoria) {
 
         try {
+            em.getTransaction().begin();
             String sql = "UPDATE administracion_categorias SET descripcion = ?, estado = ? WHERE codigo = ?";
             em.createNativeQuery(sql)
                     .setParameter(1, categoria.getDescripcion())
                     .setParameter(2, categoria.getEstado())
                     .setParameter(3, categoria.getCodigo())
                     .executeUpdate();
+            em.getTransaction().commit();
         }catch(Exception e){
 
             em.getTransaction().rollback();
@@ -49,12 +53,14 @@ public class CategoriaRepository {
     }
 
     // ---eliminar por codigo
-    @Transactional
+
     public void deleteCategory(Integer codigo) {
+        em.getTransaction().begin();
         String sql = "DELETE FROM administracion_categorias WHERE codigo = ?";
         em.createNativeQuery(sql)
                 .setParameter(1, codigo)
                 .executeUpdate();
+        em.getTransaction().commit();
     }
 
     // ----listar

@@ -16,9 +16,10 @@ public class VehiculoRepository {
 
 
     // ===== agregar
-    @Transactional
+
     public void addVehiculo(VehiculoDto vehiculo) {
         try {
+
             String sql = "INSERT INTO administracion_vehiculos " +
                     "(placa, modelo, marca, categoria, estado, año, precio, imagen, nombre_imagen) " +
                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";

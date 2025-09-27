@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
-@Named
+@Named("vehiculoBean")
 @ViewScoped
 public class VehiculoController implements Serializable {
 

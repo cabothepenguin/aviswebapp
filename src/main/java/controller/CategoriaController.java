@@ -69,17 +69,20 @@ public class CategoriaController implements Serializable {
     }
 
     /* ===== UPDATE ===== */
-    public void update() {
+    public String update() {
         try {
             service.updateCategoria(selectedCategoria);
             success("Categoría actualizada correctamente.");
             loadCategorias();
+            return "/Categorias/list-categorias.xhtml?=faces-redirect=true";
         } catch (IllegalArgumentException e) {
             error(e.getMessage());
         } catch (Exception e) {
             LOG.severe(e.getMessage());
             error("Ocurrió un error al actualizar la categoría.");
+
         }
+        return null;
     }
 
     /* ===== DELETE ===== */
@@ -108,11 +111,18 @@ public class CategoriaController implements Serializable {
     }
 
     /* ===== Getters/Setters ===== */
-    public CategoriaVehiculoDto getNewCategoria() { return newCategoria; }
-    public void setNewCategoria(CategoriaVehiculoDto newCategoria) { this.newCategoria = newCategoria; }
+    public CategoriaVehiculoDto getNewCategoria() {
+        return newCategoria; }
 
-    public CategoriaVehiculoDto getSelectedCategoria() { return selectedCategoria; }
-    public void setSelectedCategoria(CategoriaVehiculoDto selectedCategoria) { this.selectedCategoria = selectedCategoria; }
+    public void setNewCategoria(CategoriaVehiculoDto newCategoria) {
+        this.newCategoria = newCategoria; }
 
-    public List<CategoriaVehiculo> getCategorias() { return categorias; }
+    public CategoriaVehiculoDto getSelectedCategoria() {
+        return selectedCategoria; }
+
+    public void setSelectedCategoria(CategoriaVehiculoDto selectedCategoria) {
+        this.selectedCategoria = selectedCategoria; }
+
+    public List<CategoriaVehiculo> getCategorias() {
+        return categorias; }
 }
