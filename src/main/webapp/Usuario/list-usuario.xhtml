@@ -110,9 +110,10 @@
                     <h:column headerClass="table-header">
                         <f:facet name="header">ACCIONES</f:facet>
                         <h:form >
-                            <h:commandLink value="Editar" styleClass="btn btn-warning" action="update-usuario?faces-redirect=true">
-                                <f:param name="username" value="#{usuario.username}" />
-                            </h:commandLink>
+                            <h:link value="Editar" styleClass="btn btn-warning"
+                                    outcome="/Usuario/update-usuario.xhtml">
+                                 <f:param name="username" value="#{usuario.username}"/>
+                            </h:link>
 
                             <h:commandButton value="Eliminar" styleClass="btn btn-danger m-5"
                             action="#{usuarioController.delete(usuario.username)}"/>

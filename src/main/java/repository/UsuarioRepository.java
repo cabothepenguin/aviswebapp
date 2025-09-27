@@ -2,6 +2,8 @@ package repository;
 
 import dto.UsuarioDto;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Named;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
@@ -9,8 +11,8 @@ import jakarta.transaction.Transactional;
 import model.Usuario;
 
 import java.util.List;
-
-@ApplicationScoped
+@Named
+@RequestScoped
 public class UsuarioRepository {
     @PersistenceContext(unitName = "avisrent-pu")
     private EntityManager em;
@@ -36,24 +38,28 @@ public class UsuarioRepository {
     }
 
     //--------------actualizar usando username
-    @Transactional
+
     public void updateUser(UsuarioDto usuario) {
+        em.getTransaction().begin();
         String sql = "UPDATE administracion_usuarios SET password = ?," +
                 " nombre = ?, apellido = ?, correo = ? WHERE username = ?";
         Query q = em.createNativeQuery(sql);
-        q.setParameter(1, usuario.getPassword());   // <-- ideal: hash
+        q.setParameter(1, usuario.getPassword());
         q.setParameter(2, usuario.getNombre());
         q.setParameter(3, usuario.getApellido());
         q.setParameter(4, usuario.getCorreo());
         q.setParameter(5, usuario.getUsername());
         q.executeUpdate();
+        em.getTransaction().commit();
     }
 //-----elimiar usuario...usando usernam
-    @Transactional
+
     public void deleteUser(String username ) {
+        em.getTransaction().begin();
         em.createNativeQuery("DELETE FROM administracion_usuarios WHERE username = ?")
                 .setParameter(1, username)
                 .executeUpdate();
+        em.getTransaction().commit();
 
     }
     //----listar usuarios

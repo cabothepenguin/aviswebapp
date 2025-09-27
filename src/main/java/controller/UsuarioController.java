@@ -49,15 +49,20 @@ public class UsuarioController implements Serializable {
     }
 
     //actualizar
-    public void update(UsuarioDto dto) {
+    public String update() {
         try {
-            service.updateUser(dto);
-            SuccessMessage("Usuario actualizado correctamente");
+            service.updateUser(usuario);
+            SuccessMessage("Actualizado exitosamente");
             loadUsers();
+            // Ojo: la ruta debe coincidir con tu archivo list-usuario.xhtml
+            return "/Usuario/list-usuario.xhtml?faces-redirect=true";
         } catch (Exception e) {
             ErrorMessage(e.getMessage());
+            e.printStackTrace();
+            return null; // si hay error, no navega
         }
     }
+
 
     //eliminar
     public void delete(String username) {
@@ -91,5 +96,16 @@ public class UsuarioController implements Serializable {
 
     public void setUsuario(UsuarioDto usuario) {
         this.usuario = usuario;
+    }
+
+    public void loadUserByUsername() {
+        String username = FacesContext.getCurrentInstance()
+                .getExternalContext()
+                .getRequestParameterMap()
+                .get("username");
+
+        if (username != null && !username.isEmpty()) {
+            usuario = service.getUser(username); // este método debe estar en tu UsuarioService
+        }
     }
 }
