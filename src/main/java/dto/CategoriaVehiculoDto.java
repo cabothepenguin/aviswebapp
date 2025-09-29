@@ -7,9 +7,12 @@ public class CategoriaVehiculoDto implements Serializable {
 
     private Integer codigo;
     private String descripcion;
-    private Boolean estado;  // true = activa y false = deshabilitada
+    private String estado;
+
+
 
     public Integer getCodigo() {
+
         return codigo;
     }
 
@@ -18,26 +21,32 @@ public class CategoriaVehiculoDto implements Serializable {
     }
 
     public String getDescripcion() {
+
         return descripcion;
     }
     public void setDescripcion(String descripcion) {
+
         this.descripcion = descripcion;
     }
 
 
-    public Boolean getEstado() {
+    public String getEstado() {
+
         return estado;
     }
 
-    public void setEstado(Boolean estado) {
+    public void setEstado(String estado) {
+
         this.estado = estado;
     }
 
-    public Boolean getHabilitada() {
+    public String getactivo() {
+
         return estado;
     }
 
-    public void setHabilitada(Boolean habilitada) {
+    public void setHabilitada(String habilitada) {
+
         this.estado = habilitada;
     }
 }

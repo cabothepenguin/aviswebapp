@@ -36,8 +36,8 @@ public class CategoriaRepository {
 
         try {
             em.getTransaction().begin();
-            String sql = "UPDATE administracion_categorias SET descripcion = ?, estado = ? WHERE codigo = ?";
-            em.createNativeQuery(sql)
+            String jpql = "UPDATE administracion_categorias SET descripcion = ?, estado = ? WHERE codigo = ?";
+            em.createNativeQuery(jpql)
                     .setParameter(1, categoria.getDescripcion())
                     .setParameter(2, categoria.getEstado())
                     .setParameter(3, categoria.getCodigo())
@@ -99,8 +99,14 @@ public class CategoriaRepository {
         return count != null && count.intValue() > 0;
     }
 
+    public CategoriaVehiculo getById(Integer id) {
+        return em.find(CategoriaVehiculo.class, id);
+    }
 
-
+    @Transactional
+    public void update(CategoriaVehiculo categoria) {
+        em.merge(categoria);
+    }
 
 
 }

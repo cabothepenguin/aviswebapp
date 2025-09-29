@@ -47,14 +47,28 @@ public class CategoriaService {
 
     // ===== Otros métodos =====
     public void deleteCategoria(Integer codigo) {
+
         repository.deleteCategory(codigo);
     }
 
     public List<CategoriaVehiculo> listarCategorias() {
+
         return repository.getCategories();
     }
 
     public CategoriaVehiculo getByDescripcion(String desc) {
+
         return repository.findCategoryByDescripcion(desc);
     }
+
+    public CategoriaVehiculo getById(Integer id) {
+        return repository.getById(id);
+    }
+
+    public void updateCategoria(CategoriaVehiculo categoria) {
+        repository.update(categoria);
+    }
+
+
+
 }

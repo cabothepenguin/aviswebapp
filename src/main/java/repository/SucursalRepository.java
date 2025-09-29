@@ -1,5 +1,6 @@
 package repository;
 
+import dto.SucursalDto;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -15,9 +16,10 @@ public class SucursalRepository {
     private EntityManager em;
 
     // agregar
-    @Transactional
+
 
     public void addSucursal(Sucursal sucursal) {
+        em.getTransaction().begin();
         String sql = "INSERT INTO administracion_sucursales (nombre, encargado, direccion, telefono, correo) " +
                 "VALUES (?, ?, ?, ?, ?)";
         em.createNativeQuery(sql)
@@ -27,11 +29,13 @@ public class SucursalRepository {
                 .setParameter(4, sucursal.getTelefono())
                 .setParameter(5, sucursal.getCorreo())
                 .executeUpdate();
+        em.getTransaction().commit();
     }
 
     //----Actualizar por codigo
-    @Transactional
+
     public void updateSucursal(Sucursal sucursal) {
+         em.getTransaction().begin();
         String sql = "UPDATE administracion_sucursales SET nombre = ?, encargado = ?, direccion = ?, telefono = ?, correo = ? " +
                 "WHERE codigo = ?";
         em.createNativeQuery(sql)
@@ -42,14 +46,19 @@ public class SucursalRepository {
                 .setParameter(5, sucursal.getCorreo())
                 .setParameter(6, sucursal.getCodigo())
                 .executeUpdate();
+        em.getTransaction().commit();
+
     }
 
     // eliminar por codigo
-    @Transactional
+
     public void deleteSucursal(Integer codigo) {
+        em.getTransaction().begin();
         em.createNativeQuery("DELETE FROM administracion_sucursales WHERE codigo = ?")
                 .setParameter(1, codigo)
                 .executeUpdate();
+        em.getTransaction().commit();
+
     }
 
     // ===== Listar todas (SELECT) =====
@@ -77,5 +86,12 @@ public class SucursalRepository {
         return count != null && count.intValue() > 0;
     }
 
+    public Sucursal getById(Integer id) {
+        return em.find(Sucursal.class, id);
+    }
 
+    @Transactional
+    public void update(Sucursal sucursal) {
+        em.merge(sucursal);
+    }
 }
