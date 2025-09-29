@@ -27,6 +27,9 @@
                         <nav>
                             <ul class="menu-bar">
                                 <li class="menu-item">
+                                    <h:commandButton  styleClass="btn-home"  value="Home" action="irAHome" />
+                                </li>
+                                <li class="menu-item">
                                     <span>Usuario</span>
                                     <ul class="sub-menu">
                                         <li class="sub-menu-item">
@@ -41,29 +44,32 @@
                                     </ul>
                                 </li>
                                 <li class="menu-item">
-                                    <span>Sucursal</span>
+                                    <span>Sucursales</span>
                                     <ul class="sub-menu">
                                         <li class="sub-menu-item">
-                                            <h:link value="Listar" outcome="/student/list-students.xhtml?faces-redirect=true"/>
+                                            <h:link value="Listar" outcome="/Sucursales/list-sucursal.xhtml?faces-redirect=true"/>
                                         </li>
                                         <li class="sub-menu-item">
-                                            <h:link value="Agregar" outcome="/student/add-student.xhtml?faces-redirect=true"/>
+                                            <h:link value="Agregar" outcome="/Sucursales/add-sucursal.xhtml?faces-redirect=true"/>
+                                        </li>
+                                        <li class="sub-menu-item">
+                                            <h:link value="Actualizar" outcome="/Sucursales/update-sucursal.xhtml?faces-redirect=true"/>
                                         </li>
                                     </ul>
                                 </li>
                                 <li class="menu-item">
-                                    <span>Cursos</span>
+                                    <span>Vehiculos</span>
                                     <ul class="sub-menu">
                                         <li class="sub-menu-item">
-                                            <h:link value="Listar" outcome="/student/list-students.xhtml?faces-redirect=true"/>
+                                            <h:link value="Listar" outcome="/courses/list-course.xhtml?faces-redirect=true"/>
                                         </li>
                                         <li class="sub-menu-item">
-                                            <h:link value="Agregar" outcome="/student/add-student.xhtml?faces-redirect=true"/>
+                                            <h:link value="Agregar" outcome="/Vehiculos/add-vehiculo.xhtml?faces-redirect=true"/>
                                         </li>
                                     </ul>
                                 </li>
                                 <li class="menu-item">
-                                    <span>Matricula</span>
+                                    <span>Rentas</span>
                                     <ul class="sub-menu">
                                         <li class="sub-menu-item">
                                             <h:link value="Listar" outcome="/student/list-students.xhtml?faces-redirect=true"/>
@@ -99,9 +105,9 @@
                     <h:outputText value="Descripcion"/>
                     <h:inputText styleClass="form-control" value="#{categoriaController.newCategoria.descripcion}"/>
                     <h:outputText value="Estado"/>
-                    <h:selectOneMenu id="Estado" value="#{categoriaController.newCategoria.estado}" styleClass="form-control">
-                        <f:selectItem itemValue="activo" itemLabel="Habilitado"/>
-                        <f:selectItem itemValue="inactivo" itemLabel="Inhabilitado"/>
+                    <h:selectOneMenu  id="Estado" value="#{categoriaController.newCategoria.estado}" styleClass="form-control">
+                        <f:selectItem itemValue="activo" itemLabel="activo"/>
+                        <f:selectItem itemValue="inactivo" itemLabel="inactivo"/>
                     </h:selectOneMenu>
                     <h:commandButton styleClass="btn btn-primary align-center" value="Guardar"
                                      action="#{categoriaController.add}"/>

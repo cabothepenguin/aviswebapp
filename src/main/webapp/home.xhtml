@@ -22,9 +22,12 @@
                     </div>
                 </div>
                 <div style="flex: 0 0 100%"><!--Menu-->
-                    <h:form>
+                     <h:form>
                         <nav>
                             <ul class="menu-bar">
+                                <li class="menu-item">
+                                    <h:commandButton  styleClass="btn btn-home"  value="Home" action="irAHome" />
+                                </li>
                                 <li class="menu-item">
                                     <span>Usuario</span>
                                     <ul class="sub-menu">
@@ -43,10 +46,13 @@
                                     <span>Sucursales</span>
                                     <ul class="sub-menu">
                                         <li class="sub-menu-item">
-                                            <h:link value="Listar" outcome="/professor/list-professor.xhtml?faces-redirect=true"/>
+                                            <h:link value="Listar" outcome="/Sucursales/list-sucursal.xhtml?faces-redirect=true"/>
                                         </li>
                                         <li class="sub-menu-item">
-                                            <h:link value="Agregar" outcome="/professor/add-professor.xhtml?faces-redirect=true"/>
+                                            <h:link value="Agregar" outcome="/Sucursales/add-sucursal.xhtml?faces-redirect=true"/>
+                                        </li>
+                                        <li class="sub-menu-item">
+                                            <h:link value="Actualizar" outcome="/Sucursales/update-sucursal.xhtml?faces-redirect=true"/>
                                         </li>
                                     </ul>
                                 </li>

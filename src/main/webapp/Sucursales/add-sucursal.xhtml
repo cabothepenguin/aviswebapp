@@ -6,7 +6,6 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 <f:view>
-
    <h:head>
       <title>Avis App - Principal</title>
       <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
@@ -28,6 +27,9 @@
                   <nav>
                      <ul class="menu-bar">
                         <li class="menu-item">
+                           <h:commandButton  styleClass="btn btn-home"  value="Home" action="irAHome" />
+                        </li>
+                        <li class="menu-item">
                            <span>Usuario</span>
                            <ul class="sub-menu">
                               <li class="sub-menu-item">
@@ -42,7 +44,32 @@
                            </ul>
                         </li>
                         <li class="menu-item">
-                           <span>Sucursal</span>
+                           <span>Sucursales</span>
+                           <ul class="sub-menu">
+                              <li class="sub-menu-item">
+                                 <h:link value="Listar" outcome="/Sucursales/list-sucursal.xhtml?faces-redirect=true"/>
+                              </li>
+                              <li class="sub-menu-item">
+                                 <h:link value="Agregar" outcome="/Sucursales/add-sucursal.xhtml?faces-redirect=true"/>
+                              </li>
+                              <li class="sub-menu-item">
+                                 <h:link value="Actualizar" outcome="/Sucursales/update-sucursal.xhtml?faces-redirect=true"/>
+                              </li>
+                           </ul>
+                        </li>
+                        <li class="menu-item">
+                           <span>Vehiculos</span>
+                           <ul class="sub-menu">
+                              <li class="sub-menu-item">
+                                 <h:link value="Listar" outcome="/courses/list-course.xhtml?faces-redirect=true"/>
+                              </li>
+                              <li class="sub-menu-item">
+                                 <h:link value="Agregar" outcome="/Vehiculos/add-vehiculo.xhtml?faces-redirect=true"/>
+                              </li>
+                           </ul>
+                        </li>
+                        <li class="menu-item">
+                           <span>Rentas</span>
                            <ul class="sub-menu">
                               <li class="sub-menu-item">
                                  <h:link value="Listar" outcome="/student/list-students.xhtml?faces-redirect=true"/>
@@ -53,24 +80,16 @@
                            </ul>
                         </li>
                         <li class="menu-item">
-                           <span>Cursos</span>
+                           <span>Categorias</span>
                            <ul class="sub-menu">
                               <li class="sub-menu-item">
-                                 <h:link value="Listar" outcome="/student/list-students.xhtml?faces-redirect=true"/>
+                                 <h:link value="listar" outcome="/Categorias/list-categorias.xhtml?faces-redirect=true"/>
                               </li>
                               <li class="sub-menu-item">
-                                 <h:link value="Agregar" outcome="/student/add-student.xhtml?faces-redirect=true"/>
-                              </li>
-                           </ul>
-                        </li>
-                        <li class="menu-item">
-                           <span>Matricula</span>
-                           <ul class="sub-menu">
-                              <li class="sub-menu-item">
-                                 <h:link value="Listar" outcome="/student/list-students.xhtml?faces-redirect=true"/>
+                                 <h:link value="Agregar" outcome="/Categorias/add-categorias.xhtml?faces-redirect=true"/>
                               </li>
                               <li class="sub-menu-item">
-                                 <h:link value="Agregar" outcome="/student/add-student.xhtml?faces-redirect=true"/>
+                                 <h:link value="Actualizar" outcome="/Categorias/update-categorias.xhtml?faces-redirect=true"/>
                               </li>
                            </ul>
                         </li>
@@ -80,30 +99,21 @@
             </div><!--Menu end-->
          </div><!--Header app end-->
          <div style="min-height: 60vh"> <!--Content app-->
-            <h3>Agregar Vehiculo</h3>
+            <h3>Agregar Sucursal</h3>
             <h:messages id="msg" globalOnly="true"/>
-            <h:form enctype="multipart/form-data" styleClass="container">
-               <h:outputText value="Placa"/>
-               <h:inputText styleClass="form-control" value="#{vehiculoDto.placa}"/>
-               <h:outputText value="Modelo"/>
-               <h:inputText styleClass="form-control" value="#{vehiculoDto.modelo}"/>
-               <h:outputText value="Marca"/>
-               <h:inputText styleClass="form-control" value="#{vehiculoDto.marca}"/>
-               <h:outputText value="Categoria"/>
-               <h:inputText styleClass="form-control" value="#{vehiculoDto.categoria}"/>
-               <h:outputText value="Estado"/>
-               <h:inputText styleClass="form-control" value="#{vehiculoDto.estado}"/>
-               <h:outputText value="Año"/>
-               <h:inputText styleClass="form-control" value="#{vehiculoDto.anio}"/>
-               <h:outputText value="Precio"/>
-               <h:inputText styleClass="form-control" value="#{vehiculoDto.precio}"/>
-               <h:outputText value="Fotografia"/>
-               <h:inputFile value="#{vehiculoBean.uploadedFile}">
-                  <f:ajax listener="#{vehiculoBean.upload()}"/>
-               </h:inputFile>
-
+            <h:form styleClass="container">
+               <h:outputText value="Sucursal"/>
+               <h:inputText styleClass="form-control" value="#{sucursalController.newSucursal.nombre}"/>
+               <h:outputText value="Encargado"/>
+               <h:inputText styleClass="form-control" value="#{sucursalController.newSucursal.encargado}"/>
+               <h:outputText value="Direccion"/>
+               <h:inputText styleClass="form-control" value="#{sucursalController.newSucursal.direccion}"/>
+               <h:outputText value="Telefono"/>
+               <h:inputText styleClass="form-control" value="#{sucursalController.newSucursal.telefono}"/>
+               <h:outputText value="Correo"/>
+               <h:inputText styleClass="form-control" value="#{sucursalController.newSucursal.correo}"/>
                <h:commandButton styleClass="btn btn-primary align-center" value="Guardar"
-                                action="#{vehiculoBean.add()}"    />
+                                action="#{sucursalController.add}"/>
             </h:form>
          </div><!--Content app end-->
          <div> <!--Footer app-->

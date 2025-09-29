@@ -1,20 +1,23 @@
 package service;
 
 import jakarta.ejb.Stateless;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import model.Sucursal;
 import repository.SucursalRepository;
 
 import java.util.List;
 import java.util.Optional;
 
-@Stateless   // administra transacciones si las mueves al service
+@ApplicationScoped  // administra transacciones si las mueves al service
 public class SucursalService {
 
     @Inject
     private SucursalRepository repository;
 
     //  (valida que no exista el nombre)
+
     public void add(Sucursal s) {
         validarObligatorios(s);
         if (repository.existsByNombre(s.getNombre())) {
@@ -24,6 +27,7 @@ public class SucursalService {
     }
     //valida que el nombre no esté usado por otra sucursal
     // Actualizar (valida duplicado por nombre si cambió)
+
     public void update(Sucursal s) {
         validarObligatorios(s);
 
@@ -38,6 +42,7 @@ public class SucursalService {
     }
 
     // Eliminar
+
     public void eliminar(Integer codigo) {
         repository.deleteSucursal(codigo);
     }
@@ -62,6 +67,10 @@ public class SucursalService {
         if (s.getNombre() == null || s.getNombre().isBlank())
             throw new IllegalArgumentException("El nombre de la sucursal es obligatorio.");
 
+    }
+
+    public Sucursal getById(Integer id) {
+        return repository.getById(id);
     }
 
 

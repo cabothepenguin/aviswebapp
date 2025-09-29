@@ -6,6 +6,7 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 <f:view>
+    <f:event type="preRenderView" listener="#{sucursalController.loadSucursales()}"></f:event>
     <h:head>
         <title>Avis App - Principal</title>
         <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
@@ -16,16 +17,20 @@
             <div> <!--Header app-->
                 <div style="width: 100%;display: flex;align-items: flex-start"> <!--Encabezado-->
                     <div style="flex: 0 0 60%;">
-                        <h:graphicImage library="images" name="download.svg" style="width: 100px;display: block"/>
+                        <h:graphicImage library="images" name="download.svg" style="width: 100px;display: block"
+                        />
                     </div>
                     <div style="flex: 0 0 40%;">
-                        <h1 style="margin-right: 10px">Sistema de gestion Rentario</h1>
+                        <h1 style="margin-right: 10px">Sistema de gestión Rentario</h1>
                     </div>
                 </div>
                 <div style="flex: 0 0 100%"><!--Menu-->
                     <h:form>
                         <nav>
                             <ul class="menu-bar">
+                                <li class="menu-item">
+                                    <h:commandButton  styleClass="btn btn-home"  value="Home" action="irAHome" />
+                                </li>
                                 <li class="menu-item">
                                     <span>Usuario</span>
                                     <ul class="sub-menu">
@@ -41,29 +46,32 @@
                                     </ul>
                                 </li>
                                 <li class="menu-item">
-                                    <span>Sucursal</span>
+                                    <span>Sucursales</span>
                                     <ul class="sub-menu">
                                         <li class="sub-menu-item">
-                                            <h:link value="Listar" outcome="/student/list-students.xhtml?faces-redirect=true"/>
+                                            <h:link value="Listar" outcome="/Sucursales/list-sucursal.xhtml?faces-redirect=true"/>
                                         </li>
                                         <li class="sub-menu-item">
-                                            <h:link value="Agregar" outcome="/student/add-student.xhtml?faces-redirect=true"/>
+                                            <h:link value="Agregar" outcome="/Sucursales/add-sucursal.xhtml?faces-redirect=true"/>
+                                        </li>
+                                        <li class="sub-menu-item">
+                                            <h:link value="Actualizar" outcome="/Sucursales/update-sucursal.xhtml?faces-redirect=true"/>
                                         </li>
                                     </ul>
                                 </li>
                                 <li class="menu-item">
-                                    <span>Cursos</span>
+                                    <span>Vehiculos</span>
                                     <ul class="sub-menu">
                                         <li class="sub-menu-item">
-                                            <h:link value="Listar" outcome="/student/list-students.xhtml?faces-redirect=true"/>
+                                            <h:link value="Listar" outcome="/courses/list-course.xhtml?faces-redirect=true"/>
                                         </li>
                                         <li class="sub-menu-item">
-                                            <h:link value="Agregar" outcome="/student/add-student.xhtml?faces-redirect=true"/>
+                                            <h:link value="Agregar" outcome="/Vehiculos/add-vehiculo.xhtml?faces-redirect=true"/>
                                         </li>
                                     </ul>
                                 </li>
                                 <li class="menu-item">
-                                    <span>Matricula</span>
+                                    <span>Rentas</span>
                                     <ul class="sub-menu">
                                         <li class="sub-menu-item">
                                             <h:link value="Listar" outcome="/student/list-students.xhtml?faces-redirect=true"/>
@@ -93,19 +101,45 @@
                 </div><!--Menu end-->
             </div><!--Header app end-->
             <div style="min-height: 60vh"> <!--Content app-->
-                <h3>Agregar Categorias</h3>
-                <h:messages id="msg" globalOnly="true"/>
-                <h:form styleClass="container">
-                    <h:outputText value="Descripcion"/>
-                    <h:inputText styleClass="form-control" value="#{categoriaController.newCategoria.descripcion}"/>
-                    <h:outputText value="Estado"/>
-                    <h:selectOneMenu id="Estado" value="#{categoriaController.newCategoria.estado}" styleClass="form-control">
-                        <f:selectItem itemValue="activo" itemLabel="Habilitado"/>
-                        <f:selectItem itemValue="inactivo" itemLabel="Inhabilitado"/>
-                    </h:selectOneMenu>
-                    <h:commandButton styleClass="btn btn-primary align-center" value="Guardar"
-                                     action="#{categoriaController.add}"/>
-                </h:form>
+                <h3>Lista de Sucursales</h3>
+                <h:dataTable value="#{sucursalController.sucursales}" var="sucursal" styleClass="table">
+                    <h:column headerClass="table-header">
+                        <f:facet name="header">codigo</f:facet>
+                        <h:outputText value="#{sucursal.codigo}" styleClass="table-data"/>
+                    </h:column>
+                    <h:column headerClass="table-header">
+                        <f:facet name="header">Nombre</f:facet>
+                        <h:outputText value="#{sucursal.nombre}" styleClass="table-data"/>
+                    </h:column>
+                    <h:column headerClass="table-header">
+                        <f:facet name="header">Encargado</f:facet>
+                        <h:outputText value="#{sucursal.encargado}" styleClass="table-data"/>
+                    </h:column>
+                    <h:column headerClass="table-header">
+                        <f:facet name="header">Direccion</f:facet>
+                        <h:outputText value="#{sucursal.direccion}" styleClass="table-data"/>
+                    </h:column>
+                    <h:column headerClass="table-header">
+                        <f:facet name="header">Telefono</f:facet>
+                        <h:outputText value="#{sucursal.telefono}" styleClass="table-data"/>
+                    </h:column>
+                    <h:column headerClass="table-header">
+                        <f:facet name="header">Correo</f:facet>
+                        <h:outputText value="#{sucursal.correo}" styleClass="table-data"/>
+                    </h:column>
+                    <h:column headerClass="table-header">
+                        <f:facet name="header">ACCIONES</f:facet>
+                        <h:form >
+                            <h:link value="Editar" styleClass="btn btn-warning"
+                                    outcome="/Sucursales/update-sucursal.xhtml">
+                                <f:param name="codigo" value="#{sucursal.codigo}"/>
+                            </h:link>
+
+                            <h:commandButton value="Eliminar" styleClass="btn btn-danger m-5"
+                                             action="#{sucursalController.delete(sucursal.codigo)}"/>
+                        </h:form>
+                    </h:column>
+                </h:dataTable>
             </div><!--Content app end-->
             <div> <!--Footer app-->
                 <hr/>

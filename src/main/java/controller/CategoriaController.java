@@ -26,11 +26,16 @@ public class CategoriaController implements Serializable {
     @Inject
     private CategoriaService service;
 
+    // Para buscar antes de actualizar
+    private Integer codigoBuscar;
+
     // Para crear
     private CategoriaVehiculoDto newCategoria = new CategoriaVehiculoDto();
-    // Para editar (lo puedes bindear a una fila seleccionada en la tabla)
+
+    // Para editar
     private CategoriaVehiculoDto selectedCategoria = new CategoriaVehiculoDto();
 
+    // Listado
     private List<CategoriaVehiculo> categorias = new ArrayList<>();
 
     @PostConstruct
@@ -43,12 +48,15 @@ public class CategoriaController implements Serializable {
         try {
             service.createCategoria(newCategoria);
             success("Categoría creada correctamente.");
+            LOG.info(newCategoria.getEstado().toString());
             newCategoria = new CategoriaVehiculoDto(); // limpiar formulario
             loadCategorias();
         } catch (IllegalArgumentException e) {
             error(e.getMessage());
+            LOG.info(newCategoria.getEstado().toString());
         } catch (Exception e) {
             LOG.severe(e.getMessage());
+            LOG.info(newCategoria.getEstado().toString());
             error("Ocurrió un error al crear la categoría.");
         }
     }
@@ -74,15 +82,34 @@ public class CategoriaController implements Serializable {
             service.updateCategoria(selectedCategoria);
             success("Categoría actualizada correctamente.");
             loadCategorias();
-            return "/Categorias/list-categorias.xhtml?=faces-redirect=true";
+            return "/Categorias/list-categorias.xhtml?faces-redirect=true";
         } catch (IllegalArgumentException e) {
             error(e.getMessage());
         } catch (Exception e) {
             LOG.severe(e.getMessage());
             error("Ocurrió un error al actualizar la categoría.");
-
         }
         return null;
+    }
+
+
+    public void loadCategoriaByCodigo() {
+        try {
+            if (codigoBuscar != null) {
+                CategoriaVehiculo encontrada = service.getById(codigoBuscar);
+                if (encontrada != null) {
+                    selectedCategoria.setCodigo(encontrada.getCodigo());
+                    selectedCategoria.setDescripcion(encontrada.getDescripcion());
+                    selectedCategoria.setEstado(encontrada.getEstado());
+                    success("Categoría cargada para edición.");
+                } else {
+                    error("No se encontró ninguna categoría con el código: " + codigoBuscar);
+                }
+            }
+        } catch (Exception e) {
+            error("Error al buscar la categoría.");
+            LOG.severe(e.getMessage());
+        }
     }
 
     /* ===== DELETE ===== */
@@ -111,18 +138,14 @@ public class CategoriaController implements Serializable {
     }
 
     /* ===== Getters/Setters ===== */
-    public CategoriaVehiculoDto getNewCategoria() {
-        return newCategoria; }
+    public CategoriaVehiculoDto getNewCategoria() { return newCategoria; }
+    public void setNewCategoria(CategoriaVehiculoDto newCategoria) { this.newCategoria = newCategoria; }
 
-    public void setNewCategoria(CategoriaVehiculoDto newCategoria) {
-        this.newCategoria = newCategoria; }
+    public CategoriaVehiculoDto getSelectedCategoria() { return selectedCategoria; }
+    public void setSelectedCategoria(CategoriaVehiculoDto selectedCategoria) { this.selectedCategoria = selectedCategoria; }
 
-    public CategoriaVehiculoDto getSelectedCategoria() {
-        return selectedCategoria; }
+    public List<CategoriaVehiculo> getCategorias() { return categorias; }
 
-    public void setSelectedCategoria(CategoriaVehiculoDto selectedCategoria) {
-        this.selectedCategoria = selectedCategoria; }
-
-    public List<CategoriaVehiculo> getCategorias() {
-        return categorias; }
+    public Integer getCodigoBuscar() { return codigoBuscar; }
+    public void setCodigoBuscar(Integer codigoBuscar) { this.codigoBuscar = codigoBuscar; }
 }

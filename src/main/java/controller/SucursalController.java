@@ -29,6 +29,9 @@ public class SucursalController implements Serializable {
     private Sucursal selectedSucursal;             // para editar/eliminar
     private List<Sucursal> sucursales = new ArrayList<>();
 
+
+
+
     @PostConstruct
     public void init() {
         loadSucursales();
@@ -64,22 +67,19 @@ public class SucursalController implements Serializable {
         return service.buscarPorId(codigo);
     }
 
-    /* ===== UPDATE ===== */
-    public void update() {
-        if (selectedSucursal == null) {
-            error("Seleccione una sucursal para actualizar.");
-            return;
-        }
+    public String update() {
         try {
             service.update(selectedSucursal);
             success("Sucursal actualizada correctamente.");
             loadSucursales();
-        } catch (IllegalArgumentException e) {
+            return "/Sucursales/list-sucursal.xhtml?faces-redirect=true";
+        }catch(IllegalArgumentException e) {
             error(e.getMessage());
-        } catch (Exception e) {
+        }catch(Exception e) {
             LOG.severe(e.getMessage());
-            error("Ocurrió un error al actualizar la sucursal.");
+            error("ocurrio un error al actualizar la sucursal");
         }
+        return null;
     }
 
     /* ===== DELETE ===== */
@@ -107,12 +107,65 @@ public class SucursalController implements Serializable {
                 .addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, msg, null));
     }
 
+    public void buscarSucursalPorCodigo() {
+        if (codigoBusqueda == null) {
+            error("Debe ingresar un código.");
+            return;
+        }
+        service.buscarPorId(codigoBusqueda).ifPresentOrElse(
+                s -> selectedSucursal = s,
+                () -> {
+                    selectedSucursal = null;
+                    error("No se encontró la sucursal con código " + codigoBusqueda);
+                }
+        );
+    }
+
+    public void cancelarEdicion() {
+        selectedSucursal = null;
+        codigoBusqueda = null;
+    }
+
+    public void loadSelectedSucursal() {
+        if (selectedSucursal != null && selectedSucursal.getCodigo() != null) {
+            service.buscarPorId(selectedSucursal.getCodigo())
+                    .ifPresentOrElse(
+                            s -> selectedSucursal = s,
+                            () -> error("No se encontró la sucursal con código " + selectedSucursal.getCodigo())
+                    );
+        }
+    }
+
+
+
+
+
+
     /* ===== Getters/Setters ===== */
-    public Sucursal getNewSucursal() { return newSucursal; }
-    public void setNewSucursal(Sucursal newSucursal) { this.newSucursal = newSucursal; }
+    public Sucursal getNewSucursal() {
+        return newSucursal; }
 
-    public Sucursal getSelectedSucursal() { return selectedSucursal; }
-    public void setSelectedSucursal(Sucursal selectedSucursal) { this.selectedSucursal = selectedSucursal; }
+    public void setNewSucursal(Sucursal newSucursal) {
+        this.newSucursal = newSucursal; }
 
-    public List<Sucursal> getSucursales() { return sucursales; }
+    public Sucursal getSelectedSucursal() {
+        return selectedSucursal; }
+
+    public void setSelectedSucursal(Sucursal selectedSucursal) {
+        this.selectedSucursal = selectedSucursal; }
+
+    public List<Sucursal> getSucursales() {
+        return sucursales; }
+
+
+    private Integer codigoBusqueda;
+
+    public Integer getCodigoBusqueda() {
+        return codigoBusqueda; }
+
+    public void setCodigoBusqueda(Integer codigoBusqueda) {
+        this.codigoBusqueda = codigoBusqueda; }
+
+
+
 }

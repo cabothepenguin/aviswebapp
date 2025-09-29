@@ -4,7 +4,10 @@
    <persistence-unit name="avisrent-pu" transaction-type="RESOURCE_LOCAL">
       <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
       <non-jta-data-source>java:/jboss/datasources/renta_vehiculos</non-jta-data-source>
+
       <properties>
+         <property name="hibernate.jpa.compliance.query" value="false"/>
+
 
          <property name="hibernate.show_sql" value="true"/>
          <property name="hibernate.format_sql" value="true"/>

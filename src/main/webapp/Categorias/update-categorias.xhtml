@@ -8,123 +8,153 @@
 <f:view>
     <f:event type="preRenderView" listener="#{categoriaController.loadCategorias()}"/>
     <h:head>
-        <title>AVIS App - Principal</title>
+        <title>AVIS App - Actualizar Categorías</title>
         <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
         <h:outputStylesheet library="css" name="style.css"/>
     </h:head>
     <h:body>
         <div class="container">
-            <div> <!--Header app-->
-                <div style="width: 100%;display: flex;align-items: flex-start">
-                    <div style="flex: 0 0 60%;">
-                        <h:graphicImage library="images" name="download.svg" style="width: 100px;display: block"/>
-                    </div>
-                    <div style="flex: 0 0 40%;">
-                        <h1 style="margin-right: 10px">Sistema de gestión Rentario</h1>
-                    </div>
+            <!-- Header -->
+            <div style="width: 100%;display: flex;align-items: flex-start">
+                <div style="flex: 0 0 60%;">
+                    <h:graphicImage library="images" name="download.svg" style="width: 100px;display: block"/>
                 </div>
+                <div style="flex: 0 0 40%;">
+                    <h1 style="margin-right: 10px">Sistema de gestión Rentario</h1>
+                </div>
+            </div>
 
-                <!-- Menu -->
-                <div style="flex: 0 0 100%">
-                    <h:form>
-                        <nav>
-                            <ul class="menu-bar">
-                                <li class="menu-item">
-                                    <span>Usuario</span>
-                                    <ul class="sub-menu">
-                                        <li class="sub-menu-item">
-                                            <h:link value="Listar" outcome="/Usuario/list-usuario.xhtml?faces-redirect=true"/>
-                                        </li>
-                                        <li class="sub-menu-item">
-                                            <h:link value="Agregar" outcome="/Usuario/add-Usuario.xhtml?faces-redirect=true"/>
-                                        </li>
-                                        <li class="sub-menu-item">
-                                            <h:link value="Actualizar" outcome="/Usuario/update-usuario.xhtml?faces-redirect=true"/>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="menu-item">
-                                    <span>Sucursal</span>
-                                    <ul class="sub-menu">
-                                        <li class="sub-menu-item">
-                                            <h:link value="Listar" outcome="/student/list-students.xhtml?faces-redirect=true"/>
-                                        </li>
-                                        <li class="sub-menu-item">
-                                            <h:link value="Agregar" outcome="/student/add-student.xhtml?faces-redirect=true"/>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="menu-item">
-                                    <span>Cursos</span>
-                                    <ul class="sub-menu">
-                                        <li class="sub-menu-item">
-                                            <h:link value="Listar" outcome="/student/list-students.xhtml?faces-redirect=true"/>
-                                        </li>
-                                        <li class="sub-menu-item">
-                                            <h:link value="Agregar" outcome="/student/add-student.xhtml?faces-redirect=true"/>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="menu-item">
-                                    <span>Matricula</span>
-                                    <ul class="sub-menu">
-                                        <li class="sub-menu-item">
-                                            <h:link value="Listar" outcome="/student/list-students.xhtml?faces-redirect=true"/>
-                                        </li>
-                                        <li class="sub-menu-item">
-                                            <h:link value="Agregar" outcome="/student/add-student.xhtml?faces-redirect=true"/>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="menu-item">
-                                    <span>Categorias</span>
-                                    <ul class="sub-menu">
-                                        <li class="sub-menu-item">
-                                            <h:link value="listar" outcome="/Categorias/list-categorias.xhtml?faces-redirect=true"/>
-                                        </li>
-                                        <li class="sub-menu-item">
-                                            <h:link value="Agregar" outcome="/Categorias/add-categorias.xhtml?faces-redirect=true"/>
-                                        </li>
-                                        <li class="sub-menu-item">
-                                            <h:link value="Actualizar" outcome="/Categorias/update-categorias.xhtml?faces-redirect=true"/>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </nav>
-                    </h:form>
-                </div><!--Menu end-->
-            </div><!--Header app end-->
+            <!-- Menu -->
+            <div style="flex: 0 0 100%">
+                <h:form>
+                    <nav>
+                        <ul class="menu-bar">
+                            <li class="menu-item">
+                                <h:commandButton  styleClass="btn btn-home"  value="Home" action="irAHome" />
+                            </li>
+                            <li class="menu-item">
+                                <span>Usuario</span>
+                                <ul class="sub-menu">
+                                    <li class="sub-menu-item">
+                                        <h:link value="Listar" outcome="/Usuario/list-usuario.xhtml?faces-redirect=true"/>
+                                    </li>
+                                    <li class="sub-menu-item">
+                                        <h:link value="Agregar" outcome="/Usuario/add-Usuario.xhtml?faces-redirect=true"/>
+                                    </li>
+                                    <li class="sub-menu-item">
+                                        <h:link value="Actualizar" outcome="/Usuario/update-usuario.xhtml?faces-redirect=true"/>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="menu-item">
+                                <span>Sucursales</span>
+                                <ul class="sub-menu">
+                                    <li class="sub-menu-item">
+                                        <h:link value="Listar" outcome="/Sucursales/list-sucursal.xhtml?faces-redirect=true"/>
+                                    </li>
+                                    <li class="sub-menu-item">
+                                        <h:link value="Agregar" outcome="/Sucursales/add-sucursal.xhtml?faces-redirect=true"/>
+                                    </li>
+                                    <li class="sub-menu-item">
+                                        <h:link value="Actualizar" outcome="/Sucursales/update-sucursal.xhtml?faces-redirect=true"/>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="menu-item">
+                                <span>Vehiculos</span>
+                                <ul class="sub-menu">
+                                    <li class="sub-menu-item">
+                                        <h:link value="Listar" outcome="/courses/list-course.xhtml?faces-redirect=true"/>
+                                    </li>
+                                    <li class="sub-menu-item">
+                                        <h:link value="Agregar" outcome="/Vehiculos/add-vehiculo.xhtml?faces-redirect=true"/>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="menu-item">
+                                <span>Rentas</span>
+                                <ul class="sub-menu">
+                                    <li class="sub-menu-item">
+                                        <h:link value="Listar" outcome="/student/list-students.xhtml?faces-redirect=true"/>
+                                    </li>
+                                    <li class="sub-menu-item">
+                                        <h:link value="Agregar" outcome="/student/add-student.xhtml?faces-redirect=true"/>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="menu-item">
+                                <span>Categorias</span>
+                                <ul class="sub-menu">
+                                    <li class="sub-menu-item">
+                                        <h:link value="listar" outcome="/Categorias/list-categorias.xhtml?faces-redirect=true"/>
+                                    </li>
+                                    <li class="sub-menu-item">
+                                        <h:link value="Agregar" outcome="/Categorias/add-categorias.xhtml?faces-redirect=true"/>
+                                    </li>
+                                    <li class="sub-menu-item">
+                                        <h:link value="Actualizar" outcome="/Categorias/update-categorias.xhtml?faces-redirect=true"/>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </nav>
+                </h:form>
+            </div>
+            <!-- Menu end -->
 
             <!-- Content -->
             <div style="min-height: 60vh">
-                <h3>Actualizar Categorias</h3>
+                <h3>Actualizar Categorías</h3>
                 <h:messages id="msg" globalOnly="true"/>
-                <h:form styleClass="container">
-                    <h:outputText value="Descripción"/>
-                    <h:inputText styleClass="form-control" value="#{categoriaController.newCategoria.descripcion}"/>
 
-                    <h:selectOneMenu id="Estado" value="#{categoriaController.newCategoria.estado}" styleClass="form-control">
-                        <f:selectItem itemValue="activo" itemLabel="Habilitado"/>
-                        <f:selectItem itemValue="inactivo" itemLabel="Inhabilitado"/>
-                    </h:selectOneMenu>
+                <!-- Paso 1: Buscar por código -->
+                <h:form>
+                    <h:panelGrid columns="2" columnClasses="label,value" cellpadding="5">
+                        <h:outputLabel value="Código:" for="codigoBuscar"/>
+                        <h:inputText id="codigoBuscar" value="#{categoriaController.codigoBuscar}" />
 
-
-                    <h:commandButton value="Guardar"
-                                     action="#{categoriaController.update}"
-                                     styleClass="btn btn-primary"/>
-
-                    <h:link value="Cancelar" outcome="/Categorias/list-categorias.xhtml?faces-redirect=true"
-                            styleClass="btn btn-warning"/>
+                        <h:commandButton value="Buscar"
+                                         action="#{categoriaController.loadCategoriaByCodigo}"
+                                         styleClass="btn btn-info"/>
+                        <h:link value="Cancelar"
+                                outcome="/Categorias/list-categorias.xhtml?faces-redirect=true"
+                                styleClass="btn btn-warning"/>
+                    </h:panelGrid>
                 </h:form>
 
+                <!-- Paso 2: Formulario de edición (se muestra solo si hay categoría cargada) -->
+                <h:panelGroup rendered="#{not empty categoriaController.selectedCategoria.codigo}">
+                    <h:form styleClass="container" prependId="false">
+                        <h:panelGrid columns="2" columnClasses="label,value" cellpadding="5">
 
-            </div><!--Content app end-->
+
+
+                            <h:outputLabel value="Descripción:" />
+                            <h:inputText styleClass="form-control" value="#{categoriaController.selectedCategoria.descripcion}"/>
+
+                            <h:outputLabel value="Estado:" />
+                            <h:selectOneMenu value="#{categoriaController.selectedCategoria.estado}" styleClass="form-control">
+                                <f:selectItem itemValue="activo" itemLabel="Activo"/>
+                                <f:selectItem itemValue="inactivo" itemLabel="Inactivo"/>
+                            </h:selectOneMenu>
+                        </h:panelGrid>
+
+                        <h:commandButton value="Guardar"
+                                         action="#{categoriaController.update}"
+                                         styleClass="btn btn-primary"/>
+                        <h:link value="Cancelar"
+                                outcome="/Categorias/list-categorias.xhtml?faces-redirect=true"
+                                styleClass="btn btn-warning"/>
+                    </h:form>
+                </h:panelGroup>
+
+            </div>
+            <!-- Content end -->
 
             <!-- Footer -->
             <div>
                 <hr/>
-                <p>Avis Costa Rica. Todos los derechos reservado&copy; 2025</p>
+                <p>Avis Costa Rica. Todos los derechos reservados &copy; 2025</p>
             </div>
         </div>
     </h:body>
