@@ -51,6 +51,15 @@ public class CategoriaService {
         repository.deleteCategory(codigo);
     }
 
+    public CategoriaVehiculoDto toDto(CategoriaVehiculo model) {
+        CategoriaVehiculoDto categoriaVehiculoDto = new CategoriaVehiculoDto();
+        categoriaVehiculoDto.setCodigo(model.getCodigo());
+        categoriaVehiculoDto.setDescripcion(model.getDescripcion());
+        categoriaVehiculoDto.setEstado(model.getEstado());
+
+        return categoriaVehiculoDto;
+    }
+
     public List<CategoriaVehiculo> listarCategorias() {
 
         return repository.getCategories();
@@ -63,6 +72,10 @@ public class CategoriaService {
 
     public CategoriaVehiculo getById(Integer id) {
         return repository.getById(id);
+    }
+
+    public CategoriaVehiculoDto findById(Integer id) {
+        return toDto(repository.findCategoryById(id));
     }
 
     public void updateCategoria(CategoriaVehiculo categoria) {

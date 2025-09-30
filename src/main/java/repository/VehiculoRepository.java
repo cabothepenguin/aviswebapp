@@ -19,6 +19,7 @@ public class VehiculoRepository {
 
     public void addVehiculo(VehiculoDto vehiculo) {
         try {
+            em.getTransaction().begin();
 
             String sql = "INSERT INTO administracion_vehiculos " +
                     "(placa, modelo, marca, categoria, estado, año, precio, imagen, nombre_imagen) " +
@@ -34,6 +35,7 @@ public class VehiculoRepository {
                     .setParameter(8, vehiculo.getImage())
                     .setParameter(9, vehiculo.getImageName())
                     .executeUpdate();
+            em.getTransaction().commit();
         }catch(Exception e){
             em.getTransaction().rollback();
             e.printStackTrace();
@@ -44,8 +46,9 @@ public class VehiculoRepository {
     }
 
     // ===== Actualizar por placa
-    @Transactional
+
     public void updateVehiculo(VehiculoDto vehiculo) {
+        em.getTransaction().begin();
         String sql = "UPDATE administracion_vehiculos SET modelo = ?, marca = ?, categoria = ?, estado = ?, " +
                 "año = ?, precio = ?, imagen = ?, nombre_imagen = ? WHERE placa = ?";
         em.createNativeQuery(sql)
@@ -59,14 +62,17 @@ public class VehiculoRepository {
                 .setParameter(8, vehiculo.getImageName())
                 .setParameter(9, vehiculo.getPlaca())
                 .executeUpdate();
+        em.getTransaction().commit();
     }
 
     // ===== Eliminar por placa
-    @Transactional
-    public void deleteVehiculo(String placa) {
+
+    public void deleteVehiculo(Integer placa) {
+        em.getTransaction().begin();
         em.createNativeQuery("DELETE FROM administracion_vehiculos WHERE placa = ?")
                 .setParameter(1, placa)
                 .executeUpdate();
+        em.getTransaction().commit();
     }
 
     // ===== Listar
@@ -80,7 +86,7 @@ public class VehiculoRepository {
     }
 
     // ===== Buscar por placa
-    public Vehiculo findVehiculoByPlaca(String placa) {
+    public Vehiculo findVehiculoByPlaca(Integer placa) {
         return (Vehiculo) em.createNativeQuery(
                 "SELECT placa, modelo, marca, categoria, estado, año, precio, imagen, nombre_imagen " +
                         "FROM administracion_vehiculos WHERE placa = ?",
@@ -89,7 +95,7 @@ public class VehiculoRepository {
     }
 
     // ===== Verificar existencia por placa
-    public boolean existsByPlaca(String placa) {
+    public boolean existsByPlaca(Integer placa) {
         Number count = (Number) em.createNativeQuery(
                 "SELECT COUNT(*) FROM administracion_vehiculos WHERE placa = ?"
         ).setParameter(1, placa).getSingleResult();

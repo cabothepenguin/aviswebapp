@@ -7,10 +7,14 @@ import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import jakarta.servlet.http.Part;
 import model.Vehiculo;
 import service.VehiculoService;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -19,12 +23,14 @@ import java.util.logging.Logger;
 @Named("vehiculoBean")
 @ViewScoped
 public class VehiculoController implements Serializable {
-
     private static final long serialVersionUID = 1L;
     private static final Logger LOG = Logger.getLogger(VehiculoController.class.getName());
 
     @Inject
     private VehiculoService service;
+    private Part uploadedFile;
+    private String fileName;
+    private byte[] file;
 
     // Form de creación
     private VehiculoDto newVehiculo = new VehiculoDto();
@@ -39,10 +45,21 @@ public class VehiculoController implements Serializable {
         loadVehiculos();
     }
 
+    public void upload(){
+        this.fileName= Paths.get(uploadedFile.getName()).getFileName().toString();
+        try{
+            InputStream in = uploadedFile.getInputStream();
+            file= in.readAllBytes();
+        }catch(IOException e){
+            e.printStackTrace();
+            //metodo error
+        }
+    }
+
     /* =================== CREATE =================== */
     public void add() {
         try {
-            service.crear(newVehiculo);
+            service.addVehiculo(newVehiculo);
             success("Vehículo creado correctamente.");
             newVehiculo = new VehiculoDto(); // limpiar form
             loadVehiculos();
@@ -65,7 +82,7 @@ public class VehiculoController implements Serializable {
         }
     }
 
-    public Optional<Vehiculo> findByPlaca(String placa) {
+    public Optional<Vehiculo> findByPlaca(Integer placa) {
         return service.buscarPorPlaca(placa);
     }
 
@@ -84,7 +101,7 @@ public class VehiculoController implements Serializable {
     }
 
     /* =================== DELETE =================== */
-    public void delete(String placa) {
+    public void delete(Integer placa) {
         try {
             service.eliminar(placa);
             success("Vehículo eliminado correctamente.");
@@ -109,11 +126,27 @@ public class VehiculoController implements Serializable {
     }
 
     /* =================== Getters/Setters =================== */
-    public VehiculoDto getNewVehiculo() { return newVehiculo; }
-    public void setNewVehiculo(VehiculoDto newVehiculo) { this.newVehiculo = newVehiculo; }
+    public VehiculoDto getNewVehiculo() {
+        return newVehiculo; }
+    public void setNewVehiculo(VehiculoDto newVehiculo) {
+        this.newVehiculo = newVehiculo; }
 
-    public VehiculoDto getSelectedVehiculo() { return selectedVehiculo; }
-    public void setSelectedVehiculo(VehiculoDto selectedVehiculo) { this.selectedVehiculo = selectedVehiculo; }
+    public VehiculoDto getSelectedVehiculo() {
+        return selectedVehiculo; }
+    public void setSelectedVehiculo(VehiculoDto selectedVehiculo) {
+        this.selectedVehiculo = selectedVehiculo; }
 
-    public List<Vehiculo> getVehiculos() { return vehiculos; }
+    public Part getUploadedFile() {
+        return uploadedFile;
+    }
+
+    public void setUploadedFile(Part uploadedFile) {
+        this.uploadedFile = uploadedFile;
+    }
+
+    public List<Vehiculo> getVehiculos() {
+        return vehiculos; }
+
+
+
 }

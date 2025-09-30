@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 public class Vehiculo {
 
     @Id
-    private String placa;
+    private Integer placa;
 
     @Column(name = "modelo")
     private String modelo;
@@ -19,7 +19,7 @@ public class Vehiculo {
     private CategoriaVehiculo categoria;
 
     @Column(name = "estado")
-    private String nombre;
+    private String estado;
 
     @Column(name = "año")
     private String anio;
@@ -36,29 +36,31 @@ public class Vehiculo {
     public Vehiculo() {
     }
 
-    public Vehiculo(String placa, String modelo, String marca,
-                    CategoriaVehiculo categoria, String nombre,
+    public Vehiculo(Integer placa, String modelo, String marca,
+                    CategoriaVehiculo categoria, String estado,
                     String anio, String precio, byte[] image, String imageName) {
         this.placa = placa;
         this.modelo = modelo;
         this.marca = marca;
         this.categoria = categoria;
-        this.nombre = nombre;
+        this.estado = estado;
         this.anio = anio;
         this.precio = precio;
         this.image = image;
         this.imageName = imageName;
     }
 
-    public String getPlaca() {
+    public Integer getPlaca() {
         return placa;
     }
 
-    public void setPlaca(String placa) {
+    public void setPlaca(Integer placa) {
+
         this.placa = placa;
     }
 
     public String getModelo() {
+
         return modelo;
     }
 
@@ -67,10 +69,12 @@ public class Vehiculo {
     }
 
     public String getMarca() {
+
         return marca;
     }
 
     public void setMarca(String marca) {
+
         this.marca = marca;
     }
 
@@ -79,18 +83,22 @@ public class Vehiculo {
     }
 
     public void setCategoria(CategoriaVehiculo categoria) {
+
         this.categoria = categoria;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getEstado() {
+
+        return estado;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setEstado(String estado) {
+
+        this.estado = estado;
     }
 
     public String getAnio() {
+
         return anio;
     }
 
@@ -99,26 +107,32 @@ public class Vehiculo {
     }
 
     public String getPrecio() {
+
         return precio;
     }
 
     public void setPrecio(String precio) {
+
         this.precio = precio;
     }
 
     public byte[] getImage() {
+
         return image;
     }
 
     public void setImage(byte[] image) {
+
         this.image = image;
     }
 
     public String getImageName() {
+
         return imageName;
     }
 
     public void setImageName(String imageName) {
+
         this.imageName = imageName;
     }
 }
