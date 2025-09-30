@@ -2,6 +2,8 @@ package service;
 
 import dto.VehiculoDto;
 import jakarta.ejb.Stateless;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import model.Vehiculo;
 import repository.VehiculoRepository;
@@ -11,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-@Stateless
+@ApplicationScoped
 public class VehiculoService {
 
 
@@ -21,19 +23,18 @@ public class VehiculoService {
     @Inject
     private VehiculoRepository repository;
 
-    /* ================== CREAR ================== */
-    public void crear(VehiculoDto dto) {
-        validarObligatorios(dto);
 
-        if (repository.existsByPlaca(dto.getPlaca())) {
-            throw new IllegalArgumentException("Ya existe un vehículo con la placa: " + dto.getPlaca());
+    public void addVehiculo(VehiculoDto vehiculoDto) {
+        try{
+            repository.addVehiculo(vehiculoDto);
+        }catch(Exception e){
+            throw new RuntimeException(e);
         }
-        repository.addVehiculo(dto);
     }
 
     /* ================== ACTUALIZAR ================== */
     public void actualizar(VehiculoDto dto) {
-        if (dto.getPlaca() == null || dto.getPlaca().isBlank()) {
+        if (dto.getPlaca() == null) {
             throw new IllegalArgumentException("La placa es obligatoria para actualizar.");
         }
         validarObligatorios(dto);  // valida resto de campos
@@ -45,20 +46,37 @@ public class VehiculoService {
     }
 
     /* ================== ELIMINAR ================== */
-    public void eliminar(String placa) {
-        if (placa == null || placa.isBlank()) {
+    public void eliminar(Integer placa) {
+        if (placa == null ) {
             throw new IllegalArgumentException("La placa es obligatoria para eliminar.");
         }
         repository.deleteVehiculo(placa);
     }
+
+
+    private VehiculoDto toDto(Vehiculo model) {
+        VehiculoDto vehiculosDto = new VehiculoDto();
+        vehiculosDto.setPlaca(model.getPlaca());
+        vehiculosDto.setModelo(model.getModelo());
+        vehiculosDto.setMarca(model.getMarca());
+        vehiculosDto.setEstado(model.getEstado());
+        vehiculosDto.setAnio(Integer.valueOf(model.getAnio()));
+        vehiculosDto.setPrecio(Integer.valueOf(model.getPrecio()));
+        if(model.getImage() != null) {
+            vehiculosDto.setImage(model.getImage());
+            vehiculosDto.setImageName(model.getImageName());
+        }
+        return vehiculosDto;
+    }
+
 
     /* ================== CONSULTAS ================== */
     public List<Vehiculo> listar() {
         return repository.getVehiculos();
     }
 
-    public Optional<Vehiculo> buscarPorPlaca(String placa) {
-        if (placa == null || placa.isBlank()) return Optional.empty();
+    public Optional<Vehiculo> buscarPorPlaca(Integer placa) {
+        if (placa == null ) return Optional.empty();
         try {
             return Optional.ofNullable(repository.findVehiculoByPlaca(placa));
         } catch (Exception e) {
@@ -66,8 +84,8 @@ public class VehiculoService {
         }
     }
 
-    public boolean existePlaca(String placa) {
-        return placa != null && !placa.isBlank() && repository.existsByPlaca(placa);
+    public boolean existePlaca(Integer placa) {
+        return placa != null  && repository.existsByPlaca(placa);
     }
 
     /* ================== VALIDACIONES ================== */
@@ -75,7 +93,7 @@ public class VehiculoService {
         if (v == null) throw new IllegalArgumentException("El vehículo es requerido.");
 
         // placa / modelo / marca
-        if (v.getPlaca() == null || v.getPlaca().isBlank())
+        if (v.getPlaca() == null )
             throw new IllegalArgumentException("La placa es obligatoria.");
         if (v.getModelo() == null || v.getModelo().isBlank())
             throw new IllegalArgumentException("El modelo es obligatorio.");
@@ -109,5 +127,9 @@ public class VehiculoService {
 
         if (v.getPrecio() == null) throw new IllegalArgumentException("El precio es obligatorio.");
         if (v.getPrecio() < 0) throw new IllegalArgumentException("El precio no puede ser negativo.");
+    }
+
+    public VehiculoDto findVehicleByPlaca(Integer id) {
+        return toDto(repository.findVehiculoByPlaca(id));
     }
 }

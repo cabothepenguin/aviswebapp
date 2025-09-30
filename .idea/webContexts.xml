@@ -5,6 +5,7 @@
       <map>
         <entry key="file://$PROJECT_DIR$/src/main/webapp/Categorias/update-categorias.xhtml" value="file://$PROJECT_DIR$/src/main/webapp/Categorias" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/Sucursales/update-sucursal.xhtml" value="file://$PROJECT_DIR$/src/main/webapp/Sucursales" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/Vehiculos/add-vehiculo.xhtml" value="file://$PROJECT_DIR$/src/main/webapp/Vehiculos" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/home.xhtml" value="file://$PROJECT_DIR$/src/main/webapp" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/index.xhtml" value="file://$PROJECT_DIR$/src/main/webapp" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/student/list-students.xhtml" value="file://$PROJECT_DIR$/src/main/webapp/student" />

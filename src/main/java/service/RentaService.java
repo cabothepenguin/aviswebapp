@@ -74,9 +74,9 @@ public class RentaService {
         if (dto.getClienteNombre() == null || dto.getClienteNombre().isBlank())
             throw new IllegalArgumentException("clienteNombre es obligatorio.");
 
-        if (dto.getVehiculo() == null || dto.getVehiculo().getPlaca() == null
+       /* if (dto.getVehiculo() == null || dto.getVehiculo().getPlaca() == null
                 || dto.getVehiculo().getPlaca().isBlank())
-            throw new IllegalArgumentException("vehiculoAsignado (placa) es obligatorio.");
+            throw new IllegalArgumentException("vehiculoAsignado (placa) es obligatorio.");*/
 
         if (dto.getSucursal() == null || dto.getSucursal().getCodigo() == null)
             throw new IllegalArgumentException("sucursal es obligatoria.");
