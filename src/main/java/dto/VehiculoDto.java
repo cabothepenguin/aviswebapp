@@ -1,19 +1,9 @@
 package dto;
 
-import jakarta.faces.view.ViewScoped;
-import jakarta.inject.Named;
 import model.CategoriaVehiculo;
 
-import java.io.Serializable;
-import java.util.Objects;
-
-
-@Named
-@ViewScoped
-public class VehiculoDto implements Serializable {
-
-
-    private Integer placa;        // PK
+public class VehiculoDto {
+    private String placa;
     private String modelo;
     private String marca;
     private CategoriaVehiculo categoria;
@@ -23,28 +13,16 @@ public class VehiculoDto implements Serializable {
     private byte[] image;
     private String imageName;
 
+    // Constructor
     public VehiculoDto() {
-
     }
 
-    public VehiculoDto(Integer placa, String modelo, String marca, CategoriaVehiculo categoria, String estado, Integer anio,
-                       Integer precio, byte[] image, String imageName) {
-        this.placa = placa;
-        this.modelo = modelo;
-        this.marca = marca;
-        this.categoria = categoria;
-        this.estado = estado;
-        this.anio = anio;
-        this.precio = precio;
-        this.image = image;
-        this.imageName = imageName;
-    }
-
-    public Integer getPlaca() {
+    // Getters y Setters
+    public String getPlaca() {
         return placa;
     }
 
-    public void setPlaca(Integer placa) {
+    public void setPlaca(String placa) {
         this.placa = placa;
     }
 
@@ -113,15 +91,4 @@ public class VehiculoDto implements Serializable {
     }
 
 
-    @Override
-    public boolean equals(Object o) {
-        if(o == null  || getClass() != o.getClass()) return false;
-        VehiculoDto that = (VehiculoDto) o;
-        return Objects.equals(placa, that.placa);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(placa);
-    }
 }

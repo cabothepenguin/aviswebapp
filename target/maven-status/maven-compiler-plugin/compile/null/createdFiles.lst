@@ -11,7 +11,9 @@ service\UsuarioService.class
 service\SucursalService.class
 controller\UsuarioController.class
 controller\VehiculoController.class
+converter\CategoriaVehiculoConverter.class
 converter\VehiculoConverter.class
+converter\SucursalConverter.class
 dto\VehiculoDto.class
 model\Vehiculo.class
 repository\SucursalRepository.class
@@ -21,7 +23,6 @@ model\CategoriaVehiculo.class
 service\RentaService.class
 dto\UsuarioDto.class
 repository\RentaRepository.class
-converter\CategoriaConverter.class
 repository\VehiculoRepository.class
 service\CategoriaService.class
 controller\RentasController.class

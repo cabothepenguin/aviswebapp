@@ -2,7 +2,9 @@ package model;
 
 import jakarta.persistence.*;
 
-@Entity(name = "administracion_Categorias")
+import java.util.Objects;
+
+@Entity(name = "administracion_categorias")
 public class CategoriaVehiculo {
 
     @Id
@@ -47,6 +49,20 @@ public class CategoriaVehiculo {
     }
 
     public void setEstado(String estado) {
+
         this.estado = estado;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CategoriaVehiculo)) return false;
+        CategoriaVehiculo that = (CategoriaVehiculo) o;
+        return codigo != null && codigo.equals(that.codigo);
+    }
+
+    @Override
+    public int hashCode() {
+        return codigo != null ? codigo.hashCode() : 0;
     }
 }

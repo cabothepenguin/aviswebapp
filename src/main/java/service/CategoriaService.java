@@ -16,7 +16,6 @@ public class CategoriaService {
 
     // ===== Crear categoría con validación =====
     public void createCategoria(CategoriaVehiculoDto dto) {
-        // validar unicidad de descripción
         if (repository.existsByDescripcion(dto.getDescripcion())) {
             throw new IllegalArgumentException(
                     "Ya existe una categoría con la descripción: " + dto.getDescripcion()
@@ -27,14 +26,12 @@ public class CategoriaService {
 
     // ===== Actualizar categoría con validación =====
     public void updateCategoria(CategoriaVehiculoDto dto) {
-        // obtener la categoría actual desde DB
         CategoriaVehiculo existente = repository.findCategoryById(dto.getCodigo());
 
         if (existente == null) {
             throw new IllegalArgumentException("La categoría con código " + dto.getCodigo() + " no existe.");
         }
 
-        // verificar si hay otra con la misma descripción
         CategoriaVehiculo otra = repository.findCategoryByDescripcion(dto.getDescripcion());
         if (otra != null && !otra.getCodigo().equals(dto.getCodigo())) {
             throw new IllegalArgumentException(
@@ -47,7 +44,6 @@ public class CategoriaService {
 
     // ===== Otros métodos =====
     public void deleteCategoria(Integer codigo) {
-
         repository.deleteCategory(codigo);
     }
 
@@ -56,17 +52,14 @@ public class CategoriaService {
         categoriaVehiculoDto.setCodigo(model.getCodigo());
         categoriaVehiculoDto.setDescripcion(model.getDescripcion());
         categoriaVehiculoDto.setEstado(model.getEstado());
-
         return categoriaVehiculoDto;
     }
 
     public List<CategoriaVehiculo> listarCategorias() {
-
         return repository.getCategories();
     }
 
     public CategoriaVehiculo getByDescripcion(String desc) {
-
         return repository.findCategoryByDescripcion(desc);
     }
 
@@ -74,14 +67,16 @@ public class CategoriaService {
         return repository.getById(id);
     }
 
-    public CategoriaVehiculoDto findById(Integer id) {
-        return toDto(repository.findCategoryById(id));
+    public CategoriaVehiculo findById(Integer id) {
+        return repository.findCategoryById(id);
     }
 
     public void updateCategoria(CategoriaVehiculo categoria) {
         repository.update(categoria);
     }
 
-
+    public List<CategoriaVehiculo> getCategorias() {
+        return listarCategorias();
+    }
 
 }

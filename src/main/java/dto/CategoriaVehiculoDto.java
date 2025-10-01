@@ -1,6 +1,7 @@
 package dto;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class CategoriaVehiculoDto implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -48,5 +49,18 @@ public class CategoriaVehiculoDto implements Serializable {
     public void setHabilitada(String habilitada) {
 
         this.estado = habilitada;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        CategoriaVehiculoDto that = (CategoriaVehiculoDto) o;
+        return Objects.equals(codigo, that.codigo) && Objects.equals(descripcion, that.descripcion) && Objects.equals(estado, that.estado);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(codigo, descripcion, estado);
     }
 }

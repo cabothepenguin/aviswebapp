@@ -76,7 +76,7 @@ public class CategoriaRepository {
     public CategoriaVehiculo findCategoryByDescripcion(String descripcion) {
         try {
             return em.createQuery(
-                            "FROM administracion_Categorias c WHERE c.descripcion = :desc", CategoriaVehiculo.class)
+                            "FROM administracion_categorias c WHERE c.descripcion = :desc", CategoriaVehiculo.class)
                     .setParameter("desc", descripcion)
                     .getSingleResult();
 
@@ -85,6 +85,7 @@ public class CategoriaRepository {
         }
     }
     public CategoriaVehiculo findCategoryById(Integer codigo) {
+
         return em.find(CategoriaVehiculo.class, codigo);
     }
 

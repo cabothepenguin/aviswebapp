@@ -73,6 +73,15 @@ public class SucursalService {
         return repository.getById(id);
     }
 
+    public Optional<Sucursal> buscarPorCodigo(Integer codigo) {
+        if (codigo == null) return Optional.empty();
+        try {
+            return Optional.ofNullable(repository.findByCodigo(codigo));
+        } catch (Exception e) {
+            return Optional.empty();
+        }
+    }
 
 
 }
+
