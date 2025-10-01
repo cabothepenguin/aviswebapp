@@ -2,137 +2,72 @@ package model;
 
 import jakarta.persistence.*;
 
-@Entity(name = "administracion_Vehiculos")
+@Entity
+@Table(name = "administracion_vehiculos")
 public class Vehiculo {
 
     @Id
-    private Integer placa;
+    @Column(name = "placa", length = 20)
+    private String placa;  // Cambiar de Integer a String
 
-    @Column(name = "modelo")
+    @Column(name = "modelo", length = 100, nullable = false)
     private String modelo;
 
-    @Column(name = "marca")
+    @Column(name = "marca", length = 100, nullable = false)
     private String marca;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "categoria", referencedColumnName = "codigo", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "categoria", referencedColumnName = "codigo")
     private CategoriaVehiculo categoria;
 
-    @Column(name = "estado")
+
+    @Column(name = "estado", length = 20)
     private String estado;
 
-    @Column(name = "año")
-    private String anio;
+    @Column(name = "anio", nullable = false)
+    private Integer anio;
 
-    @Column(name = "precio")
-    private String precio;
+    @Column(name = "precio", nullable = false)
+    private Integer precio;
 
+    @Lob
     @Column(name = "imagen")
     private byte[] image;
 
-    @Column(name = "nombre_imagen")
+    @Column(name = "nombre_imagen", length = 100)
     private String imageName;
 
+    // Constructor por defecto
     public Vehiculo() {
     }
 
-    public Vehiculo(Integer placa, String modelo, String marca,
-                    CategoriaVehiculo categoria, String estado,
-                    String anio, String precio, byte[] image, String imageName) {
-        this.placa = placa;
-        this.modelo = modelo;
-        this.marca = marca;
-        this.categoria = categoria;
-        this.estado = estado;
-        this.anio = anio;
-        this.precio = precio;
-        this.image = image;
-        this.imageName = imageName;
-    }
+    // Getters y Setters
+    public String getPlaca() { return placa; }
+    public void setPlaca(String placa) { this.placa = placa; }
 
-    public Integer getPlaca() {
-        return placa;
-    }
+    public String getModelo() { return modelo; }
+    public void setModelo(String modelo) { this.modelo = modelo; }
 
-    public void setPlaca(Integer placa) {
+    public String getMarca() { return marca; }
+    public void setMarca(String marca) { this.marca = marca; }
 
-        this.placa = placa;
-    }
+    public CategoriaVehiculo getCategoria() { return categoria; }
+    public void setCategoria(CategoriaVehiculo categoria) { this.categoria = categoria; }
 
-    public String getModelo() {
+    public String getEstado() { return estado; }
+    public void setEstado(String estado) { this.estado = estado; }
 
-        return modelo;
-    }
+    public Integer getAnio() { return anio; }
+    public void setAnio(Integer anio) { this.anio = anio; }
 
-    public void setModelo(String modelo) {
-        this.modelo = modelo;
-    }
+    public Integer getPrecio() { return precio; }
+    public void setPrecio(Integer precio) { this.precio = precio; }
 
-    public String getMarca() {
+    public byte[] getImage() { return image; }
+    public void setImage(byte[] image) { this.image = image; }
 
-        return marca;
-    }
+    public String getImageName() { return imageName; }
+    public void setImageName(String imageName) { this.imageName = imageName; }
 
-    public void setMarca(String marca) {
 
-        this.marca = marca;
-    }
-
-    public CategoriaVehiculo getCategoria() {
-        return categoria;
-    }
-
-    public void setCategoria(CategoriaVehiculo categoria) {
-
-        this.categoria = categoria;
-    }
-
-    public String getEstado() {
-
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-
-        this.estado = estado;
-    }
-
-    public String getAnio() {
-
-        return anio;
-    }
-
-    public void setAnio(String anio) {
-        this.anio = anio;
-    }
-
-    public String getPrecio() {
-
-        return precio;
-    }
-
-    public void setPrecio(String precio) {
-
-        this.precio = precio;
-    }
-
-    public byte[] getImage() {
-
-        return image;
-    }
-
-    public void setImage(byte[] image) {
-
-        this.image = image;
-    }
-
-    public String getImageName() {
-
-        return imageName;
-    }
-
-    public void setImageName(String imageName) {
-
-        this.imageName = imageName;
-    }
 }

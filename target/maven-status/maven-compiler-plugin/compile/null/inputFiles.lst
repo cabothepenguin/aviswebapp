@@ -4,7 +4,8 @@ C:\Users\Admin\Desktop\6 semestre\programacion III\proyecto 1\aviswebapp\src\mai
 C:\Users\Admin\Desktop\6 semestre\programacion III\proyecto 1\aviswebapp\src\main\java\controller\UserController.java
 C:\Users\Admin\Desktop\6 semestre\programacion III\proyecto 1\aviswebapp\src\main\java\controller\UsuarioController.java
 C:\Users\Admin\Desktop\6 semestre\programacion III\proyecto 1\aviswebapp\src\main\java\controller\VehiculoController.java
-C:\Users\Admin\Desktop\6 semestre\programacion III\proyecto 1\aviswebapp\src\main\java\converter\CategoriaConverter.java
+C:\Users\Admin\Desktop\6 semestre\programacion III\proyecto 1\aviswebapp\src\main\java\converter\CategoriaVehiculoConverter.java
+C:\Users\Admin\Desktop\6 semestre\programacion III\proyecto 1\aviswebapp\src\main\java\converter\SucursalConverter.java
 C:\Users\Admin\Desktop\6 semestre\programacion III\proyecto 1\aviswebapp\src\main\java\converter\VehiculoConverter.java
 C:\Users\Admin\Desktop\6 semestre\programacion III\proyecto 1\aviswebapp\src\main\java\dto\CategoriaVehiculoDto.java
 C:\Users\Admin\Desktop\6 semestre\programacion III\proyecto 1\aviswebapp\src\main\java\dto\RentasDto.java

@@ -131,6 +131,7 @@ nav ul li:hover > ul{
 .table-header{
     background-color: #951616;
     color: white;
+    margin: 0;
 }
 
 .table-data{

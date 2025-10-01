@@ -126,6 +126,14 @@ public class CategoriaController implements Serializable {
         }
     }
 
+    public List<CategoriaVehiculo> getListaCategorias() {
+        if (categorias == null || categorias.isEmpty()) {
+            categorias = service.listarCategorias();
+        }
+        return categorias;
+    }
+
+
     /* ===== Helpers ===== */
     private void error(String msg) {
         FacesContext.getCurrentInstance()

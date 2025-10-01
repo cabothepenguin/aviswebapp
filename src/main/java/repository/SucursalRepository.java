@@ -94,4 +94,8 @@ public class SucursalRepository {
     public void update(Sucursal sucursal) {
         em.merge(sucursal);
     }
+
+    public Sucursal findByCodigo(Integer codigo) {
+        return em.find(Sucursal.class, codigo);
+    }
 }

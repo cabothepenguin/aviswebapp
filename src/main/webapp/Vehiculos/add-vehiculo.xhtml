@@ -6,145 +6,201 @@
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 <f:view>
-   <f:event type="preRenderView" listener="#{categoriaController.loadCategorias()}"></f:event>
    <h:head>
-      <title>Avis App - Principal</title>
+      <title>Avis App - Agregar Vehículo</title>
       <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
       <h:outputStylesheet library="css" name="style.css"/>
    </h:head>
+
    <h:body>
       <div class="container">
-         <div> <!--Header app-->
-            <div style="width: 100%;display: flex;align-items: flex-start"> <!--Encabezado-->
-               <div style="flex: 0 0 60%;">
-                  <h:graphicImage library="images" name="download.svg" style="width: 100px;display: block"/>
+         <!-- Header -->
+         <div>
+            <div style="width:100%;display:flex;align-items:flex-start">
+               <div style="flex:0 0 60%;">
+                  <h:graphicImage library="images" name="download.svg" style="width:100px;display:block"/>
                </div>
-               <div style="flex: 0 0 40%;">
-                  <h1 style="margin-right: 10px">Sistema de gestion Rentario</h1>
+               <div style="flex:0 0 40%;">
+                  <h1 style="margin-right:10px">Sistema de gestión Rentario</h1>
                </div>
             </div>
-            <div style="flex: 0 0 100%"><!--Menu-->
-               <h:form>
-                  <nav>
-                     <ul class="menu-bar">
-                        <li class="menu-item">
-                           <span>Usuario</span>
-                           <ul class="sub-menu">
-                              <li class="sub-menu-item">
-                                 <h:link value="Listar" outcome="/Usuario/list-usuario.xhtml?faces-redirect=true"/>
-                              </li>
-                              <li class="sub-menu-item">
-                                 <h:link value="Agregar" outcome="/Usuario/add-Usuario.xhtml?faces-redirect=true"/>
-                              </li>
-                              <li class="sub-menu-item">
-                                 <h:link value="Actualizar" outcome="/Usuario/update-usuario.xhtml?faces-redirect=true"/>
-                              </li>
-                           </ul>
-                        </li>
-                        <li class="menu-item">
-                           <span>Sucursales</span>
-                           <ul class="sub-menu">
-                              <li class="sub-menu-item">
-                                 <h:link value="Listar" outcome="/Sucursales/list-sucursal.xhtml?faces-redirect=true"/>
-                              </li>
-                              <li class="sub-menu-item">
-                                 <h:link value="Agregar" outcome="/Sucursales/add-sucursal.xhtml?faces-redirect=true"/>
-                              </li>
-                              <li class="sub-menu-item">
-                                 <h:link value="Actualizar" outcome="/Sucursales/update-sucursal.xhtml?faces-redirect=true"/>
-                              </li>
-                           </ul>
-                        </li>
-                        <li class="menu-item">
-                           <span>Vehiculos</span>
-                           <ul class="sub-menu">
-                              <li class="sub-menu-item">
-                                 <h:link value="Listar" outcome="/courses/list-course.xhtml?faces-redirect=true"/>
-                              </li>
-                              <li class="sub-menu-item">
-                                 <h:link value="Agregar" outcome="/Vehiculos/add-vehiculo.xhtml?faces-redirect=true"/>
-                              </li>
-                           </ul>
-                        </li>
-                        <li class="menu-item">
-                           <span>Rentas</span>
-                           <ul class="sub-menu">
-                              <li class="sub-menu-item">
-                                 <h:link value="Listar" outcome="/student/list-students.xhtml?faces-redirect=true"/>
-                              </li>
-                              <li class="sub-menu-item">
-                                 <h:link value="Agregar" outcome="/student/add-student.xhtml?faces-redirect=true"/>
-                              </li>
-                           </ul>
-                        </li>
-                        <li class="menu-item">
-                           <span>Categorias</span>
-                           <ul class="sub-menu">
-                              <li class="sub-menu-item">
-                                 <h:link value="listar" outcome="/Categorias/list-categorias.xhtml?faces-redirect=true"/>
-                              </li>
-                              <li class="sub-menu-item">
-                                 <h:link value="Agregar" outcome="/Categorias/add-categorias.xhtml?faces-redirect=true"/>
-                              </li>
-                              <li class="sub-menu-item">
-                                 <h:link value="Actualizar" outcome="/Categorias/update-categorias.xhtml?faces-redirect=true"/>
-                              </li>
-                           </ul>
-                        </li>
+
+            <!-- Menu -->
+            <nav style="flex:0 0 100%">
+               <ul class="menu-bar">
+                  <li class="menu-item">
+                     <h:link styleClass="btn btn-primary" outcome="/index.xhtml?faces-redirect=true" value="Home"/>
+                  </li>
+
+                  <li class="menu-item">
+                     <span>Usuario</span>
+                     <ul class="sub-menu">
+                        <li class="sub-menu-item"><h:link value="Listar" outcome="/Usuario/list-usuario.xhtml?faces-redirect=true"/></li>
+                        <li class="sub-menu-item"><h:link value="Agregar" outcome="/Usuario/add-Usuario.xhtml?faces-redirect=true"/></li>
+                        <li class="sub-menu-item"><h:link value="Actualizar" outcome="/Usuario/update-usuario.xhtml?faces-redirect=true"/></li>
                      </ul>
-                  </nav>
-               </h:form>
-            </div><!--Menu end-->
-         </div><!--Header app end-->
-         <div style="min-height: 60vh"> <!--Content app-->
-            <h3>Agregar Vehiculo</h3>
-            <h:messages id="msg" globalOnly="true"/>
-            <h:form enctype="multipart/form-data" styleClass="container">
-               <h:outputText value="Placa"/>
-               <h:inputText styleClass="form-control" value="#{vehiculoDto.placa}"/>
-               <h:outputText value="Modelo"/>
-               <h:inputText styleClass="form-control" value="#{vehiculoDto.modelo}"/>
-               <h:outputText value="Marca"/>
-               <h:inputText styleClass="form-control" value="#{vehiculoDto.marca}"/>
-               <h:outputText value="Categoria"/>
+                  </li>
 
-               <h:selectOneMenu id="category"
-                                styleClass="form-control"
-                                converter="categoriaConverter"
-                                value="#{vehiculoDto.categoria}">
-                  <f:selectItem itemLabel="Seleccionar una categoría" itemValue="#{null}" />
-                  <f:selectItems value="#{categoriaController.categorias}"
-                                 var="cat"
-                                 itemLabel="#{cat.descripcion}"
-                                 itemValue="#{cat}" />
-               </h:selectOneMenu>
+                  <li class="menu-item">
+                     <span>Sucursales</span>
+                     <ul class="sub-menu">
+                        <li class="sub-menu-item"><h:link value="Listar" outcome="/Sucursales/list-sucursal.xhtml?faces-redirect=true"/></li>
+                        <li class="sub-menu-item"><h:link value="Agregar" outcome="/Sucursales/add-sucursal.xhtml?faces-redirect=true"/></li>
+                        <li class="sub-menu-item"><h:link value="Actualizar" outcome="/Sucursales/update-sucursal.xhtml?faces-redirect=true"/></li>
+                     </ul>
+                  </li>
+
+                  <li class="menu-item">
+                     <span>Vehículos</span>
+                     <ul class="sub-menu">
+                        <li class="sub-menu-item"><h:link value="Listar" outcome="/Vehiculos/list-vehiculo.xhtml?faces-redirect=true"/></li>
+                        <li class="sub-menu-item"><h:link value="Agregar" outcome="/Vehiculos/add-vehiculo.xhtml?faces-redirect=true"/></li>
+                        <li class="sub-menu-item"><h:link value="Actualizar" outcome="/Vehiculos/update-vehiculo.xhtml?faces-redirect=true"/></li>
+                     </ul>
+                  </li>
+
+                  <li class="menu-item">
+                     <span>Rentas</span>
+                     <ul class="sub-menu">
+                        <li class="sub-menu-item"><h:link value="Listar" outcome="/Rentas/list-renta.xhtml?faces-redirect=true"/></li>
+                        <li class="sub-menu-item"><h:link value="Agregar" outcome="/Rentas/add-renta.xhtml?faces-redirect=true"/></li>
+                     </ul>
+                  </li>
+
+                  <li class="menu-item">
+                     <span>Categorías</span>
+                     <ul class="sub-menu">
+                        <li class="sub-menu-item"><h:link value="Listar" outcome="/Categorias/list-categorias.xhtml?faces-redirect=true"/></li>
+                        <li class="sub-menu-item"><h:link value="Agregar" outcome="/Categorias/add-categorias.xhtml?faces-redirect=true"/></li>
+                        <li class="sub-menu-item"><h:link value="Actualizar" outcome="/Categorias/update-categorias.xhtml?faces-redirect=true"/></li>
+                     </ul>
+                  </li>
+               </ul>
+            </nav>
+         </div>
+         <!-- /Header -->
+
+         <!-- Content -->
+         <div style="min-height:60vh">
+            <h3>Agregar Vehículo</h3>
+
+            <!-- Mensajes -->
+            <h:messages id="msg"
+                        globalOnly="false"
+                        styleClass="message-global"
+                        infoClass="message-info"
+                        errorClass="message-error"
+                        warnClass="message-warn"/>
+
+            <!-- Formulario -->
+            <h:form id="vehiculoForm" enctype="multipart/form-data" styleClass="form-container">
+
+               <!-- Placa -->
+               <div class="form-group">
+                  <h:outputLabel for="placa" value="Placa:" styleClass="form-label"/>
+                  <h:inputText id="placa" styleClass="form-control"
+                               value="#{vehiculoBean.newVehiculo.placa}"
+                               required="true" requiredMessage="La placa es obligatoria"/>
+                  <h:message for="placa" styleClass="error-message"/>
+               </div>
+
+               <!-- Modelo -->
+               <div class="form-group">
+                  <h:outputLabel for="modelo" value="Modelo:" styleClass="form-label"/>
+                  <h:inputText id="modelo" styleClass="form-control"
+                               value="#{vehiculoBean.newVehiculo.modelo}"
+                               required="true" requiredMessage="El modelo es obligatorio"/>
+                  <h:message for="modelo" styleClass="error-message"/>
+               </div>
+
+               <!-- Marca -->
+               <div class="form-group">
+                  <h:outputLabel for="marca" value="Marca:" styleClass="form-label"/>
+                  <h:inputText id="marca" styleClass="form-control"
+                               value="#{vehiculoBean.newVehiculo.marca}"
+                               required="true" requiredMessage="La marca es obligatoria"/>
+                  <h:message for="marca" styleClass="error-message"/>
+               </div>
+
+               <!-- Categoría -->
+               <div class="form-group">
+                  <h:outputLabel for="categoria" value="Categoría:" styleClass="form-label"/>
+                  <h:selectOneMenu id="categoria" styleClass="form-control"
+                                   value="#{vehiculoBean.newVehiculo.categoria}"
+                                   converter="categoriaVehiculoConverter"
+                                   required="true" requiredMessage="La categoría es obligatoria">
+                     <f:selectItems value="#{vehiculoBean.categorias}" var="cat"
+                                    itemLabel="#{cat.descripcion}"
+                                    itemValue="#{cat}" />
+                  </h:selectOneMenu>
 
 
 
+                  <h:message for="categoria" styleClass="error-message"/>
+               </div>
 
+               <!-- Estado -->
+               <div class="form-group">
+                  <h:outputLabel for="estado" value="Estado:" styleClass="form-label"/>
+                  <h:selectOneMenu id="estado" styleClass="form-control"
+                                   value="#{vehiculoBean.newVehiculo.estado}"
+                                   required="true" requiredMessage="El estado es obligatorio">
+                     <f:selectItem itemValue="disponible" itemLabel="Disponible"/>
+                     <f:selectItem itemValue="rentado" itemLabel="Rentado"/>
+                     <f:selectItem itemValue="mantenimiento" itemLabel="Mantenimiento"/>
+                  </h:selectOneMenu>
+                  <h:message for="estado" styleClass="error-message"/>
+               </div>
 
-               <h:selectOneMenu  id="Estado" value="#{vehiculoDto.estado}" styleClass="form-control">
-                 <f:selectItem itemValue="disponible" itemLabel="disponible"/>
-                 <f:selectItem itemValue="rentado" itemLabel="rentado"/>
-                 <f:selectItem itemValue="mantenimiento" itemLabel="mantenimiento"/>
-               </h:selectOneMenu>
-               <h:outputText value="Año"/>
-               <h:inputText styleClass="form-control" value="#{vehiculoDto.anio}"/>
-               <h:outputText value="Precio"/>
-               <h:inputText styleClass="form-control" value="#{vehiculoDto.precio}"/>
-               <h:outputText value="Fotografia"/>
-               <h:inputFile value="#{vehiculoBean.uploadedFile}">
-                  <f:ajax listener="#{vehiculoBean.upload()}"/>
-               </h:inputFile>
+               <!-- Año -->
+               <div class="form-group">
+                  <h:outputLabel for="anio" value="Año:" styleClass="form-label"/>
+                  <h:inputText id="anio" styleClass="form-control"
+                               value="#{vehiculoBean.newVehiculo.anio}"
+                               required="true" requiredMessage="El año es obligatorio">
+                     <f:validateLongRange minimum="1900" maximum="2030"/>
+                  </h:inputText>
+                  <h:message for="anio" styleClass="error-message"/>
+               </div>
 
-               <h:commandButton styleClass="btn btn-primary align-center" value="Guardar"
-                                action="#{vehiculoBean.add()}"    />
+               <!-- Precio -->
+               <div class="form-group">
+                  <h:outputLabel for="precio" value="Precio:" styleClass="form-label"/>
+                  <h:inputText id="precio" styleClass="form-control"
+                               value="#{vehiculoBean.newVehiculo.precio}"
+                               required="true" requiredMessage="El precio es obligatorio">
+                     <f:validateLongRange minimum="0"/>
+                  </h:inputText>
+                  <h:message for="precio" styleClass="error-message"/>
+               </div>
+
+               <!-- Imagen -->
+               <div class="form-group">
+                  <h:outputLabel for="foto" value="Fotografía:" styleClass="form-label"/>
+                  <h:inputFile id="foto" value="#{vehiculoBean.uploadedFile}" styleClass="form-control-file"/>
+                  <h:outputText id="fileNameDisplay"
+                                value="Archivo seleccionado: #{vehiculoBean.fileName}"
+                                styleClass="file-name-display"
+                                rendered="#{not empty vehiculoBean.fileName}"/>
+               </div>
+
+               <!-- Botones -->
+               <div class="form-actions">
+                  <h:commandButton styleClass="btn btn-primary"
+                                   value="Guardar"
+                                   action="#{vehiculoBean.addVehiculo}"/>
+                  <h:commandButton styleClass="btn btn-secondary"
+                                   type="reset" value="Limpiar"/>
+               </div>
             </h:form>
-         </div><!--Content app end-->
-         <div> <!--Footer app-->
+         </div>
+         <!-- /Content -->
+
+         <!-- Footer -->
+         <div>
             <hr/>
-            <p>Avis Costa Rica. Todos los derechos reservado&copy; 2025</p>
-         </div><!--Footer app end-->
+            <p>Avis Costa Rica. Todos los derechos reservados &copy; 2025</p>
+         </div>
       </div>
    </h:body>
 </f:view>

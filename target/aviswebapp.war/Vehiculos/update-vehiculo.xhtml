@@ -3,21 +3,22 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
+
 <f:view>
-    <f:event type="preRenderView" listener="#{categoriaController.loadCategorias()}"/>
     <h:head>
-        <title>AVIS App - Actualizar Categorías</title>
+        <title>AVIS App - Actualizar Vehículo</title>
         <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
         <h:outputStylesheet library="css" name="style.css"/>
     </h:head>
+
     <h:body>
         <div class="container">
             <!-- Header -->
             <div style="width: 100%;display: flex;align-items: flex-start">
                 <div style="flex: 0 0 60%;">
-                    <h:graphicImage library="images" name="download.svg" style="width: 100px;display: block"/>
+                    <h:graphicImage library="images" name="download.svg"
+                                    style="width: 100px;display: block"/>
                 </div>
                 <div style="flex: 0 0 40%;">
                     <h1 style="margin-right: 10px">Sistema de gestión Rentario</h1>
@@ -69,6 +70,7 @@
                                     <li class="sub-menu-item">
                                         <h:link value="Agregar" outcome="/Vehiculos/add-vehiculo.xhtml?faces-redirect=true"/>
                                     </li>
+
                                 </ul>
                             </li>
                             <li class="menu-item">
@@ -104,46 +106,73 @@
 
             <!-- Content -->
             <div style="min-height: 60vh">
-                <h3>Actualizar Categorías</h3>
+                <h3>Actualizar Vehículo</h3>
                 <h:messages id="msg" globalOnly="true"/>
 
-                <!-- Paso 1: Buscar por código o id -->
+                <!-- Paso 1: Buscar por placa -->
                 <h:form>
                     <h:panelGrid columns="2" columnClasses="label,value" cellpadding="5">
-                        <h:outputLabel value="Código:" for="codigoBuscar"/>
-                        <h:inputText styleClass="form-control" id="codigoBuscar" value="#{categoriaController.codigoBuscar}" />
+                        <h:outputLabel value="Placa:" for="placaBuscar"/>
+                        <h:inputText styleClass="form-control" id="placaBuscar"
+                                     value="#{vehiculoBean.selectedVehiculo.placa}"/>
 
                         <h:commandButton value="Buscar"
-                                         action="#{categoriaController.loadCategoriaByCodigo}"
+                                         action="#{vehiculoBean.loadVehiculoByPlaca(vehiculoBean.selectedVehiculo.placa)}"
                                          styleClass="btn btn-info"/>
                         <h:link value="Cancelar"
-                                outcome="/Categorias/list-categorias.xhtml?faces-redirect=true"
+                                outcome="/Vehiculos/list-vehiculo.xhtml?faces-redirect=true"
                                 styleClass="btn btn-warning"/>
                     </h:panelGrid>
                 </h:form>
 
-                <!-- Paso 2: Formulario de edición (se muestra solo si hay categoría cargada) -->
-                <h:panelGroup rendered="#{not empty categoriaController.selectedCategoria.codigo}">
-                    <h:form styleClass="container" prependId="false">
+                <!-- Paso 2: Formulario de edición -->
+                <h:panelGroup rendered="#{not empty vehiculoBean.selectedVehiculo.placa}">
+                    <h:form styleClass="container" prependId="false" enctype="multipart/form-data">
                         <h:panelGrid columns="2" columnClasses="label,value" cellpadding="5">
 
+                            <h:outputLabel value="Placa:"/>
+                            <h:inputText  styleClass="form-control" value="#{vehiculoBean.selectedVehiculo.placa}" readonly="true"/>
 
+                            <h:outputLabel value="Modelo:"/>
+                            <h:inputText styleClass="form-control" value="#{vehiculoBean.selectedVehiculo.modelo}" required="true"/>
 
-                            <h:outputLabel value="Descripción:" />
-                            <h:inputText styleClass="form-control" value="#{categoriaController.selectedCategoria.descripcion}"/>
+                            <h:outputLabel value="Marca:"/>
+                            <h:inputText styleClass="form-control" value="#{vehiculoBean.selectedVehiculo.marca}" required="true"/>
 
-                            <h:outputLabel value="Estado:" />
-                            <h:selectOneMenu value="#{categoriaController.selectedCategoria.estado}" styleClass="form-control">
-                                <f:selectItem itemValue="activo" itemLabel="Activo"/>
-                                <f:selectItem itemValue="inactivo" itemLabel="Inactivo"/>
+                            <h:outputLabel value="Categoría:"/>
+                            <h:selectOneMenu value="#{vehiculoBean.selectedVehiculo.categoria}"
+                                             converter="categoriaVehiculoConverter" styleClass="form-control" required="true">
+                                <f:selectItems value="#{vehiculoBean.categorias}" var="cat"
+                                               itemLabel="#{cat.descripcion}" itemValue="#{cat}"/>
                             </h:selectOneMenu>
+
+                            <h:outputLabel value="Estado:"/>
+                            <h:selectOneMenu value="#{vehiculoBean.selectedVehiculo.estado}" styleClass="form-control">
+                                <f:selectItem itemValue="disponible" itemLabel="Disponible"/>
+                                <f:selectItem itemValue="rentado" itemLabel="Rentado"/>
+                                <f:selectItem itemValue="mantenimiento" itemLabel="Mantenimiento"/>
+                            </h:selectOneMenu>
+
+                            <h:outputLabel value="Año:"/>
+                            <h:inputText styleClass="form-control" value="#{vehiculoBean.selectedVehiculo.anio}"/>
+
+                            <h:outputLabel value="Precio:"/>
+                            <h:inputText styleClass="form-control" value="#{vehiculoBean.selectedVehiculo.precio}"/>
+
+                            <h:outputLabel value="Fotografía:"/>
+                            <h:panelGroup>
+                                <h:inputFile value="#{vehiculoBean.uploadedFile}"/>
+                                <h:graphicImage value="/resources/uploads/#{vehiculoBean.selectedVehiculo.imageName}"
+                                                width="100" height="70"
+                                                rendered="#{not empty vehiculoBean.selectedVehiculo.imageName}"/>
+                            </h:panelGroup>
                         </h:panelGrid>
 
                         <h:commandButton value="Guardar"
-                                         action="#{categoriaController.update()}"
+                                         action="#{vehiculoBean.update()}"
                                          styleClass="btn btn-primary"/>
                         <h:link value="Cancelar"
-                                outcome="/Categorias/list-categorias.xhtml?faces-redirect=true"
+                                outcome="/Vehiculos/list-vehiculo.xhtml?faces-redirect=true"
                                 styleClass="btn btn-warning"/>
                     </h:form>
                 </h:panelGroup>
