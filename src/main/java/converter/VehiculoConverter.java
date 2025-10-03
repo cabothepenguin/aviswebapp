@@ -17,15 +17,18 @@ public class VehiculoConverter implements Converter<VehiculoDto> {
     private VehiculoService service;
 
     @Override
-    public VehiculoDto getAsObject(FacesContext context, UIComponent uiComponent, String s) {
-        if(s != null && !s.isEmpty()) {
-            return service.findVehicleByPlaca(s);
+    public VehiculoDto getAsObject(FacesContext context, UIComponent uiComponent, String value) {
+        if (value != null && !value.isEmpty()) {
+            return service.findVehicleByPlaca(value);
         }
         return null;
     }
 
     @Override
     public String getAsString(FacesContext context, UIComponent component, VehiculoDto vehiculoDto) {
-        return vehiculoDto.getPlaca() == null ? "" : vehiculoDto.getPlaca();
+        if (vehiculoDto != null && vehiculoDto.getPlaca() != null) {
+            return vehiculoDto.getPlaca();
+        }
+        return "";
     }
 }

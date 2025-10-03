@@ -4,6 +4,7 @@
     <option name="state">
       <map>
         <entry key="file://$PROJECT_DIR$/src/main/webapp/Categorias/update-categorias.xhtml" value="file://$PROJECT_DIR$/src/main/webapp/Categorias" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/Rentas/add-rentas.xhtml" value="file://$PROJECT_DIR$/src/main/webapp/Rentas" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/Sucursales/update-sucursal.xhtml" value="file://$PROJECT_DIR$/src/main/webapp/Sucursales" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/Vehiculos/add-vehiculo.xhtml" value="file://$PROJECT_DIR$/src/main/webapp/Vehiculos" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/home.xhtml" value="file://$PROJECT_DIR$/src/main/webapp" />

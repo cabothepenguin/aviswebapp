@@ -1,6 +1,7 @@
 package controller;
 
 import dto.RentasDto;
+import dto.VehiculoDto;
 import jakarta.annotation.PostConstruct;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
@@ -8,7 +9,11 @@ import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import model.Renta;
+import model.Sucursal;
+import model.Vehiculo;
 import service.RentaService;
+import service.SucursalService;
+import service.VehiculoService;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -16,35 +21,38 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
-@Named
+@Named("rentasBean")
 @ViewScoped
 public class RentasController implements Serializable {
 
     private static final long serialVersionUID = 1L;
     private static final Logger LOG = Logger.getLogger(RentasController.class.getName());
 
-    @Inject
-    private RentaService service;
+    @Inject private RentaService rentaService;
+    @Inject private VehiculoService vehiculoService;
+    @Inject private SucursalService sucursalService;
 
-    // Form de creación
     private RentasDto newRenta = new RentasDto();
-    // Form de edición (p.ej. bind con diálogo o fila seleccionada)
     private RentasDto selectedRenta = new RentasDto();
 
-    // Tabla: el service expone entidades (Renta)
     private List<Renta> rentas = new ArrayList<>();
+    private List<VehiculoDto> vehiculos = new ArrayList<>();
+    private List<Sucursal> sucursales = new ArrayList<>();
 
     @PostConstruct
     public void init() {
         loadRentas();
+        vehiculos = vehiculoService.listar();      // ya tienes este método
+        sucursales = sucursalService.listar();     // debe devolver List<Sucursal>
+        newRenta.setEstado("activa");
     }
 
-    /* ================== CREATE ================== */
     public void add() {
         try {
-            service.crear(newRenta);
+            rentaService.crear(newRenta);
             success("Renta creada correctamente.");
-            newRenta = new RentasDto(); // limpiar form
+            newRenta = new RentasDto();
+            newRenta.setEstado("activa");
             loadRentas();
         } catch (IllegalArgumentException e) {
             error(e.getMessage());
@@ -54,10 +62,9 @@ public class RentasController implements Serializable {
         }
     }
 
-    /* ================== READ ================== */
     public void loadRentas() {
         try {
-            rentas = service.listar();
+            rentas = rentaService.listar();
         } catch (Exception e) {
             LOG.severe(e.getMessage());
             rentas = new ArrayList<>();
@@ -66,13 +73,12 @@ public class RentasController implements Serializable {
     }
 
     public Optional<Renta> findByNumero(int numeroRenta) {
-        return service.buscarPorNumero(numeroRenta);
+        return rentaService.buscarPorNumero(numeroRenta);
     }
 
-    /* ================== UPDATE ================== */
     public void update() {
         try {
-            service.actualizar(selectedRenta);
+            rentaService.actualizar(selectedRenta);
             success("Renta actualizada correctamente.");
             loadRentas();
         } catch (IllegalArgumentException e) {
@@ -83,10 +89,9 @@ public class RentasController implements Serializable {
         }
     }
 
-    /* ================== DELETE ================== */
     public void delete(int numeroRenta) {
         try {
-            service.eliminar(numeroRenta);
+            rentaService.eliminar(numeroRenta);
             success("Renta eliminada correctamente.");
             loadRentas();
         } catch (IllegalArgumentException e) {
@@ -97,7 +102,6 @@ public class RentasController implements Serializable {
         }
     }
 
-    /* ================== Helpers ================== */
     private void error(String msg) {
         FacesContext.getCurrentInstance()
                 .addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, null));
@@ -108,7 +112,7 @@ public class RentasController implements Serializable {
                 .addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, msg, null));
     }
 
-    /* ================== Getters / Setters ================== */
+    // Getters/Setters
     public RentasDto getNewRenta() { return newRenta; }
     public void setNewRenta(RentasDto newRenta) { this.newRenta = newRenta; }
 
@@ -116,4 +120,6 @@ public class RentasController implements Serializable {
     public void setSelectedRenta(RentasDto selectedRenta) { this.selectedRenta = selectedRenta; }
 
     public List<Renta> getRentas() { return rentas; }
+    public List<VehiculoDto> getVehiculos() { return vehiculos; }
+    public List<Sucursal> getSucursales() { return sucursales; }
 }

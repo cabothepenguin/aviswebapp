@@ -6,7 +6,6 @@ import jakarta.inject.Inject;
 import model.Renta;
 import repository.RentaRepository;
 
-
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -18,31 +17,26 @@ public class RentaService {
     private static final Set<String> ESTADOS_VALIDOS =
             Set.of("activa", "finalizada", "cancelada");
 
-    //@Inject
-    public RentaRepository repository;
+    @Inject
+    private RentaRepository repository;
 
-    /* ================== CREAR ================== */
     public void crear(RentasDto dto) {
         validar(dto, false);
         repository.addRenta(dto);
     }
 
-    /* ================== ACTUALIZAR ================== */
     public void actualizar(RentasDto dto) {
         if (dto.getNumeroRenta() == null) {
             throw new IllegalArgumentException("numeroRenta es obligatorio para actualizar.");
         }
         validar(dto, true);
 
-
         if (!repository.existsBynumeroRenta(dto.getNumeroRenta())) {
             throw new IllegalArgumentException("No existe la renta #" + dto.getNumeroRenta());
         }
-
         repository.updateRenta(dto);
     }
 
-    /* ================== ELIMINAR ================== */
     public void eliminar(int numeroRenta) {
         if (!repository.existsBynumeroRenta(numeroRenta)) {
             throw new IllegalArgumentException("No existe la renta #" + numeroRenta);
@@ -50,10 +44,7 @@ public class RentaService {
         repository.deleteRenta(numeroRenta);
     }
 
-    /* ================== CONSULTAS ================== */
-    public List<Renta> listar() {
-        return repository.getRenta();
-    }
+    public List<Renta> listar() { return repository.getRenta(); }
 
     public Optional<Renta> buscarPorNumero(int numeroRenta) {
         try {
@@ -63,27 +54,21 @@ public class RentaService {
         }
     }
 
-    public boolean existe(int numeroRenta) {
-        return repository.existsBynumeroRenta(numeroRenta);
-    }
-
-    /* ================== VALIDACIONES ================== */
     private void validar(RentasDto dto, boolean esActualizacion) {
         if (dto == null) throw new IllegalArgumentException("La renta es requerida.");
 
         if (dto.getClienteNombre() == null || dto.getClienteNombre().isBlank())
             throw new IllegalArgumentException("clienteNombre es obligatorio.");
 
-       /* if (dto.getVehiculo() == null || dto.getVehiculo().getPlaca() == null
-                || dto.getVehiculo().getPlaca().isBlank())
-            throw new IllegalArgumentException("vehiculoAsignado (placa) es obligatorio.");*/
+        if (dto.getVehiculoPlaca() == null || dto.getVehiculoPlaca().isBlank())
+            throw new IllegalArgumentException("vehiculo (placa) es obligatorio.");
 
-        if (dto.getSucursal() == null || dto.getSucursal().getCodigo() == null)
+        if (dto.getSucursalCodigo() == null)
             throw new IllegalArgumentException("sucursal es obligatoria.");
 
         validarFechas(dto.getFechaInicio(), dto.getFechaFin());
 
-        if (dto.getPrecioTotal() < 0)
+        if (dto.getPrecioTotal() == null || dto.getPrecioTotal() < 0)
             throw new IllegalArgumentException("precioTotal no puede ser negativo.");
 
         if (dto.getEstado() == null || dto.getEstado().isBlank()
