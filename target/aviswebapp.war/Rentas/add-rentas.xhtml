@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<f:view>
+   <h:head>
+      <title>Avis App - Agregar Renta</title>
+      <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+      <h:outputStylesheet library="css" name="style.css"/>
+   </h:head>
+
+   <h:body>
+      <div class="container">
+
+         <!-- Header -->
+         <div style="width:100%;display:flex;align-items:flex-start">
+            <div style="flex:0 0 60%;">
+               <h:graphicImage library="images" name="download.svg" style="width:100px;display:block"/>
+            </div>
+            <div style="flex:0 0 40%;">
+               <h1 style="margin-right:10px">Sistema de gestión Rentario</h1>
+            </div>
+         </div>
+
+         <!-- Menu -->
+         <h:form>
+            <nav>
+               <ul class="menu-bar">
+                  <li class="menu-item">
+                     <h:commandButton styleClass="btn btn-primary" value="Home" action="irAHome" />
+                  </li>
+                  <li class="menu-item">
+                     <span>Usuario</span>
+                     <ul class="sub-menu">
+                        <li class="sub-menu-item">
+                           <h:link value="Listar" outcome="/Usuario/list-usuario.xhtml?faces-redirect=true"/>
+                        </li>
+                        <li class="sub-menu-item">
+                           <h:link value="Agregar" outcome="/Usuario/add-usuario.xhtml?faces-redirect=true"/>
+                        </li>
+                        <li class="sub-menu-item">
+                           <h:link value="Actualizar" outcome="/Usuario/update-usuario.xhtml?faces-redirect=true"/>
+                        </li>
+                     </ul>
+                  </li>
+                  <li class="menu-item">
+                     <span>Sucursales</span>
+                     <ul class="sub-menu">
+                        <li class="sub-menu-item">
+                           <h:link value="Listar" outcome="/Sucursales/list-sucursal.xhtml?faces-redirect=true"/>
+                        </li>
+                        <li class="sub-menu-item">
+                           <h:link value="Agregar" outcome="/Sucursales/add-sucursal.xhtml?faces-redirect=true"/>
+                        </li>
+                        <li class="sub-menu-item">
+                           <h:link value="Actualizar" outcome="/Sucursales/update-sucursal.xhtml?faces-redirect=true"/>
+                        </li>
+                     </ul>
+                  </li>
+                  <li class="menu-item">
+                     <span>Vehiculos</span>
+                     <ul class="sub-menu">
+                        <li class="sub-menu-item">
+                           <h:link value="Listar" outcome="/Vehiculos/list-vehiculo.xhtml?faces-redirect=true"/>
+                        </li>
+                        <li class="sub-menu-item">
+                           <h:link value="Agregar" outcome="/Vehiculos/add-vehiculo.xhtml?faces-redirect=true"/>
+                        </li>
+                        <li class="sub-menu-item">
+                           <h:link value="Actualizar" outcome="/Vehiculos/update-vehiculo.xhtml?faces-redirect=true"/>
+                        </li>
+                     </ul>
+                  </li>
+                  <li class="menu-item">
+                     <span>Rentas</span>
+                     <ul class="sub-menu">
+                        <li class="sub-menu-item">
+                           <h:link value="Listar" outcome="/Rentas/list-rentas.xhtml?faces-redirect=true"/>
+                        </li>
+                        <li class="sub-menu-item">
+                           <h:link value="Agregar" outcome="/Rentas/add-rentas.xhtml?faces-redirect=true"/>
+                        </li>
+                        <li class="sub-menu-item">
+                           <h:link value="Actualizar" outcome="/Rentas/update-rentas.xhtml?faces-redirect=true"/>
+                        </li>
+                     </ul>
+                  </li>
+                  <li class="menu-item">
+                     <span>Categorias</span>
+                     <ul class="sub-menu">
+                        <li class="sub-menu-item">
+                           <h:link value="Listar" outcome="/Categorias/list-categorias.xhtml?faces-redirect=true"/>
+                        </li>
+                        <li class="sub-menu-item">
+                           <h:link value="Agregar" outcome="/Categorias/add-categorias.xhtml?faces-redirect=true"/>
+                        </li>
+                        <li class="sub-menu-item">
+                           <h:link value="Actualizar" outcome="/Categorias/update-categorias.xhtml?faces-redirect=true"/>
+                        </li>
+                     </ul>
+                  </li>
+               </ul>
+            </nav>
+         </h:form>
+
+         <!-- Content -->
+         <div style="min-height:60vh">
+            <h3>Agregar Renta</h3>
+
+            <!-- Mensajes -->
+            <h:messages id="msg"
+                        globalOnly="false"
+                        styleClass="message-global"
+                        infoClass="message-info"
+                        errorClass="message-error"
+                        warnClass="message-warn"/>
+
+            <!-- Formulario -->
+            <h:form id="rentaForm">
+               <h:panelGrid columns="2" cellpadding="5">
+
+                  <!-- Cliente -->
+                  <h:outputLabel value="Cliente:" for="cliente" />
+                  <h:inputText id="cliente"
+                               value="#{rentaController.newRenta.clienteNombre}"
+                               required="true"
+                               requiredMessage="Debe ingresar un cliente" />
+
+                  <!-- Vehículo -->
+                  <h:outputLabel value="Vehículo:" for="vehiculo" />
+                  <h:selectOneMenu id="vehiculo"
+                                   value="#{rentaController.newRenta.vehiculo}"
+                                   converter="vehiculoConverter"
+                                   required="true"
+                                   requiredMessage="Debe seleccionar un vehículo">
+                     <f:selectItem itemLabel="Seleccione un vehículo" itemValue="#{null}" noSelectionOption="true"/>
+                     <f:selectItems value="#{vehiculoController.vehiculos}"
+                                    var="v"
+                                    itemValue="#{v}"
+                                    itemLabel="#{v.placa} - #{v.marca} #{v.modelo}" />
+                  </h:selectOneMenu>
+
+                  <!-- Sucursal -->
+                  <h:outputLabel value="Sucursal:" for="sucursal" />
+                  <h:selectOneMenu id="sucursal"
+                                   value="#{rentaController.newRenta.sucursal}"
+                                   converter="sucursalConverter"
+                                   required="true"
+                                   requiredMessage="Debe seleccionar una sucursal">
+                     <f:selectItem itemLabel="Seleccione una sucursal" itemValue="#{null}" noSelectionOption="true"/>
+                     <f:selectItems value="#{sucursalController.sucursales}"
+                                    var="s"
+                                    itemValue="#{s}"
+                                    itemLabel="#{s.nombre} (#{s.codigo})" />
+                  </h:selectOneMenu>
+
+                  <!-- Fecha Inicio -->
+                  <h:outputLabel value="Fecha Inicio:" for="fechaInicio" />
+                  <p:datePicker id="fechaInicio"
+                                value="#{rentaController.newRenta.fechaInicio}"
+                                pattern="yyyy-MM-dd"
+                                required="true"
+                                requiredMessage="Debe seleccionar la fecha de inicio" />
+
+                  <!-- Fecha Fin -->
+                  <h:outputLabel value="Fecha Fin:" for="fechaFin" />
+                  <p:datePicker id="fechaFin"
+                                value="#{rentaController.newRenta.fechaFin}"
+                                pattern="yyyy-MM-dd"
+                                required="true"
+                                requiredMessage="Debe seleccionar la fecha de fin" />
+
+                  <!-- Precio Total -->
+                  <h:outputLabel value="Precio Total:" for="precioTotal" />
+                  <h:inputText id="precioTotal"
+                               value="#{rentaController.newRenta.precioTotal}"
+                               required="true"
+                               requiredMessage="Debe ingresar un precio" />
+
+                  <!-- Estado -->
+                  <h:outputLabel value="Estado:" for="estado" />
+                  <h:selectOneMenu id="estado"
+                                   value="#{rentaController.newRenta.estado}"
+                                   required="true"
+                                   requiredMessage="Debe seleccionar un estado">
+                     <f:selectItem itemLabel="Seleccionar estado" itemValue="#{null}" noSelectionOption="true"/>
+                     <f:selectItem itemLabel="Activa" itemValue="Activa"/>
+                     <f:selectItem itemLabel="Finalizada" itemValue="Finalizada"/>
+                  </h:selectOneMenu>
+
+               </h:panelGrid>
+
+               <!-- Botones -->
+               <h:commandButton value="Guardar"
+                                action="#{rentaController.add}"
+                                update="@form" />
+               <h:commandButton value="Limpiar"
+                                actionListener="#{rentaController.reset}"
+                                update="@form"
+                                type="reset" />
+            </h:form>
+         </div>
+
+         <!-- Footer -->
+         <div>
+            <hr/>
+            <p>Avis Costa Rica. Todos los derechos reservados &copy; 2025</p>
+         </div>
+      </div>
+   </h:body>
+</f:view>
+</html>

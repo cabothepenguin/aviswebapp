@@ -102,6 +102,8 @@ public class VehiculoService {
                 .toList();
     }
 
+
+
     public Optional<VehiculoDto> buscarPorPlaca(String placa) {
         if (placa == null) return Optional.empty();
         return Optional.ofNullable(repository.findVehiculoByPlaca(placa))
