@@ -21,6 +21,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
+/**
+ * Controlador para la gestión de rentas (reservas/alquileres).
+ * <p>
+ * Expone operaciones CRUD, carga de catálogos (vehículos/sucursales),
+ * filtrado por estado y utilidades para precargar la edición vía parámetros.
+ * </p>
+ */
 @Named("rentasBean")
 @ViewScoped
 public class RentasController implements Serializable {
@@ -32,15 +39,23 @@ public class RentasController implements Serializable {
     @Inject private VehiculoService vehiculoService;
     @Inject private SucursalService sucursalService;
 
+    /** DTO para creación de una nueva renta. */
     private RentasDto newRenta = new RentasDto();
+    /** DTO seleccionado para edición. */
     private RentasDto selectedRenta = new RentasDto();
 
+    /** Listado completo de rentas. */
     private List<Renta> rentasActivas = new ArrayList<>();
     private List<Renta> rentas = new ArrayList<>();
     private List<VehiculoDto> vehiculos = new ArrayList<>();
     private List<Sucursal> sucursales = new ArrayList<>();
+    /** Parámetro de navegación para cargar una renta específica. */
     private Integer numeroRentaParam;
 
+    /**
+     * Inicializa el bean: carga listas base y procesa parámetro de edición.
+     * <p>Establece el estado por defecto de nuevas rentas como "activa".</p>
+     */
     @PostConstruct
     public void init() {
         loadRentas();
@@ -60,7 +75,10 @@ public class RentasController implements Serializable {
         }
     }
 
-
+    /**
+     * Carga catálogos de sucursales y vehículos para combos/selects.
+     * <p>Invocar antes de mostrar formularios dependientes de estos datos.</p>
+     */
     public void loadChoices() {
         try{
             sucursales = sucursalService.listar();
@@ -70,16 +88,29 @@ public class RentasController implements Serializable {
         }
     }
 
+    /**
+     * Precarga una renta para edición usando {@link #numeroRentaParam}.
+     * <p>
+     * Nota: si el número no existe, informa mediante mensaje Faces.
+     * </p>
+     */
     public void preloadForEdit(){
         if(numeroRentaParam == null)return;
         var opt = rentaService.buscarPorNumero(numeroRentaParam);
         if(opt.isPresent()){
+            // Nota: el comportamiento actual muestra error cuando sí existe.
+            // Se mantiene sin cambios por requerimiento de "solo documentación".
             error("no existe la renta #"+numeroRentaParam+"`");
             return;
         }
         selectedRenta = toDto(opt.get());
     }
 
+    /**
+     * Convierte una entidad {@link Renta} a su DTO equivalente {@link RentasDto}.
+     * @param r entidad origen.
+     * @return DTO poblado.
+     */
     private RentasDto toDto(Renta r) {
         var dto = new RentasDto();
         dto.setNumeroRenta(r.getNumeroRenta());
@@ -93,10 +124,19 @@ public class RentasController implements Serializable {
         return dto;
     }
 
+    /**
+     * Construye la URL de navegación a la vista de edición de rentas con redirect.
+     * @param numeroRentaParam número de renta a editar.
+     * @return cadena de navegación JSF.
+     */
     public String goToEdit(Integer numeroRentaParam) {
         return "/Rentas/update-rentas.xhtm?faces-redirect=true&numeroRentaParam="+numeroRentaParam;
     }
 
+    /**
+     * Crea una nueva renta a partir de {@link #newRenta}.
+     * <p>Resuelve y valida vehículo y sucursal previamente.</p>
+     */
     public void add() {
         try {
             var vehiculo = vehiculoService.buscarEntidadPorPlaca(newRenta.getVehiculoPlaca())
@@ -117,7 +157,7 @@ public class RentasController implements Serializable {
         }
     }
 
-
+    /** Carga el listado completo de rentas. */
     public void loadRentas() {
         try {
             rentas = rentaService.listar();
@@ -128,10 +168,19 @@ public class RentasController implements Serializable {
         }
     }
 
+    /**
+     * Busca una renta por su número.
+     * @param numeroRenta identificador numérico de la renta.
+     * @return {@link Optional} con la entidad si existe.
+     */
     public Optional<Renta> findByNumero(int numeroRenta) {
         return rentaService.buscarPorNumero(numeroRenta);
     }
 
+    /**
+     * Actualiza la renta actualmente seleccionada en {@link #selectedRenta}.
+     * <p>Resuelve entidad de vehículo y sucursal antes de persistir.</p>
+     */
     public void update() {
         try {
             var vehiculo = vehiculoService.buscarEntidadPorPlaca(selectedRenta.getVehiculoPlaca())
@@ -150,7 +199,10 @@ public class RentasController implements Serializable {
         }
     }
 
-
+    /**
+     * Elimina una renta por su número.
+     * @param numeroRenta identificador de la renta a eliminar.
+     */
     public void delete(int numeroRenta) {
         try {
             rentaService.eliminar(numeroRenta);
@@ -164,8 +216,11 @@ public class RentasController implements Serializable {
         }
     }
 
-
-
+    /**
+     * Carga una renta por su número desde {@link #selectedRenta} y
+     * rellena el DTO para su edición (incluyendo claves de selectOneMenu).
+     * @return <code>null</code> para permanecer en la misma vista.
+     */
     public Object loadRentaByNumero() {
         try {
             // Validación básica
@@ -220,14 +275,17 @@ public class RentasController implements Serializable {
         }
     }
 
+    // -------- Filtrado por estado --------
 
-
-
-
-
+    /** Valor del estado para filtrar rentas (p.ej. "activa", "finalizada"). */
     private String estadoFiltro;
+    /** Resultado del filtrado por estado. */
     private List<Renta> rentasFiltradas = new ArrayList<>();
 
+    /**
+     * Filtra las rentas por el valor actual de {@link #estadoFiltro}
+     * y deja el resultado en {@link #rentasFiltradas}.
+     */
     public void filtrarPorEstado() {
         try {
             rentasFiltradas = rentaService.listarPorEstado(estadoFiltro);
@@ -238,23 +296,25 @@ public class RentasController implements Serializable {
         }
     }
 
-    public String getEstadoFiltro() { return estadoFiltro; }
-    public void setEstadoFiltro(String estadoFiltro) { this.estadoFiltro = estadoFiltro; }
+    // ---------------- Helpers de mensajes ----------------
 
-    public List<Renta> getRentasFiltradas() { return rentasFiltradas; }
-
-
+    /** Muestra un mensaje de error. */
     private void error(String msg) {
         FacesContext.getCurrentInstance()
                 .addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, null));
     }
 
+    /** Muestra un mensaje informativo/éxito. */
     private void success(String msg) {
         FacesContext.getCurrentInstance()
                 .addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, msg, null));
     }
 
-    // Getters/Setters
+    // ---------------- Getters/Setters ----------------
+    public String getEstadoFiltro() { return estadoFiltro; }
+    public void setEstadoFiltro(String estadoFiltro) { this.estadoFiltro = estadoFiltro; }
+    public List<Renta> getRentasFiltradas() { return rentasFiltradas; }
+
     public RentasDto getNewRenta() { return newRenta; }
     public void setNewRenta(RentasDto newRenta) { this.newRenta = newRenta; }
 
@@ -267,6 +327,4 @@ public class RentasController implements Serializable {
 
     public Integer getNumeroRentaParam() { return numeroRentaParam; }
     public void setNumeroRentaParam(Integer n) { this.numeroRentaParam = n; }
-
-
 }

@@ -11,31 +11,45 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+/**
+ * Servicio de negocio para vehículos.
+ * <p>Valida obligatorios, rangos y estados permitidos; provee mapping DTO.</p>
+ */
 @ApplicationScoped
 public class VehiculoService {
 
+    /** Estados válidos admitidos por el sistema. */
     private static final Set<String> ESTADOS_VALIDOS =
             Set.of("disponible", "rentado", "mantenimiento");
 
     @Inject
     private VehiculoRepository repository;
 
-    /* ===== Consultas por categoría ===== */
+    // -------- Consultas por categoría --------
+
+    /** Lista vehículos por código de categoría. */
     public List<Vehiculo> listarPorCategoria(Integer codigoCategoria) {
         if (codigoCategoria == null) return List.of();
         return repository.findByCategoriaCodigo(codigoCategoria);
     }
 
+    /** Lista vehículos por descripción de categoría. */
     public List<Vehiculo> listarPorCategoriaDesc(String descripcion) {
         return repository.findByCategoriaDescripcion(descripcion);
     }
 
-    /* ===== CRUD ===== */
+    // -------- CRUD --------
+
+    /** Crea un vehículo delegando al repositorio. */
     public void addVehiculo(VehiculoDto dto) {
         try { repository.addVehiculo(dto); }
         catch (Exception e) { throw new RuntimeException("No se puede agregar el vehículo", e); }
     }
 
+    /**
+     * Actualiza un vehículo validando existencia por placa y campos obligatorios.
+     * @throws IllegalArgumentException si la placa no existe o los datos son inválidos.
+     */
     public void actualizar(VehiculoDto dto) {
         if (dto.getPlaca() == null) throw new IllegalArgumentException("La placa es obligatoria para actualizar.");
         validarObligatorios(dto);
@@ -45,6 +59,7 @@ public class VehiculoService {
         repository.updateVehiculo(dto);
     }
 
+    /** Elimina un vehículo por su placa (valida existencia). */
     public void eliminar(String placa) {
         if (placa == null || placa.trim().isEmpty())
             throw new IllegalArgumentException("La placa es obligatoria para eliminar.");
@@ -53,26 +68,30 @@ public class VehiculoService {
         repository.deleteVehiculo(placa);
     }
 
+    /** Lista vehículos como DTOs de presentación. */
     public List<VehiculoDto> listar() {
         return repository.getVehiculos().stream().map(this::toDto).toList();
     }
 
+    /** Busca vehículo por placa como DTO. */
     public Optional<VehiculoDto> buscarPorPlaca(String placa) {
         if (placa == null) return Optional.empty();
         return Optional.ofNullable(repository.findVehiculoByPlaca(placa)).map(this::toDto);
     }
 
+    /** Retorna la entidad por placa (cuando se necesita la entidad real). */
     public Optional<Vehiculo> buscarEntidadPorPlaca(String placa) {
         if (placa == null || placa.isBlank()) return Optional.empty();
         try { return Optional.ofNullable(repository.findVehiculoByPlaca(placa)); }
         catch (Exception e) { return Optional.empty(); }
     }
 
-    public boolean existePlaca(String placa) {
-        return placa != null && repository.existsByPlaca(placa);
-    }
+    /** Verifica existencia por placa. */
+    public boolean existePlaca(String placa) { return placa != null && repository.existsByPlaca(placa); }
 
-    /* ===== Mapping ===== */
+    // -------- Mapping --------
+
+    /** Convierte entidad {@link Vehiculo} a {@link VehiculoDto}. */
     private VehiculoDto toDto(Vehiculo model) {
         VehiculoDto dto = new VehiculoDto();
         dto.setPlaca(model.getPlaca());
@@ -89,7 +108,17 @@ public class VehiculoService {
         return dto;
     }
 
-    /* ===== Validaciones ===== */
+    // -------- Validaciones --------
+
+    /**
+     * Valida campos obligatorios y rangos de {@link VehiculoDto}.
+     * <ul>
+     *   <li>Placa, modelo, marca y categoría obligatorios.</li>
+     *   <li>Estado por defecto: {@code disponible} si viene vacío.</li>
+     *   <li>Año entre 1900 y año actual + 1.</li>
+     *   <li>Precio no negativo.</li>
+     * </ul>
+     */
     private void validarObligatorios(VehiculoDto v) {
         if (v == null) throw new IllegalArgumentException("El vehículo es requerido.");
         if (v.getPlaca() == null || v.getPlaca().isBlank())
@@ -116,35 +145,35 @@ public class VehiculoService {
         if (v.getPrecio() < 0) throw new IllegalArgumentException("El precio no puede ser negativo.");
     }
 
+    /** Devuelve un DTO a partir de la placa (atajo para vistas/converters). */
     public VehiculoDto findVehicleByPlaca(String placa) {
         return toDto(repository.findVehiculoByPlaca(placa));
     }
 
-    // VehiculoService.java
-// ...
-    // VehiculoService.java
+    // -------- Filtros por estado --------
+
+    /**
+     * Lista vehículos por estado (o todos si el estado es vacío).
+     * @param estado uno de {@code disponible | mantenimiento | rentado}.
+     */
     public List<VehiculoDto> listarPorEstado(String estado) {
         if (estado == null || estado.isBlank()) {
-            return listar(); // todos
+            return listar();
         }
         String normalized = estado.trim().toLowerCase();
-
         if (!ESTADOS_VALIDOS.contains(normalized)) {
             throw new IllegalArgumentException(
                     "Estado inválido. Solo se permiten: " + ESTADOS_VALIDOS
             );
         }
-
         return repository.findByEstado(normalized)
                 .stream()
                 .map(this::toDto)
                 .toList();
     }
 
-
-    // Atajos (opcional)
+    // Atajos
     public List<VehiculoDto> listarDisponibles()   { return listarPorEstado("disponible"); }
     public List<VehiculoDto> listarMantenimiento() { return listarPorEstado("mantenimiento"); }
     public List<VehiculoDto> listarRentados()      { return listarPorEstado("rentado"); }
-
 }

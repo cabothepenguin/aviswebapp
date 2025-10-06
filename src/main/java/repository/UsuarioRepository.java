@@ -11,17 +11,24 @@ import jakarta.transaction.Transactional;
 import model.Usuario;
 
 import java.util.List;
+
+/**
+ * Repositorio de usuarios ({@link Usuario}).
+ * <p>Opera principalmente con SQL nativo para DML y lecturas.</p>
+ */
 @Named
 @RequestScoped
 public class UsuarioRepository {
+
     @PersistenceContext(unitName = "avisrent-pu")
     private EntityManager em;
 
-
-
-
+    /**
+     * Inserta un usuario (SQL nativo).
+     * @param usuario DTO con datos básicos.
+     */
     public void addUser(UsuarioDto usuario) {
-        try{
+        try {
             em.getTransaction().begin();
             String sql = "INSERT INTO administracion_usuarios (username,password,nombre,apellido,correo) VALUES (?,?,?,?,?)";
             Query query = em.createNativeQuery(sql);
@@ -32,15 +39,14 @@ public class UsuarioRepository {
             query.setParameter(5, usuario.getCorreo());
             query.executeUpdate();
             em.getTransaction().commit();
-    }catch(Exception e){
+        } catch (Exception e) {
             em.getTransaction().rollback();
             e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
 
-    //--------------actualizar usando username
-
+    /** Actualiza un usuario identificado por username. */
     public void updateUser(UsuarioDto usuario) {
         em.getTransaction().begin();
         String sql = "UPDATE administracion_usuarios SET password = ?," +
@@ -54,18 +60,20 @@ public class UsuarioRepository {
         q.executeUpdate();
         em.getTransaction().commit();
     }
-//-----elimiar usuario...usando usernam
 
+    /** Elimina un usuario por su username. */
     public void deleteUser(String username ) {
         em.getTransaction().begin();
         em.createNativeQuery("DELETE FROM administracion_usuarios WHERE username = ?")
                 .setParameter(1, username)
                 .executeUpdate();
         em.getTransaction().commit();
-
     }
-    //----listar usuarios
 
+    /**
+     * Lista todos los usuarios mapeando a la entidad {@link Usuario}.
+     * @return lista de entidades.
+     */
     @SuppressWarnings("unchecked")
     public List<Usuario> getUsers() {
         return em.createNativeQuery(
@@ -74,21 +82,21 @@ public class UsuarioRepository {
         ).getResultList();
     }
 
-
-
-    //-----por si las moscas-- mas adelante se use--para saber si existe el nombre usuario
-    //  y asi no tener errores/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//
+    /**
+     * Verifica existencia por username (SQL nativo).
+     * @param username nombre de usuario.
+     */
     public boolean existsByUsername(String username) {
         Number count = (Number) em.createNativeQuery(
                 "SELECT COUNT(*) FROM administracion_usuarios WHERE username = ?"
         ).setParameter(1, username).getSingleResult();
         return count != null && count.intValue() > 0;
     }
-//----
 
-    // ===== Buscar usuario por username =====
+    /**
+     * Obtiene un usuario por username.
+     * @return entidad o {@code null} si no existe.
+     */
     public Usuario getUser(String username) {
         try {
             return (Usuario) em.createNativeQuery(
@@ -99,11 +107,14 @@ public class UsuarioRepository {
                     .setParameter(1, username)
                     .getSingleResult();
         } catch (Exception e) {
-            return null; // Si no existe el usuario, devolvemos null
+            return null;
         }
     }
 
-
+    /**
+     * Busca un usuario por username y password (lectura simple).
+     * @return entidad o {@code null} si no coincide.
+     */
     public Usuario findByUsernameAndPassword(String username, String password) {
         try {
             return (Usuario) em.createNativeQuery(
@@ -118,11 +129,4 @@ public class UsuarioRepository {
             return null;
         }
     }
-
-
-
-
-
-
-
 }

@@ -12,6 +12,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Controlador para administración de usuarios.
+ * <p>
+ * Provee operaciones CRUD y utilidades de búsqueda/edición utilizadas
+ * por las vistas XHTML (por ejemplo, edición inline por username).
+ * </p>
+ */
 @Named
 @ViewScoped
 public class UsuarioController implements Serializable {
@@ -19,15 +26,24 @@ public class UsuarioController implements Serializable {
     @Inject
     private UsuarioService service;
 
-    // ==== Lo que ya tenías ====
+    // ==== Datos principales de la vista ====
+    /** Lista cacheada de usuarios para la tabla. */
     private List<UsuarioDto> usuarios;
+    /** DTO base utilizado por formularios genéricos. */
     private UsuarioDto usuario = new UsuarioDto();
 
-    // ==== NUEVO: lo que tu XHTML espera ====
-    private String usernameQuery;        // #{usuarioController.usernameQuery}
-    private UsuarioDto usuarioEdit;      // #{usuarioController.usuarioEdit}
+    // ==== Parámetros esperados por el XHTML ====
+    /** Criterio de búsqueda por nombre de usuario. */
+    private String usernameQuery;
+    /** Usuario actualmente cargado para edición o eliminación. */
+    private UsuarioDto usuarioEdit;
 
     // ----------------- CRUD existente -----------------
+
+    /**
+     * Agrega un nuevo usuario usando el DTO proporcionado.
+     * @param dto datos del usuario a crear.
+     */
     public void add(UsuarioDto dto) {
         try {
             service.addUser(dto);
@@ -38,6 +54,7 @@ public class UsuarioController implements Serializable {
         }
     }
 
+    /** Carga todos los usuarios del sistema en {@link #usuarios}. */
     public void loadUsers() {
         if (usuarios != null) usuarios.clear();
         try {
@@ -45,12 +62,14 @@ public class UsuarioController implements Serializable {
         } catch (Exception e) {
             e.printStackTrace();
             usuarios = new ArrayList<UsuarioDto>();
-
         }
     }
 
-
-
+    /**
+     * Actualiza el usuario mantenido en {@link #usuario}.
+     *
+     * @return navegación a la lista con redirect; <code>null</code> si hay error.
+     */
     public String update() {
         try {
             service.updateUser(usuario);
@@ -64,10 +83,10 @@ public class UsuarioController implements Serializable {
         }
     }
 
-
-
-
-
+    /**
+     * Elimina un usuario por su username.
+     * @param username identificador único del usuario.
+     */
     public void delete(String username) {
         try {
             service.deleteUser(username);
@@ -78,6 +97,10 @@ public class UsuarioController implements Serializable {
         }
     }
 
+    /**
+     * Carga un usuario a {@link #usuario} utilizando el parámetro
+     * de request <code>username</code> proveniente de la vista.
+     */
     public void loadUserByUsername() {
         String username = FacesContext.getCurrentInstance()
                 .getExternalContext()
@@ -89,9 +112,13 @@ public class UsuarioController implements Serializable {
         }
     }
 
-    // ----------------- NUEVO: métodos que usa el XHTML -----------------
+    // ----------------- Métodos usados por el XHTML -----------------
 
-
+    /**
+     * Busca por username (campo {@link #usernameQuery}) y
+     * carga el resultado en {@link #usuarioEdit} para edición.
+     * @return <code>null</code> para permanecer en la vista.
+     */
     public String buscarPorUsername() {
         if (usernameQuery == null || usernameQuery.trim().isEmpty()) {
             usuarioEdit = null;
@@ -111,15 +138,14 @@ public class UsuarioController implements Serializable {
         return null; // permanecer en la vista
     }
 
-
-    /** Botón "Limpiar" del formulario (f:ajax) */
+    /** Limpia los campos de búsqueda y el panel de edición. */
     public void limpiarBusqueda() {
         usernameQuery = null;
         usuarioEdit = null;
         InfoMessage("Búsqueda y formulario reiniciados.");
     }
 
-    /** Botón "Guardar cambios" en el panel de edición (f:ajax) */
+    /** Persiste los cambios realizados sobre {@link #usuarioEdit}. */
     public void guardarCambios() {
         if (usuarioEdit == null) {
             WarningMessage("No hay datos para guardar. Busque un usuario primero.");
@@ -135,8 +161,10 @@ public class UsuarioController implements Serializable {
         }
     }
 
-
-    /** Buscar usuario para ELIMINAR (puedes reutilizar buscarPorUsername si quieres el mismo comportamiento) */
+    /**
+     * Busca un usuario para eliminarlo (sin realizar aún la eliminación).
+     * @return <code>null</code> para permanecer en la vista.
+     */
     public String buscarParaEliminar() {
         if (usernameQuery == null || usernameQuery.trim().isEmpty()) {
             usuarioEdit = null;
@@ -154,7 +182,7 @@ public class UsuarioController implements Serializable {
         return null;
     }
 
-    /** Eliminar al usuario actualmente cargado */
+    /** Elimina el usuario actualmente cargado en {@link #usuarioEdit}. */
     public void eliminarUsuario() {
         if (usuarioEdit == null) {
             WarningMessage("Busque un usuario primero.");
@@ -171,35 +199,31 @@ public class UsuarioController implements Serializable {
         }
     }
 
-
     // ----------------- Helpers de mensajes -----------------
     private void ErrorMessage(String msg) {
         FacesMessage m = new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, null);
         FacesContext.getCurrentInstance().addMessage(null, m);
     }
-
     private void WarningMessage(String msg) {
         FacesMessage m = new FacesMessage(FacesMessage.SEVERITY_WARN, msg, null);
         FacesContext.getCurrentInstance().addMessage(null, m);
     }
-
     private void InfoMessage(String msg) {
         FacesMessage m = new FacesMessage(FacesMessage.SEVERITY_INFO, msg, null);
         FacesContext.getCurrentInstance().addMessage(null, m);
     }
-
     private void SuccessMessage(String msg) {
         FacesMessage m = new FacesMessage(FacesMessage.SEVERITY_INFO, msg, null);
         FacesContext.getCurrentInstance().addMessage(null, m);
     }
 
     // ----------------- Getters / Setters -----------------
+    /** @return lista actual de usuarios para la tabla. */
     public List<UsuarioDto> getUsuarios() { return usuarios; }
 
     public UsuarioDto getUsuario() { return usuario; }
     public void setUsuario(UsuarioDto usuario) { this.usuario = usuario; }
 
-    // NUEVO
     public String getUsernameQuery() { return usernameQuery; }
     public void setUsernameQuery(String usernameQuery) { this.usernameQuery = usernameQuery; }
 

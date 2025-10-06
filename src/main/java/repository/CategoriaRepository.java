@@ -10,13 +10,25 @@ import model.CategoriaVehiculo;
 
 import java.util.List;
 
+/**
+ * Repositorio de acceso a datos para {@link CategoriaVehiculo}.
+ * <p>
+ * Usa SQL nativo para operaciones de inserción/actualización/borrado y
+ * consultas simples. Algunas operaciones gestionan manualmente transacciones
+ * mediante {@code em.getTransaction()}.
+ * </p>
+ *
+ */
 @ApplicationScoped
 public class CategoriaRepository {
 
     @PersistenceContext(unitName = "avisrent-pu")
     private EntityManager em;
 
-
+    /**
+     * Inserta una nueva categoría usando SQL nativo.
+     * @param categoria DTO con descripción y estado.
+     */
     public void addCategory(CategoriaVehiculoDto categoria) {
         em.getTransaction().begin();
         em.createNativeQuery(
@@ -27,13 +39,8 @@ public class CategoriaRepository {
         em.getTransaction().commit();
     }
 
-
-
-
-    // --actualizar por codigo
-
+    /** Actualiza una categoría por su código usando SQL nativo. */
     public void updateCategory(CategoriaVehiculoDto categoria) {
-
         try {
             em.getTransaction().begin();
             String jpql = "UPDATE administracion_categorias SET descripcion = ?, estado = ? WHERE codigo = ?";
@@ -43,17 +50,14 @@ public class CategoriaRepository {
                     .setParameter(3, categoria.getCodigo())
                     .executeUpdate();
             em.getTransaction().commit();
-        }catch(Exception e){
-
+        } catch (Exception e) {
             em.getTransaction().rollback();
             e.printStackTrace();
-            throw  new RuntimeException(e);
+            throw new RuntimeException(e);
         }
-
     }
 
-    // ---eliminar por codigo
-
+    /** Elimina una categoría por su código. */
     public void deleteCategory(Integer codigo) {
         em.getTransaction().begin();
         String sql = "DELETE FROM administracion_categorias WHERE codigo = ?";
@@ -63,7 +67,10 @@ public class CategoriaRepository {
         em.getTransaction().commit();
     }
 
-    // ----listar
+    /**
+     * Lista todas las categorías.
+     * @return lista de entidades mapeadas a {@link CategoriaVehiculo}.
+     */
     @SuppressWarnings("unchecked")
     public List<CategoriaVehiculo> getCategories() {
         return em.createNativeQuery(
@@ -72,27 +79,32 @@ public class CategoriaRepository {
         ).getResultList();
     }
 
-    // ------- Buscar por descripción
+    /**
+     * Busca una categoría por descripción exacta.
+     * @param descripcion valor a buscar.
+     * @return entidad encontrada o {@code null} si no existe.
+     */
     public CategoriaVehiculo findCategoryByDescripcion(String descripcion) {
         try {
             return em.createQuery(
                             "FROM administracion_categorias c WHERE c.descripcion = :desc", CategoriaVehiculo.class)
                     .setParameter("desc", descripcion)
                     .getSingleResult();
-
         } catch (NoResultException e) {
-            return null; // o Optional.empty()
+            return null;
         }
     }
-    public CategoriaVehiculo findCategoryById(Integer codigo) {
 
+    /** Busca una categoría por su id (clave primaria). */
+    public CategoriaVehiculo findCategoryById(Integer codigo) {
         return em.find(CategoriaVehiculo.class, codigo);
     }
 
-
-
-
-    // Verificar existencia por descripcion
+    /**
+     * Verifica existencia por descripción (insensible a mayúsculas según BD).
+     * @param descripcion descripción a validar.
+     * @return {@code true} si existe al menos un registro.
+     */
     public boolean existsByDescripcion(String descripcion) {
         Number count = (Number) em.createNativeQuery(
                 "SELECT COUNT(*) FROM administracion_categorias WHERE descripcion = ?"
@@ -100,19 +112,17 @@ public class CategoriaRepository {
         return count != null && count.intValue() > 0;
     }
 
-
-
-
-
-
+    /** Obtiene una categoría por id usando {@link EntityManager#find}. */
     public CategoriaVehiculo getById(Integer id) {
         return em.find(CategoriaVehiculo.class, id);
     }
 
+    /**
+     * Actualiza una entidad administrada mediante {@link EntityManager#merge(Object)}.
+     * Requiere contexto transaccional activo (anotado con {@link Transactional}).
+     */
     @Transactional
     public void update(CategoriaVehiculo categoria) {
         em.merge(categoria);
     }
-
-
 }
