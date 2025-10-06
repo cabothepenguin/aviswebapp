@@ -108,4 +108,40 @@ public class VehiculoRepository {
             return false;
         }
     }
+
+
+
+    public List<Vehiculo> findByCategoriaCodigo(Integer codigo) {
+        // Si tu entidad Vehiculo tiene relación @ManyToOne categoria
+        return em.createQuery(
+                "SELECT v FROM Vehiculo v WHERE v.categoria.codigo = :cod",
+                Vehiculo.class
+        ).setParameter("cod", codigo).getResultList();
+    }
+
+    public List<Vehiculo> findByCategoriaDescripcion(String desc) {
+        return em.createQuery(
+                "SELECT v FROM Vehiculo v WHERE v.categoria.descripcion = :desc",
+                Vehiculo.class
+        ).setParameter("desc", desc).getResultList();
+    }
+
+    // VehiculoRepository.java
+
+    @SuppressWarnings("unchecked")
+    public List<Vehiculo> findByEstado(String estado) {
+        return em.createQuery(
+                        "SELECT v FROM Vehiculo v " +
+                                "WHERE LOWER(v.estado) = :estado " +
+                                "ORDER BY v.marca, v.modelo", Vehiculo.class)
+                .setParameter("estado", estado.toLowerCase())
+                .getResultList();
+    }
+
+    // Atajos convenientes (opcional)
+    public List<Vehiculo> findDisponibles()     { return findByEstado("disponible"); }
+    public List<Vehiculo> findMantenimiento()   { return findByEstado("mantenimiento"); }
+    public List<Vehiculo> findRentados()        { return findByEstado("rentado"); }
+
+
 }

@@ -10,6 +10,8 @@
         <title>Avis App - Agregar Vehículo</title>
         <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
         <h:outputStylesheet library="css" name="style.css"/>
+        <link rel="stylesheet" type="text/css"
+              href="#{request.contextPath}/resources/css/style.css"/>
     </h:head>
     <h:body>
         <div class="container">
@@ -25,80 +27,71 @@
                 <div style="flex: 0 0 100%"><!--Menu-->
                     <h:form>
                         <nav>
-                            <ul class="menu-bar">
+                            <ul class="menu">
                                 <li class="menu-item">
-                                    <h:commandButton  styleClass="btn btn-primary"  value="Home" action="irAHome" />
+                                    <h:commandButton value="Home" action="irAHome" styleClass="home-btn" />
                                 </li>
-                                <li class="menu-item">
-                                    <span>Usuario</span>
+
+                                <li class="menu-item has-sub">
+                                    <span class="menu-link">Usuario</span>
                                     <ul class="sub-menu">
-                                        <li class="sub-menu-item">
-                                            <h:link value="Listar" outcome="/Usuario/list-usuario.xhtml?faces-redirect=true"/>
-                                        </li>
-                                        <li class="sub-menu-item">
-                                            <h:link value="Agregar" outcome="/Usuario/add-Usuario.xhtml?faces-redirect=true"/>
-                                        </li>
-                                        <li class="sub-menu-item">
-                                            <h:link value="Actualizar" outcome="/Usuario/update-usuario.xhtml?faces-redirect=true"/>
-                                        </li>
+                                        <li><h:link value="Listar"     outcome="/Usuario/list-usuario.xhtml?faces-redirect=true"/></li>
+                                        <li><h:link value="Agregar"    outcome="/Usuario/add-Usuario.xhtml?faces-redirect=true"/></li>
+                                        <li><h:link value="Actualizar" outcome="/Usuario/update-usuario-byUsername.xhtml?faces-redirect=true"/></li>
+                                        <li><h:link value="Eliminar"   outcome="/Usuario/delete-usuario-byUsername.xhtml?faces-redirect=true"/></li>
                                     </ul>
                                 </li>
-                                <li class="menu-item">
-                                    <span>Sucursales</span>
+
+                                <li class="menu-item has-sub">
+                                    <span class="menu-link">Sucursales</span>
                                     <ul class="sub-menu">
-                                        <li class="sub-menu-item">
-                                            <h:link value="Listar" outcome="/Sucursales/list-sucursal.xhtml?faces-redirect=true"/>
-                                        </li>
-                                        <li class="sub-menu-item">
-                                            <h:link value="Agregar" outcome="/Sucursales/add-sucursal.xhtml?faces-redirect=true"/>
-                                        </li>
-                                        <li class="sub-menu-item">
-                                            <h:link value="Actualizar" outcome="/Sucursales/update-sucursal.xhtml?faces-redirect=true"/>
-                                        </li>
+                                        <li><h:link value="Listar"      outcome="/Sucursales/list-sucursal.xhtml?faces-redirect=true"/></li>
+                                        <li><h:link value="Agregar"     outcome="/Sucursales/add-sucursal.xhtml?faces-redirect=true"/></li>
+                                        <li><h:link value="Actualizar"  outcome="/Sucursales/update-sucursal.xhtml?faces-redirect=true"/></li>
                                     </ul>
                                 </li>
-                                <li class="menu-item">
-                                    <span>Vehiculos</span>
+
+                                <li class="menu-item has-sub">
+                                    <span class="menu-link">Vehículos</span>
                                     <ul class="sub-menu">
-                                        <li class="sub-menu-item">
-                                            <h:link value="Listar" outcome="/courses/list-course.xhtml?faces-redirect=true"/>
-                                        </li>
-                                        <li class="sub-menu-item">
-                                            <h:link value="Agregar" outcome="/Vehiculos/add-vehiculo.xhtml?faces-redirect=true"/>
-                                        </li>
-                                        <li class="sub-menu-item">
-                                            <h:link value="Actualizar" outcome="/Vehiculos/update-vehiculo.xhtml?faces-redirect=true"/>
-                                        </li>
+                                        <li><h:link value="Listar"      outcome="/Vehiculos/list-vehiculo.xhtml?faces-redirect=true"/></li>
+                                        <li><h:link value="Agregar"     outcome="/Vehiculos/add-vehiculo.xhtml?faces-redirect=true"/></li>
+                                        <li><h:link value="Actualizar"  outcome="/Vehiculos/update-vehiculo.xhtml?faces-redirect=true"/></li>
                                     </ul>
                                 </li>
-                                <li class="menu-item">
-                                    <span>Rentas</span>
+
+                                <li class="menu-item has-sub">
+                                    <span class="menu-link">Rentas</span>
                                     <ul class="sub-menu">
-                                        <li class="sub-menu-item">
-                                            <h:link value="Listar" outcome="/Rentas/list-rentas.xhtml?faces-redirect=true"/>
-                                        </li>
-                                        <li class="sub-menu-item">
-                                            <h:link value="Agregar" outcome="/Rentas/add-rentas.xhtml?faces-redirect=true"/>
-                                        </li>
-                                        <li class="sub-menu-item">
-                                            <h:link value="Actualizar" outcome="/Rentas/update-rentas.xhtml?faces-redirect=true"/>
-                                        </li>
+                                        <li><h:link value="Listar"      outcome="/Rentas/list-rentas.xhtml?faces-redirect=true"/></li>
+                                        <li><h:link value="Agregar"     outcome="/Rentas/add-rentas.xhtml?faces-redirect=true"/></li>
+                                        <li><h:link value="Actualizar"  outcome="/Rentas/update-rentas.xhtml?faces-redirect=true"/></li>
                                     </ul>
                                 </li>
-                                <li class="menu-item">
-                                    <span>Categorias</span>
+
+                                <li class="menu-item has-sub">
+                                    <span class="menu-link">Categorías</span>
                                     <ul class="sub-menu">
-                                        <li class="sub-menu-item">
-                                            <h:link value="listar" outcome="/Categorias/list-categorias.xhtml?faces-redirect=true"/>
-                                        </li>
-                                        <li class="sub-menu-item">
-                                            <h:link value="Agregar" outcome="/Categorias/add-categorias.xhtml?faces-redirect=true"/>
-                                        </li>
-                                        <li class="sub-menu-item">
-                                            <h:link value="Actualizar" outcome="/Categorias/update-categorias.xhtml?faces-redirect=true"/>
-                                        </li>
+                                        <li><h:link value="Listar"      outcome="/Categorias/list-categorias.xhtml?faces-redirect=true"/></li>
+                                        <li><h:link value="Agregar"     outcome="/Categorias/add-categorias.xhtml?faces-redirect=true"/></li>
+                                        <li><h:link value="Actualizar"  outcome="/Categorias/update-categorias.xhtml?faces-redirect=true"/></li>
                                     </ul>
                                 </li>
+
+                                <li class="menu-item has-sub">
+                                    <span class="menu-link">Reportes</span>
+                                    <ul class="sub-menu">
+                                        <li><h:link value="Vehículos por categoría" outcome="/Reportes/list-ByCategoria.xhtml?faces-redirect=true"/></li>
+                                        <!-- agrega más reportes aquí -->
+
+                                        <li><h:link value="Vehículos por estado" outcome="/Reportes/list-EstadoCategoria.xhtml?faces-redirect=true"/></li>
+                                        <!-- agrega más reportes aquí -->
+                                        <li><h:link value="Vehículos por estado" outcome="/Reportes/list-EstadoRenta.xhtml?faces-redirect=true"/></li>
+                                        <!-- agrega más reportes aquí -->
+
+                                    </ul>
+                                </li>
+
                             </ul>
                         </nav>
                     </h:form>

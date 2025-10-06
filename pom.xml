@@ -145,6 +145,8 @@
     <dependencies>
 
 
+
+
         <!-- Required for e.g. "javax.annotation.PostConstruct" -->
         <dependency>
             <groupId>jakarta.annotation</groupId>

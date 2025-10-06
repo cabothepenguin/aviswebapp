@@ -1,12 +1,14 @@
 package repository;
 
 import dto.RentasDto;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import model.Renta;
 
+import java.util.Date;
 import java.util.List;
-
+@ApplicationScoped
 public class RentaRepository {
 
     @PersistenceContext(unitName = "avisrent-pu")
@@ -60,22 +62,31 @@ public class RentaRepository {
         em.getTransaction().commit();
     }
 
+
     @SuppressWarnings("unchecked")
     public List<Renta> getRenta() {
-        return em.createNativeQuery(
-                "SELECT numeroRenta, clienteNombre, vehiculoAsignado, sucursal, fechaInicio, fechafin, precioTotal, estado " +
-                        "FROM administracion_rentas",
+        // JPQL, no SQL nativo -> las relaciones se materializan
+        return em.createQuery(
+                "SELECT r FROM Renta r " +
+                        "JOIN FETCH r.vehiculo v " +
+                        "JOIN FETCH r.sucursal s " +
+                        "ORDER BY r.numeroRenta DESC",
                 Renta.class
         ).getResultList();
     }
 
     public Renta findRentaByNumeroRenta(int numeroRenta) {
-        return (Renta) em.createNativeQuery(
-                "SELECT numeroRenta, clienteNombre, vehiculoAsignado, sucursal, fechaInicio, fechafin, precioTotal, estado " +
-                        "FROM administracion_rentas WHERE numeroRenta = ?",
-                Renta.class
-        ).setParameter(1, numeroRenta).getSingleResult();
+        return em.createQuery(
+                        "SELECT r FROM Renta r " +
+                                "JOIN FETCH r.vehiculo v " +
+                                "JOIN FETCH r.sucursal s " +
+                                "WHERE r.numeroRenta = :n",
+                        Renta.class
+                ).setParameter("n", numeroRenta)
+                .getSingleResult();
     }
+
+
 
     public boolean existsBynumeroRenta(int numeroRenta) {
         Number count = (Number) em.createNativeQuery(
@@ -83,4 +94,18 @@ public class RentaRepository {
         ).setParameter(1, numeroRenta).getSingleResult();
         return count != null && count.intValue() > 0;
     }
+
+    public List<Renta> findByEstado(String estado) {
+        return em.createQuery(
+                        "SELECT r FROM Renta r " +
+                                "JOIN FETCH r.vehiculo v " +
+                                "JOIN FETCH r.sucursal s " +
+                                "WHERE LOWER(r.estado) = LOWER(:estado) " +
+                                "ORDER BY r.fechaInicio DESC",
+                        Renta.class
+                ).setParameter("estado", estado)
+                .getResultList();
+    }
+
+
 }

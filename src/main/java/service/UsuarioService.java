@@ -30,7 +30,7 @@ public class UsuarioService {
     /* ===== READ ALL ===== */
     public List<UsuarioDto> getUsers() {
         List<UsuarioDto> out = new ArrayList<>();
-        repository.getUsers().forEach(obj -> {          // repo devuelve lista cruda, igual que tu StudentService
+        repository.getUsers().forEach(obj -> {
             out.add(toDto((Usuario) obj));
         });
         return out;
@@ -90,6 +90,36 @@ public class UsuarioService {
         u.setCorreo(dto.getCorreo());
         return u;
     }
+
+
+
+    /* ===== LOGIN POR USERNAME ===== */
+    public UsuarioDto getByUsernameAndPassword(String username, String plainPassword) {
+        Usuario u = repository.getUser(username); // ya lo tienes
+        if (u == null) return null;
+        if (plainPassword != null && plainPassword.equals(u.getPassword())) {
+            return toDto(u);
+        }
+        return null;
+    }
+
+
+    /* ===== UPDATE preservando password si viene vacía ===== */
+    public void updatePreservandoPassword(UsuarioDto dto) {
+        // Traer el actual para conservar password si no se envía
+        UsuarioDto actual = getUser(dto.getUsername());
+        if (actual == null) {
+            throw new RuntimeException("El usuario no existe: " + dto.getUsername());
+        }
+        // Si el password del formulario viene nulo/vacío, conservar el existente
+        if (dto.getPassword() == null || dto.getPassword().isBlank()) {
+            dto.setPassword(actual.getPassword());
+        }
+        updateUser(dto); // reutiliza tu método existente
+    }
+
+
+
 
 
 }

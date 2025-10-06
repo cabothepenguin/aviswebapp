@@ -58,6 +58,8 @@ public class VehiculoController implements Serializable {
         loadCategorias();
     }
 
+
+
     /* =================== CREATE =================== */
     public void addVehiculo() {
         if (uploadedFile != null && newVehiculo.getImage() == null) {
@@ -201,6 +203,33 @@ public class VehiculoController implements Serializable {
             error("Error al subir el archivo: " + e.getMessage());
         }
     }
+
+
+
+    // VehiculoController.java
+// ...
+    private String estadoBuscar;              // <--- NUEVO
+
+    public void buscarPorEstado() {
+        try {
+            if (estadoBuscar == null || estadoBuscar.isBlank()) {
+                loadVehiculos(); // todos
+            } else {
+                vehiculos = service.listarPorEstado(estadoBuscar);
+            }
+            success("Vehículos cargados.");
+        } catch (Exception e) {
+            LOG.severe(e.getMessage());
+            error("Ocurrió un error al cargar vehículos por estado.");
+            vehiculos = new ArrayList<>();
+        }
+    }
+
+
+    // getter/setter
+    public String getEstadoBuscar() { return estadoBuscar; }
+    public void setEstadoBuscar(String estadoBuscar) { this.estadoBuscar = estadoBuscar; }
+
 
 
     private void error(String msg) {

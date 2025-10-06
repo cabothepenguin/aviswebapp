@@ -2,6 +2,7 @@ package service;
 
 import dto.RentasDto;
 import jakarta.ejb.Stateless;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import model.Renta;
 import repository.RentaRepository;
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-@Stateless
+@ApplicationScoped
 public class RentaService {
 
     private static final Set<String> ESTADOS_VALIDOS =
@@ -83,4 +84,12 @@ public class RentaService {
         if (inicio.after(fin))
             throw new IllegalArgumentException("fechaInicio no puede ser posterior a fechafin.");
     }
+
+    public List<Renta> listarPorEstado(String estado) {
+        if (estado == null || estado.isBlank()) {
+            throw new IllegalArgumentException("Debe indicar un estado válido (activa, finalizada o cancelada).");
+        }
+        return repository.findByEstado(estado);
+    }
+
 }

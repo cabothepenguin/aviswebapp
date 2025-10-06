@@ -18,6 +18,8 @@ public class UsuarioRepository {
     private EntityManager em;
 
 
+
+
     public void addUser(UsuarioDto usuario) {
         try{
             em.getTransaction().begin();
@@ -100,5 +102,27 @@ public class UsuarioRepository {
             return null; // Si no existe el usuario, devolvemos null
         }
     }
+
+
+    public Usuario findByUsernameAndPassword(String username, String password) {
+        try {
+            return (Usuario) em.createNativeQuery(
+                            "SELECT username, password, nombre, apellido, correo " +
+                                    "FROM administracion_usuarios WHERE username = ? AND password = ?",
+                            Usuario.class
+                    )
+                    .setParameter(1, username)
+                    .setParameter(2, password)
+                    .getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+
+
+
+
+
 
 }

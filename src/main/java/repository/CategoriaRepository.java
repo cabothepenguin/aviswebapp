@@ -100,6 +100,11 @@ public class CategoriaRepository {
         return count != null && count.intValue() > 0;
     }
 
+
+
+
+
+
     public CategoriaVehiculo getById(Integer id) {
         return em.find(CategoriaVehiculo.class, id);
     }

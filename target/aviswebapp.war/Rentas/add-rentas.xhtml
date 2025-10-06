@@ -12,6 +12,8 @@
       <title>Avis App - Agregar Renta</title>
       <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
       <h:outputStylesheet library="css" name="style.css"/>
+      <link rel="stylesheet" type="text/css"
+            href="#{request.contextPath}/resources/css/style.css"/>
    </h:head>
 
    <h:body>
@@ -30,80 +32,71 @@
          <!-- Menu -->
          <h:form>
             <nav>
-               <ul class="menu-bar">
+               <ul class="menu">
                   <li class="menu-item">
-                     <h:commandButton styleClass="btn btn-primary" value="Home" action="irAHome" />
+                     <h:commandButton value="Home" action="irAHome" styleClass="home-btn" />
                   </li>
-                  <li class="menu-item">
-                     <span>Usuario</span>
+
+                  <li class="menu-item has-sub">
+                     <span class="menu-link">Usuario</span>
                      <ul class="sub-menu">
-                        <li class="sub-menu-item">
-                           <h:link value="Listar" outcome="/Usuario/list-usuario.xhtml?faces-redirect=true"/>
-                        </li>
-                        <li class="sub-menu-item">
-                           <h:link value="Agregar" outcome="/Usuario/add-usuario.xhtml?faces-redirect=true"/>
-                        </li>
-                        <li class="sub-menu-item">
-                           <h:link value="Actualizar" outcome="/Usuario/update-usuario.xhtml?faces-redirect=true"/>
-                        </li>
+                        <li><h:link value="Listar"     outcome="/Usuario/list-usuario.xhtml?faces-redirect=true"/></li>
+                        <li><h:link value="Agregar"    outcome="/Usuario/add-Usuario.xhtml?faces-redirect=true"/></li>
+                        <li><h:link value="Actualizar" outcome="/Usuario/update-usuario-byUsername.xhtml?faces-redirect=true"/></li>
+                        <li><h:link value="Eliminar"   outcome="/Usuario/delete-usuario-byUsername.xhtml?faces-redirect=true"/></li>
                      </ul>
                   </li>
-                  <li class="menu-item">
-                     <span>Sucursales</span>
+
+                  <li class="menu-item has-sub">
+                     <span class="menu-link">Sucursales</span>
                      <ul class="sub-menu">
-                        <li class="sub-menu-item">
-                           <h:link value="Listar" outcome="/Sucursales/list-sucursal.xhtml?faces-redirect=true"/>
-                        </li>
-                        <li class="sub-menu-item">
-                           <h:link value="Agregar" outcome="/Sucursales/add-sucursal.xhtml?faces-redirect=true"/>
-                        </li>
-                        <li class="sub-menu-item">
-                           <h:link value="Actualizar" outcome="/Sucursales/update-sucursal.xhtml?faces-redirect=true"/>
-                        </li>
+                        <li><h:link value="Listar"      outcome="/Sucursales/list-sucursal.xhtml?faces-redirect=true"/></li>
+                        <li><h:link value="Agregar"     outcome="/Sucursales/add-sucursal.xhtml?faces-redirect=true"/></li>
+                        <li><h:link value="Actualizar"  outcome="/Sucursales/update-sucursal.xhtml?faces-redirect=true"/></li>
                      </ul>
                   </li>
-                  <li class="menu-item">
-                     <span>Vehiculos</span>
+
+                  <li class="menu-item has-sub">
+                     <span class="menu-link">Vehículos</span>
                      <ul class="sub-menu">
-                        <li class="sub-menu-item">
-                           <h:link value="Listar" outcome="/Vehiculos/list-vehiculo.xhtml?faces-redirect=true"/>
-                        </li>
-                        <li class="sub-menu-item">
-                           <h:link value="Agregar" outcome="/Vehiculos/add-vehiculo.xhtml?faces-redirect=true"/>
-                        </li>
-                        <li class="sub-menu-item">
-                           <h:link value="Actualizar" outcome="/Vehiculos/update-vehiculo.xhtml?faces-redirect=true"/>
-                        </li>
+                        <li><h:link value="Listar"      outcome="/Vehiculos/list-vehiculo.xhtml?faces-redirect=true"/></li>
+                        <li><h:link value="Agregar"     outcome="/Vehiculos/add-vehiculo.xhtml?faces-redirect=true"/></li>
+                        <li><h:link value="Actualizar"  outcome="/Vehiculos/update-vehiculo.xhtml?faces-redirect=true"/></li>
                      </ul>
                   </li>
-                  <li class="menu-item">
-                     <span>Rentas</span>
+
+                  <li class="menu-item has-sub">
+                     <span class="menu-link">Rentas</span>
                      <ul class="sub-menu">
-                        <li class="sub-menu-item">
-                           <h:link value="Listar" outcome="/Rentas/list-rentas.xhtml?faces-redirect=true"/>
-                        </li>
-                        <li class="sub-menu-item">
-                           <h:link value="Agregar" outcome="/Rentas/add-rentas.xhtml?faces-redirect=true"/>
-                        </li>
-                        <li class="sub-menu-item">
-                           <h:link value="Actualizar" outcome="/Rentas/update-rentas.xhtml?faces-redirect=true"/>
-                        </li>
+                        <li><h:link value="Listar"      outcome="/Rentas/list-rentas.xhtml?faces-redirect=true"/></li>
+                        <li><h:link value="Agregar"     outcome="/Rentas/add-rentas.xhtml?faces-redirect=true"/></li>
+                        <li><h:link value="Actualizar"  outcome="/Rentas/update-rentas.xhtml?faces-redirect=true"/></li>
                      </ul>
                   </li>
-                  <li class="menu-item">
-                     <span>Categorias</span>
+
+                  <li class="menu-item has-sub">
+                     <span class="menu-link">Categorías</span>
                      <ul class="sub-menu">
-                        <li class="sub-menu-item">
-                           <h:link value="Listar" outcome="/Categorias/list-categorias.xhtml?faces-redirect=true"/>
-                        </li>
-                        <li class="sub-menu-item">
-                           <h:link value="Agregar" outcome="/Categorias/add-categorias.xhtml?faces-redirect=true"/>
-                        </li>
-                        <li class="sub-menu-item">
-                           <h:link value="Actualizar" outcome="/Categorias/update-categorias.xhtml?faces-redirect=true"/>
-                        </li>
+                        <li><h:link value="Listar"      outcome="/Categorias/list-categorias.xhtml?faces-redirect=true"/></li>
+                        <li><h:link value="Agregar"     outcome="/Categorias/add-categorias.xhtml?faces-redirect=true"/></li>
+                        <li><h:link value="Actualizar"  outcome="/Categorias/update-categorias.xhtml?faces-redirect=true"/></li>
                      </ul>
                   </li>
+
+                  <li class="menu-item has-sub">
+                     <span class="menu-link">Reportes</span>
+                     <ul class="sub-menu">
+                        <li><h:link value="Vehículos por categoría" outcome="/Reportes/list-ByCategoria.xhtml?faces-redirect=true"/></li>
+                        <!-- agrega más reportes aquí -->
+
+                        <li><h:link value="Vehículos por estado" outcome="/Reportes/list-EstadoCategoria.xhtml?faces-redirect=true"/></li>
+                        <!-- agrega más reportes aquí -->
+                        <li><h:link value="Vehículos por estado" outcome="/Reportes/list-EstadoRenta.xhtml?faces-redirect=true"/></li>
+                        <!-- agrega más reportes aquí -->
+
+                     </ul>
+                  </li>
+
                </ul>
             </nav>
          </h:form>
@@ -112,97 +105,88 @@
          <div style="min-height:60vh">
             <h3>Agregar Renta</h3>
 
-            <!-- Mensajes -->
-            <h:messages id="msg"
-                        globalOnly="false"
+            <h:messages id="msg" globalOnly="false"
                         styleClass="message-global"
                         infoClass="message-info"
                         errorClass="message-error"
                         warnClass="message-warn"/>
 
-            <!-- Formulario -->
             <h:form id="rentaForm">
-               <h:panelGrid columns="2" cellpadding="5">
 
-                  <!-- Cliente -->
-                  <h:outputLabel value="Cliente:" for="cliente" />
-                  <h:inputText id="cliente"
-                               value="#{rentaController.newRenta.clienteNombre}"
-                               required="true"
-                               requiredMessage="Debe ingresar un cliente" />
 
-                  <!-- Vehículo -->
-                  <h:outputLabel value="Vehículo:" for="vehiculo" />
-                  <h:selectOneMenu id="vehiculo"
-                                   value="#{rentaController.newRenta.vehiculo}"
-                                   converter="vehiculoConverter"
-                                   required="true"
-                                   requiredMessage="Debe seleccionar un vehículo">
-                     <f:selectItem itemLabel="Seleccione un vehículo" itemValue="#{null}" noSelectionOption="true"/>
-                     <f:selectItems value="#{vehiculoController.vehiculos}"
-                                    var="v"
-                                    itemValue="#{v}"
-                                    itemLabel="#{v.placa} - #{v.marca} #{v.modelo}" />
-                  </h:selectOneMenu>
 
-                  <!-- Sucursal -->
-                  <h:outputLabel value="Sucursal:" for="sucursal" />
-                  <h:selectOneMenu id="sucursal"
-                                   value="#{rentaController.newRenta.sucursal}"
-                                   converter="sucursalConverter"
-                                   required="true"
-                                   requiredMessage="Debe seleccionar una sucursal">
-                     <f:selectItem itemLabel="Seleccione una sucursal" itemValue="#{null}" noSelectionOption="true"/>
-                     <f:selectItems value="#{sucursalController.sucursales}"
-                                    var="s"
-                                    itemValue="#{s}"
-                                    itemLabel="#{s.nombre} (#{s.codigo})" />
-                  </h:selectOneMenu>
-
-                  <!-- Fecha Inicio -->
-                  <h:outputLabel value="Fecha Inicio:" for="fechaInicio" />
-                  <p:datePicker id="fechaInicio"
-                                value="#{rentaController.newRenta.fechaInicio}"
-                                pattern="yyyy-MM-dd"
-                                required="true"
-                                requiredMessage="Debe seleccionar la fecha de inicio" />
-
-                  <!-- Fecha Fin -->
-                  <h:outputLabel value="Fecha Fin:" for="fechaFin" />
-                  <p:datePicker id="fechaFin"
-                                value="#{rentaController.newRenta.fechaFin}"
-                                pattern="yyyy-MM-dd"
-                                required="true"
-                                requiredMessage="Debe seleccionar la fecha de fin" />
-
-                  <!-- Precio Total -->
-                  <h:outputLabel value="Precio Total:" for="precioTotal" />
-                  <h:inputText id="precioTotal"
-                               value="#{rentaController.newRenta.precioTotal}"
-                               required="true"
-                               requiredMessage="Debe ingresar un precio" />
-
-                  <!-- Estado -->
-                  <h:outputLabel value="Estado:" for="estado" />
-                  <h:selectOneMenu id="estado"
-                                   value="#{rentaController.newRenta.estado}"
-                                   required="true"
-                                   requiredMessage="Debe seleccionar un estado">
-                     <f:selectItem itemLabel="Seleccionar estado" itemValue="#{null}" noSelectionOption="true"/>
-                     <f:selectItem itemLabel="Activa" itemValue="Activa"/>
-                     <f:selectItem itemLabel="Finalizada" itemValue="Finalizada"/>
-                  </h:selectOneMenu>
-
+               <!-- Cliente -->
+               <h:panelGrid columns="2">
+                  <h:outputLabel for="cliente" value="Cliente:"/>
+                  <h:inputText styleClass="form-control" id="cliente"
+                               value="#{rentasBean.newRenta.clienteNombre}"
+                               required="true" requiredMessage="El cliente es obligatorio"/>
                </h:panelGrid>
 
-               <!-- Botones -->
-               <h:commandButton value="Guardar"
-                                action="#{rentaController.add}"
-                                update="@form" />
-               <h:commandButton value="Limpiar"
-                                actionListener="#{rentaController.reset}"
-                                update="@form"
-                                type="reset" />
+               <!-- Vehículo por placa -->
+               <h:panelGrid columns="2">
+                  <h:outputLabel for="vehiculo" value="Vehículo:"/>
+                  <h:selectOneMenu value="#{rentasBean.newRenta.vehiculoPlaca}" id="vehiculo"
+                                   styleClass="form-control" required="true">
+                     <f:selectItems value="#{rentasBean.vehiculos}" var="v"
+                                    itemLabel="#{v.placa} - #{v.marca} #{v.modelo}"
+                                    itemValue="#{v.placa}"/>
+                  </h:selectOneMenu>
+               </h:panelGrid>
+
+               <!-- Sucursal por código -->
+               <h:panelGrid columns="2">
+                  <h:outputLabel for="sucursal" value="Sucursal:"/>
+                  <h:selectOneMenu value="#{rentasBean.newRenta.sucursalCodigo}" id="sucursal"
+                                   styleClass="form-control" required="true">
+                     <f:selectItems value="#{rentasBean.sucursales}" var="s"
+                                    itemLabel="#{s.nombre}"
+                                    itemValue="#{s.codigo}"/>
+                  </h:selectOneMenu>
+               </h:panelGrid>
+
+               <!-- Fechas -->
+               <h:panelGrid columns="2">
+                  <h:outputLabel for="inicio" value="Fecha inicio (yyyy-MM-dd):"/>
+                  <h:inputText styleClass="form-control" id="inicio"
+                               value="#{rentasBean.newRenta.fechaInicio}"
+                               required="true">
+                     <f:convertDateTime pattern="yyyy-MM-dd"/>
+                  </h:inputText>
+
+                  <h:outputLabel for="fin" value="Fecha fin (yyyy-MM-dd):"/>
+                  <h:inputText styleClass="form-control" id="fin"
+                               value="#{rentasBean.newRenta.fechaFin}"
+                               required="true">
+                     <f:convertDateTime pattern="yyyy-MM-dd"/>
+                  </h:inputText>
+               </h:panelGrid>
+
+               <!-- Precio -->
+               <h:panelGrid columns="2">
+                  <h:outputLabel for="precio" value="Precio total:"/>
+                  <h:inputText styleClass="form-control" id="precio"
+                               value="#{rentasBean.newRenta.precioTotal}"
+                               required="true">
+                     <f:validateLongRange minimum="0"/>
+                  </h:inputText>
+               </h:panelGrid>
+
+               <!-- Estado -->
+               <h:panelGrid columns="2">
+                  <h:outputLabel for="estado" value="Estado:"/>
+                  <h:selectOneMenu styleClass="form-control" id="estado"
+                                   value="#{rentasBean.newRenta.estado}"
+                                   required="true">
+                     <f:selectItem itemLabel="Activa" itemValue="activa"/>
+                     <f:selectItem itemLabel="Finalizada" itemValue="finalizada"/>
+                     <f:selectItem itemLabel="Cancelada" itemValue="cancelada"/>
+                  </h:selectOneMenu>
+               </h:panelGrid>
+
+               <h:commandButton styleClass="btn btn-primary" value="Guardar" action="#{rentasBean.add}"/>
+               <h:commandButton styleClass="btn btn-warning" type="reset" value="Limpiar"/>
+
             </h:form>
          </div>
 
