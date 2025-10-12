@@ -8,13 +8,20 @@ import repository.CategoriaRepository;
 
 import java.util.List;
 
+/**
+ * Capa de servicios para operaciones de negocio sobre categorías.
+ * <p>Valida reglas mínimas (duplicados) y delega al repositorio.</p>
+ */
 @ApplicationScoped
 public class CategoriaService {
 
     @Inject
     private CategoriaRepository repository;
 
-    // ===== Crear categoría con validación =====
+    /**
+     * Crea una nueva categoría validando duplicado por descripción.
+     * @throws IllegalArgumentException si ya existe la descripción.
+     */
     public void createCategoria(CategoriaVehiculoDto dto) {
         if (repository.existsByDescripcion(dto.getDescripcion())) {
             throw new IllegalArgumentException(
@@ -24,29 +31,28 @@ public class CategoriaService {
         repository.addCategory(dto);
     }
 
-    // ===== Actualizar categoría con validación =====
+    /**
+     * Actualiza la categoría validando existencia y duplicado en descripción.
+     * @throws IllegalArgumentException si no existe o hay conflicto de descripción.
+     */
     public void updateCategoria(CategoriaVehiculoDto dto) {
         CategoriaVehiculo existente = repository.findCategoryById(dto.getCodigo());
-
         if (existente == null) {
             throw new IllegalArgumentException("La categoría con código " + dto.getCodigo() + " no existe.");
         }
-
         CategoriaVehiculo otra = repository.findCategoryByDescripcion(dto.getDescripcion());
         if (otra != null && !otra.getCodigo().equals(dto.getCodigo())) {
             throw new IllegalArgumentException(
                     "Ya existe otra categoría con la descripción: " + dto.getDescripcion()
             );
         }
-
         repository.updateCategory(dto);
     }
 
-    // ===== Otros métodos =====
-    public void deleteCategoria(Integer codigo) {
-        repository.deleteCategory(codigo);
-    }
+    /** Elimina una categoría por código. */
+    public void deleteCategoria(Integer codigo) { repository.deleteCategory(codigo); }
 
+    /** Mapea entidad a DTO. */
     public CategoriaVehiculoDto toDto(CategoriaVehiculo model) {
         CategoriaVehiculoDto categoriaVehiculoDto = new CategoriaVehiculoDto();
         categoriaVehiculoDto.setCodigo(model.getCodigo());
@@ -55,28 +61,21 @@ public class CategoriaService {
         return categoriaVehiculoDto;
     }
 
-    public List<CategoriaVehiculo> listarCategorias() {
-        return repository.getCategories();
-    }
+    /** Lista todas las categorías. */
+    public List<CategoriaVehiculo> listarCategorias() { return repository.getCategories(); }
 
-    public CategoriaVehiculo getByDescripcion(String desc) {
-        return repository.findCategoryByDescripcion(desc);
-    }
+    /** Busca por descripción. */
+    public CategoriaVehiculo getByDescripcion(String desc) { return repository.findCategoryByDescripcion(desc); }
 
-    public CategoriaVehiculo getById(Integer id) {
-        return repository.getById(id);
-    }
+    /** Obtiene por id. */
+    public CategoriaVehiculo getById(Integer id) { return repository.getById(id); }
 
-    public CategoriaVehiculo findById(Integer id) {
-        return repository.findCategoryById(id);
-    }
+    /** Alias de {@link CategoriaRepository#findCategoryById(Integer)}. */
+    public CategoriaVehiculo findById(Integer id) { return repository.findCategoryById(id); }
 
-    public void updateCategoria(CategoriaVehiculo categoria) {
-        repository.update(categoria);
-    }
+    /** Actualiza entidad administrada (vía merge). */
+    public void updateCategoria(CategoriaVehiculo categoria) { repository.update(categoria); }
 
-    public List<CategoriaVehiculo> getCategorias() {
-        return listarCategorias();
-    }
-
+    /** Alias de {@link #listarCategorias()}. */
+    public List<CategoriaVehiculo> getCategorias() { return listarCategorias(); }
 }

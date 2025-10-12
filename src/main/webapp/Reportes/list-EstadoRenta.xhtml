@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<f:view>
+    <h:head>
+        <title>Rentas por estado</title>
+        <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+        <!-- Mantén tu CSS si lo usas; el resto va inline -->
+        <h:outputStylesheet library="css" name="style.css"/>
+        <link rel="stylesheet" type="text/css"
+              href="#{request.contextPath}/resources/css/style.css"/>
+    </h:head>
+
+    <h:body>
+        <!-- Wrapper general: flex column para “pegar” el footer abajo -->
+        <div class="container" style="min-height:100vh; display:flex; flex-direction:column;">
+
+            <!-- ======= NAVBAR (igual al anterior) ======= -->
+            <div class="navbar">
+                <div class="nav-inner">
+
+                    <!-- Marca -->
+                    <div class="brand">
+                        <h2 class="brand-text">AVIS</h2>
+                    </div>
+
+                    <!-- Menú -->
+                    <nav>
+                        <ul class="menu">
+                            <li class="menu-item">
+                                <h:link value="Home"
+                                        outcome="/home.xhtml?faces-redirect=true"
+                                        styleClass="home-btn"/>
+                            </li>
+
+                            <li class="menu-item has-sub">
+                                <span class="menu-link">Usuario</span>
+                                <ul class="sub-menu">
+                                    <li><h:link value="Listar"     outcome="/Usuario/list-usuario.xhtml?faces-redirect=true"/></li>
+                                    <li><h:link value="Agregar"    outcome="/Usuario/add-Usuario.xhtml?faces-redirect=true"/></li>
+                                    <li><h:link value="Actualizar" outcome="/Usuario/update-usuario-byUsername.xhtml?faces-redirect=true"/></li>
+                                    <li><h:link value="Eliminar"   outcome="/Usuario/delete-usuario-byUsername.xhtml?faces-redirect=true"/></li>
+                                </ul>
+                            </li>
+
+                            <li class="menu-item has-sub">
+                                <span class="menu-link">Sucursales</span>
+                                <ul class="sub-menu">
+                                    <li><h:link value="Listar"      outcome="/Sucursales/list-sucursal.xhtml?faces-redirect=true"/></li>
+                                    <li><h:link value="Agregar"     outcome="/Sucursales/add-sucursal.xhtml?faces-redirect=true"/></li>
+                                    <li><h:link value="Actualizar"  outcome="/Sucursales/update-sucursal.xhtml?faces-redirect=true"/></li>
+                                </ul>
+                            </li>
+
+                            <li class="menu-item has-sub">
+                                <span class="menu-link">Vehículos</span>
+                                <ul class="sub-menu">
+                                    <li><h:link value="Listar"      outcome="/Vehiculos/list-vehiculo.xhtml?faces-redirect=true"/></li>
+                                    <li><h:link value="Agregar"     outcome="/Vehiculos/add-vehiculo.xhtml?faces-redirect=true"/></li>
+                                    <li><h:link value="Actualizar"  outcome="/Vehiculos/update-vehiculo.xhtml?faces-redirect=true"/></li>
+                                </ul>
+                            </li>
+
+                            <li class="menu-item has-sub">
+                                <span class="menu-link">Rentas</span>
+                                <ul class="sub-menu">
+                                    <li><h:link value="Listar"      outcome="/Rentas/list-rentas.xhtml?faces-redirect=true"/></li>
+                                    <li><h:link value="Agregar"     outcome="/Rentas/add-rentas.xhtml?faces-redirect=true"/></li>
+                                    <li><h:link value="Actualizar"  outcome="/Rentas/update-rentas.xhtml?faces-redirect=true"/></li>
+                                </ul>
+                            </li>
+
+                            <li class="menu-item has-sub">
+                                <span class="menu-link">Categorías</span>
+                                <ul class="sub-menu">
+                                    <li><h:link value="Listar"      outcome="/Categorias/list-categorias.xhtml?faces-redirect=true"/></li>
+                                    <li><h:link value="Agregar"     outcome="/Categorias/add-categorias.xhtml?faces-redirect=true"/></li>
+                                    <li><h:link value="Actualizar"  outcome="/Categorias/update-categorias.xhtml?faces-redirect=true"/></li>
+                                </ul>
+                            </li>
+
+                            <li class="menu-item has-sub">
+                                <span class="menu-link">Reportes</span>
+                                <ul class="sub-menu">
+                                    <li><h:link value="Vehículos por categoría" outcome="/Reportes/list-ByCategoria.xhtml?faces-redirect=true"/></li>
+                                    <li><h:link value="Vehículos por estado"     outcome="/Reportes/list-EstadoCategoria.xhtml?faces-redirect=true"/></li>
+                                    <li><h:link value="Vehículos por estado"     outcome="/Reportes/list-EstadoRenta.xhtml?faces-redirect=true"/></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </nav>
+
+                </div>
+            </div>
+            <!-- ======= NAVBAR END ======= -->
+
+            <!-- ======= CONTENIDO ======= -->
+            <!-- padding-top evita que el contenido quede tapado por la navbar fija -->
+            <main style="flex:1; padding:72px 0 24px; display:flex; flex-direction:column; align-items:center;">
+
+                <h:form id="fEstado" style="display:flex; flex-direction:column; gap:16px; align-items:center;">
+
+                    <!-- Mensajes -->
+                    <h:messages id="msg" globalOnly="true"
+                                style="max-width:900px; font-weight:600; font-size:16px;"/>
+
+                    <!-- Fila de controles -->
+                    <div style="display:flex; gap:12px; align-items:center; width:900px; max-width:95%;">
+                        <label for="comboEstado" style="min-width:110px; font-weight:700;">Estado:</label>
+
+                        <h:selectOneMenu id="comboEstado"
+                                         value="#{rentasBean.estadoFiltro}"
+                                         style="flex:1; padding:10px; border:1px solid #d1d5db; border-radius:8px; font-size:1rem;">
+                            <f:selectItem itemValue=""              itemLabel="-- Todos --"/>
+                            <f:selectItem itemValue="activa"        itemLabel="Activas"/>
+                            <f:selectItem itemValue="finalizada"    itemLabel="Finalizadas"/>
+                            <f:selectItem itemValue="cancelada"     itemLabel="Canceladas"/>
+
+                            <!-- Filtra automáticamente al cambiar -->
+                            <f:ajax execute="@this"
+                                    listener="#{rentasBean.filtrarPorEstado}"
+                                    render="fEstado:msg fEstado:tabla"/>
+                        </h:selectOneMenu>
+
+                        <!-- Botón opcional: volver a “Todos” -->
+                        <h:commandButton value="Mostrar todos"
+                                         style="padding:10px 16px; background:#6b7280; color:#fff; border:0; border-radius:10px; font-weight:700; cursor:pointer;">
+                            <f:setPropertyActionListener target="#{rentasBean.estadoFiltro}" value=""/>
+                            <f:ajax execute="@this"
+                                    listener="#{rentasBean.filtrarPorEstado}"
+                                    render="fEstado:msg fEstado:comboEstado fEstado:tabla"/>
+                        </h:commandButton>
+                    </div>
+
+                    <!-- Tabla de resultados -->
+                    <h:panelGroup id="tabla" layout="block" style="width:900px; max-width:95%;">
+
+                        <!-- Cuando hay resultados -->
+                        <h:panelGroup rendered="#{not empty rentasBean.rentasFiltradas}">
+                            <h:dataTable value="#{rentasBean.rentasFiltradas}" var="r"
+                                         style="width:100%; border-collapse:collapse; margin-top:10px;"
+                                         rowClasses="rowA,rowB" headerClass="th" columnClasses="td,td,td,td,td,td,td,td">
+
+                                <h:column>
+                                    <f:facet name="header"># Renta</f:facet>
+                                    <h:outputText value="#{r.numeroRenta}"/>
+                                </h:column>
+
+                                <h:column>
+                                    <f:facet name="header">Cliente</f:facet>
+                                    <h:outputText value="#{r.clienteNombre}"/>
+                                </h:column>
+
+                                <h:column>
+                                    <f:facet name="header">Vehículo</f:facet>
+                                    <h:outputText value="#{r.vehiculo.placa}"/>
+                                </h:column>
+
+                                <h:column>
+                                    <f:facet name="header">Sucursal</f:facet>
+                                    <h:outputText value="#{r.sucursal.codigo}"/>
+                                </h:column>
+
+                                <h:column>
+                                    <f:facet name="header">Inicio</f:facet>
+                                    <h:outputText value="#{r.fechaInicio}">
+                                        <f:convertDateTime pattern="yyyy-MM-dd"/>
+                                    </h:outputText>
+                                </h:column>
+
+                                <h:column>
+                                    <f:facet name="header">Fin</f:facet>
+                                    <h:outputText value="#{r.fechaFin}">
+                                        <f:convertDateTime pattern="yyyy-MM-dd"/>
+                                    </h:outputText>
+                                </h:column>
+
+                                <h:column>
+                                    <f:facet name="header">Precio</f:facet>
+                                    <h:outputText value="#{r.precioTotal}">
+                                        <f:convertNumber type="currency" currencySymbol="$" maxFractionDigits="2"/>
+                                    </h:outputText>
+                                </h:column>
+
+                                <h:column>
+                                    <f:facet name="header">Estado</f:facet>
+                                    <h:outputText value="#{r.estado}"/>
+                                </h:column>
+
+                            </h:dataTable>
+                        </h:panelGroup>
+
+                        <!-- Cuando no hay resultados -->
+                        <h:panelGroup rendered="#{empty rentasBean.rentasFiltradas}">
+                            <div style="margin-top:14px; color:#6b7280; font-weight:600;">
+                                No hay rentas para mostrar.
+                            </div>
+                        </h:panelGroup>
+                    </h:panelGroup>
+
+                    <!-- Estilos mínimos para la tabla -->
+                    <style>
+                        .th { background:#f3f4f6; font-weight:700; padding:10px; border-bottom:1px solid #e5e7eb; text-align:left; }
+                        .td { padding:10px; border-bottom:1px solid #f1f5f9; }
+                        .rowA { background:#ffffff; }
+                        .rowB { background:#fcfcfd; }
+                    </style>
+
+                </h:form>
+            </main>
+            <!-- ======= CONTENIDO END ======= -->
+
+            <!-- ======= FOOTER (igual al anterior) ======= -->
+            <div class="site-footer" style="margin-top:auto;">
+                <hr class="site-footer__divider" />
+                <p class="site-footer__copyright">
+                    Avis Costa Rica. Todos los derechos reservado&copy; 2025
+                </p>
+
+                <div class="footer container" style="max-width:1200px; margin:0 auto; padding:24px 20px 36px;">
+                    <!-- Columna: Logo y redes -->
+                    <div class="footer__col footer__brand">
+                        <div class="logo">AVIS</div>
+
+                        <div class="footer__social">
+                            <a class="social social--ig" href="#" aria-label="Instagram">
+                                <img src="https://via.placeholder.com/20" alt="" />
+                            </a>
+                            <a class="social social--fb" href="#" aria-label="Facebook">
+                                <img src="https://via.placeholder.com/20" alt="" />
+                            </a>
+                            <a class="social social--li" href="#" aria-label="LinkedIn">
+                                <img src="https://via.placeholder.com/20" alt="" />
+                            </a>
+                            <a class="social social--wa" href="#" aria-label="WhatsApp">
+                                <img src="https://via.placeholder.com/20" alt="" />
+                            </a>
+                        </div>
+
+                        <p class="footer__note">Visítenos en nuestras redes sociales.</p>
+                        <div style="font-size: 30px; border-radius: 10px;">
+                            <h:link value="Acerca de.." styleClass="desarrollo"
+                                    outcome="/Desarrolladores/desarrolladores.xhtml?faces-redirect=true"/>
+                        </div>
+                    </div>
+
+                    <!-- Columna: Contáctenos -->
+                    <div class="footer__col">
+                        <h3 class="footer__title">Contáctenos</h3>
+                        <p class="footer__text">Central de reservas: 2293-2222</p>
+                        <p class="footer__text">WhatsApp: 6244-9247</p>
+                        <p><a class="footer__link" href="mailto:reservaciones@avis.co.cr">reservaciones@avis.co.cr</a></p>
+                        <p><a class="footer__link" href="mailto:customerservice@avis.co.cr">customerservice@avis.co.cr</a></p>
+                        <p><a class="footer__link" href="#">Teléfonos de emergencia</a></p>
+                    </div>
+
+                    <!-- Columna: Servicio al cliente -->
+                    <div class="footer__col">
+                        <h3 class="footer__title">Servicio al cliente</h3>
+                        <ul class="footer__list">
+                            <li><a class="footer__link" href="#">Guía de vehículos</a></li>
+                            <li><a class="footer__link" href="#">Extras y accesorios</a></li>
+                            <li><a class="footer__link" href="#">Coberturas adicionales</a></li>
+                            <li><a class="footer__link" href="#">Ofertas especiales</a></li>
+                            <li><a class="footer__link" href="#">Servicios corporativos</a></li>
+                            <li><a class="footer__link" href="#">Responsabilidad social empresarial</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Columna: Gestión de reservas -->
+                    <div class="footer__col">
+                        <h3 class="footer__title">Gestión de reservas</h3>
+                        <ul class="footer__list">
+                            <li><a class="footer__link" href="#">Cotice su reserva</a></li>
+                            <li><a class="footer__link" href="#">Buscar una reserva</a></li>
+                            <li><a class="footer__link" href="#">Encontrar una oficina</a></li>
+                            <li><a class="footer__link" href="#">Preguntas frecuentes</a></li>
+                            <li><a class="footer__link" href="#">Consejos al alquilar</a></li>
+                        </ul>
+                    </div>
+
+                    <!-- Columna: Acerca de nosotros -->
+                    <div class="footer__col">
+                        <h3 class="footer__title">Acerca de nosotros</h3>
+                        <ul class="footer__list">
+                            <li><a class="footer__link" href="#">Avis Costa Rica</a></li>
+                            <li><a class="footer__link" href="#">Políticas de cancelación</a></li>
+                            <li><a class="footer__link" href="#">Políticas de privacidad</a></li>
+                            <li><a class="footer__link" href="#">Políticas de cookies</a></li>
+                            <li><a class="footer__link" href="#">Términos y condiciones</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- ======= FOOTER END ======= -->
+
+        </div>
+    </h:body>
+</f:view>
+</html>

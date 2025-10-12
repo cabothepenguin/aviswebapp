@@ -24,6 +24,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
+/**
+ * Controlador JSF para la administración de vehículos.
+ * <p>
+ * Maneja operaciones CRUD con DTOs, carga de categorías y subida de imágenes
+ * a recurso estático para su posterior visualización en la aplicación.
+ * </p>
+ */
 @Named("vehiculoBean")
 @ViewScoped
 public class VehiculoController implements Serializable {
@@ -36,22 +43,31 @@ public class VehiculoController implements Serializable {
     @Inject
     private CategoriaService categoriaService;
 
+    /** Placa seleccionada para operaciones de eliminación. */
     private String selectedPlaca;
+    /** Archivo subido desde el formulario (imagen del vehículo). */
     private Part uploadedFile;
+    /** Nombre de archivo normalizado para almacenamiento web. */
     private String fileName;
+    /** Bytes del archivo (opcionalmente persistidos en DB). */
     private byte[] file;
 
     // Form de creación
+    /** DTO para crear un nuevo vehículo. */
     private VehiculoDto newVehiculo = new VehiculoDto();
     // Form de edición
+    /** DTO para editar un vehículo existente. */
     private VehiculoDto selectedVehiculo = new VehiculoDto();
 
     // Para listar en la tabla (SIEMPRE usar DTO)
+    /** Listado de vehículos (DTO) para la tabla principal. */
     private List<VehiculoDto> vehiculos = new ArrayList<>();
 
     // Lista de categorías para el select
+    /** Catálogo de categorías para combos/selects. */
     private List<CategoriaVehiculo> categorias = new ArrayList<>();
 
+    /** Carga el listado de vehículos y categorías al inicializar. */
     @PostConstruct
     public void init() {
         loadVehiculos();
@@ -59,6 +75,14 @@ public class VehiculoController implements Serializable {
     }
 
     /* =================== CREATE =================== */
+
+    /**
+     * Crea un nuevo vehículo utilizando {@link #newVehiculo}.
+     * <p>
+     * Si el formulario incluye archivo y el DTO aún no tiene imagen,
+     * invoca {@link #upload()} para copiar los bytes y nombre.
+     * </p>
+     */
     public void addVehiculo() {
         if (uploadedFile != null && newVehiculo.getImage() == null) {
             upload(); // copia bytes a newVehiculo.image / imageName
@@ -77,6 +101,8 @@ public class VehiculoController implements Serializable {
     }
 
     /* =================== READ =================== */
+
+    /** Carga el catálogo de vehículos mapeando entidades a DTOs de vista. */
     public void loadVehiculos() {
         try {
             vehiculos = service.listar()
@@ -102,11 +128,22 @@ public class VehiculoController implements Serializable {
         }
     }
 
+    /**
+     * Busca un vehículo por su placa y retorna un DTO.
+     * @param placa identificador del vehículo.
+     * @return {@link Optional} con el DTO si existe.
+     */
     public Optional<VehiculoDto> findByPlaca(String placa) {
         return service.buscarPorPlaca(placa);
     }
 
     /* =================== UPDATE =================== */
+
+    /**
+     * Actualiza el vehículo actualmente seleccionado en {@link #selectedVehiculo}.
+     *
+     * @return navegación a la lista con redirect; <code>null</code> si hay errores.
+     */
     public String update() {
         try {
             service.actualizar(selectedVehiculo);
@@ -123,6 +160,12 @@ public class VehiculoController implements Serializable {
     }
 
     /* =================== DELETE =================== */
+
+    /**
+     * Elimina el vehículo indicado por {@link #selectedPlaca}.
+     *
+     * @return navegación a la lista con redirect; <code>null</code> en caso de error.
+     */
     public String delete() {
         try {
             service.eliminar(selectedPlaca);
@@ -138,6 +181,8 @@ public class VehiculoController implements Serializable {
     }
 
     /* =================== Helpers =================== */
+
+    /** Carga las categorías disponibles desde el servicio. */
     private void loadCategorias() {
         try {
             categorias = categoriaService.listarCategorias();
@@ -149,6 +194,11 @@ public class VehiculoController implements Serializable {
         }
     }
 
+    /**
+     * Carga un vehículo por su placa y lo coloca en {@link #selectedVehiculo}.
+     * Si no existe, limpia el DTO seleccionado y muestra un mensaje de error.
+     * @param placa placa a buscar.
+     */
     public void loadVehiculoByPlaca(String placa) {
         selectedVehiculo = service.buscarPorPlaca(placa)
                 .orElseGet(() -> {
@@ -157,6 +207,13 @@ public class VehiculoController implements Serializable {
                 });
     }
 
+    /**
+     * Sube el archivo de {@link #uploadedFile} a la carpeta pública
+     * <code>/resources/images</code> y guarda sus bytes y nombre en el DTO.
+     * <p>
+     * El nombre se normaliza para evitar caracteres no seguros en sistemas de archivos.
+     * </p>
+     */
     public void upload() {
         if (uploadedFile == null) {
             System.out.println("=== CONTROLLER: No se seleccionó archivo ===");
@@ -202,22 +259,43 @@ public class VehiculoController implements Serializable {
         }
     }
 
+    // -------- Búsqueda por estado --------
 
+    /** Estado a buscar (p.ej. "disponible", "mantenimiento"). */
+    private String estadoBuscar;
+
+    /**
+     * Filtra el listado por {@link #estadoBuscar}. Si no se indica,
+     * recarga todos los vehículos.
+     */
+    public void buscarPorEstado() {
+        try {
+            if (estadoBuscar == null || estadoBuscar.isBlank()) {
+                loadVehiculos(); // todos
+            } else {
+                vehiculos = service.listarPorEstado(estadoBuscar);
+            }
+            success("Vehículos cargados.");
+        } catch (Exception e) {
+            LOG.severe(e.getMessage());
+            error("Ocurrió un error al cargar vehículos por estado.");
+            vehiculos = new ArrayList<>();
+        }
+    }
+
+    // -------- Helpers de mensajes --------
     private void error(String msg) {
         FacesContext.getCurrentInstance()
                 .addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, null));
     }
-
     private void success(String msg) {
         FacesContext.getCurrentInstance()
                 .addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, msg, null));
     }
-
     private void ErrorMessage(String msg) {
         FacesMessage msgF = new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, null);
         FacesContext.getCurrentInstance().addMessage(null, msgF);
     }
-
     private void SuccessMessage(String msg) {
         FacesMessage msgF = new FacesMessage(FacesMessage.SEVERITY_INFO, msg, null);
         FacesContext.getCurrentInstance().addMessage(null, msgF);
@@ -246,4 +324,9 @@ public class VehiculoController implements Serializable {
     public void setVehiculos(List<VehiculoDto> vehiculos) { this.vehiculos = vehiculos; }
 
     public List<CategoriaVehiculo> getCategorias() { return categorias; }
+
+    /** @return valor actual del filtro por estado. */
+    public String getEstadoBuscar() { return estadoBuscar; }
+    /** @param estadoBuscar estado por el que se desea filtrar. */
+    public void setEstadoBuscar(String estadoBuscar) { this.estadoBuscar = estadoBuscar; }
 }

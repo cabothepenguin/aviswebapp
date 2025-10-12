@@ -1,7 +1,7 @@
+C:\Users\Admin\Desktop\6 semestre\programacion III\proyecto 1\aviswebapp\src\main\java\controller\AuthController.java
 C:\Users\Admin\Desktop\6 semestre\programacion III\proyecto 1\aviswebapp\src\main\java\controller\CategoriaController.java
 C:\Users\Admin\Desktop\6 semestre\programacion III\proyecto 1\aviswebapp\src\main\java\controller\RentasController.java
 C:\Users\Admin\Desktop\6 semestre\programacion III\proyecto 1\aviswebapp\src\main\java\controller\SucursalController.java
-C:\Users\Admin\Desktop\6 semestre\programacion III\proyecto 1\aviswebapp\src\main\java\controller\UserController.java
 C:\Users\Admin\Desktop\6 semestre\programacion III\proyecto 1\aviswebapp\src\main\java\controller\UsuarioController.java
 C:\Users\Admin\Desktop\6 semestre\programacion III\proyecto 1\aviswebapp\src\main\java\controller\VehiculoController.java
 C:\Users\Admin\Desktop\6 semestre\programacion III\proyecto 1\aviswebapp\src\main\java\converter\CategoriaVehiculoConverter.java
@@ -10,7 +10,6 @@ C:\Users\Admin\Desktop\6 semestre\programacion III\proyecto 1\aviswebapp\src\mai
 C:\Users\Admin\Desktop\6 semestre\programacion III\proyecto 1\aviswebapp\src\main\java\dto\CategoriaVehiculoDto.java
 C:\Users\Admin\Desktop\6 semestre\programacion III\proyecto 1\aviswebapp\src\main\java\dto\RentasDto.java
 C:\Users\Admin\Desktop\6 semestre\programacion III\proyecto 1\aviswebapp\src\main\java\dto\SucursalDto.java
-C:\Users\Admin\Desktop\6 semestre\programacion III\proyecto 1\aviswebapp\src\main\java\dto\UserDto.java
 C:\Users\Admin\Desktop\6 semestre\programacion III\proyecto 1\aviswebapp\src\main\java\dto\UsuarioDto.java
 C:\Users\Admin\Desktop\6 semestre\programacion III\proyecto 1\aviswebapp\src\main\java\dto\VehiculoDto.java
 C:\Users\Admin\Desktop\6 semestre\programacion III\proyecto 1\aviswebapp\src\main\java\model\CategoriaVehiculo.java

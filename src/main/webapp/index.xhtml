@@ -1,32 +1,202 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
+<!DOCTYPE html>
+<html lang="es"
+      xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
-<f:view>
-    <h:head>
-        <title>AVIS renta car</title>
-        <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-        <h:outputStylesheet library="css" name="style.css"/>
-    </h:head>
-    <h:body>
-        <h:form>
-            <h:messages id="msg" globalOnly="true" style="color: darkred;"/>
-            <div class="login-card card-white">
-                <h2 style="text-align: center">Inicio de sesión</h2>
-                <h:panelGrid columns="1" cellpadding="5" style="width:100%">
-                    <h:outputText value="Usuario"/>
-                    <h:inputText styleClass="form-control" value="#{userDto.username}"/>
-                    <h:outputText value="Contraseña"/>
-                    <h:inputSecret styleClass="form-control" value="#{userDto.password}"/>
-                </h:panelGrid>
-                <h:panelGrid columns="1" cellpadding="10" style="width:100%">
-                    <h:commandButton styleClass="btn btn-primary align-center" value="Login"
-                                     action="#{userController.login(userDto)}"/>
-                </h:panelGrid>
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough">
+
+<h:head>
+    <title>Iniciar sesión</title>
+    <style>
+        /* Reset mínimo para evitar desbordes */
+        *,*::before,*::after{ box-sizing:border-box; }
+
+        :root{
+            --txt-100:#0f172a; --txt-300:#64748b;
+            --accent-1:#2563eb; --accent-2:#4f46e5;
+            --glass-bg: rgba(255,255,255,.72);
+            --glass-border: rgba(255,255,255,.55);
+            --shadow: 0 22px 55px rgba(0,0,0,.32);
+            --radius: 22px;
+            --card-w: 560px;     /* ← cambia este ancho si lo quieres más chico/grande */
+            --control-h: 52px;   /* alto de los campos */
+        }
+
+        /* Fondo */
+        body.login-page{
+            margin:0; min-height:100svh; display:grid; place-items:center; padding:22px;
+            background:
+                    radial-gradient(1100px 520px at 50% -8%, rgba(2,6,23,.34), transparent 60%),
+                    linear-gradient(180deg, rgba(2,6,23,.30), rgba(2,6,23,.22)),
+                    url("#{resource['images:background.webp']}");
+            background-size:cover; background-position:center; background-attachment:fixed;
+            font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+            color:var(--txt-100);
+        }
+        @supports (-webkit-touch-callout:none){ body.login-page{ background-attachment:scroll; } }
+
+        /* Card glass */
+        .login-card{
+            width:min(92vw, var(--card-w));
+            border-radius:var(--radius);
+            padding:24px clamp(18px, 3vw, 28px);
+            position:relative;
+            background:var(--glass-bg);
+            border:1px solid var(--glass-border);
+            backdrop-filter: blur(12px) saturate(140%);
+            -webkit-backdrop-filter: blur(12px) saturate(140%);
+            box-shadow: var(--shadow);
+            animation: pop .28s ease-out both;
+        }
+        .login-card::after{
+            content:""; position:absolute; inset:-1px; border-radius:inherit; pointer-events:none;
+            box-shadow:0 0 0 1px rgba(255,255,255,.33) inset, 0 0 34px rgba(79,70,229,.12) inset;
+        }
+        @keyframes pop{ from{ transform:translateY(6px); opacity:0 } to{ transform:none; opacity:1 } }
+
+        .login-title{
+            margin:4px 0 16px; text-align:center;
+            font-size:clamp(22px, 2.4vw, 30px); letter-spacing:.2px;
+            color:#0b1323; text-shadow:0 2px 10px rgba(0,0,0,.14);
+        }
+
+        .messages{
+            margin:0 0 10px; padding:10px 12px; border-radius:12px;
+            background:rgba(239,68,68,.12); border:1px solid rgba(239,68,68,.45);
+            color:#991b1b; font-weight:700;
+        }
+
+        .field{ margin:10px 0 18px; }
+        label{ display:block; margin:0 0 6px; font-weight:800; color:#0b1323; }
+
+        /* ===== CONTROL UNIFICADO (icono + input + botón) ===== */
+        .control{
+            display:flex; align-items:center; gap:10px;
+            height:var(--control-h);
+            border-radius:16px;
+            padding:0 12px;
+            border:1px solid rgba(15,23,42,.14);
+            background:rgba(255,255,255,.98);
+            box-shadow: inset 0 2px 8px rgba(0,0,0,.06);
+            transition:border .16s ease, box-shadow .16s ease, background .16s ease;
+        }
+        .control:focus-within{
+            border-color:#93c5fd;
+            box-shadow:0 0 0 4px rgba(147,197,253,.22), inset 0 2px 8px rgba(0,0,0,.06);
+            background:#fff;
+        }
+        .control .leading{
+            width:18px; height:18px; opacity:.9; fill:#0b1323; flex:0 0 auto;
+        }
+        .control input{
+            flex:1 1 auto;
+            height:100%;
+            border:0; outline:none; background:transparent;
+            font-size:16px; color:#0b1323; padding:0;
+        }
+        .control input::placeholder{ color:var(--txt-300); }
+
+        .trailing{
+            flex:0 0 auto;
+            width:36px; height:36px; display:grid; place-items:center;
+            border-radius:10px; border:0; cursor:pointer; background:transparent;
+            transition:background .15s ease;
+        }
+        .trailing:hover{ background:rgba(15,23,42,.06); }
+        .trailing svg{ width:19px; height:19px; fill:#0b1323; opacity:.9; }
+        .trailing:focus{ outline:none; }
+
+        /* fila de extras */
+        .row{
+            display:flex; align-items:center; justify-content:space-between;
+            gap:10px; margin:-2px 0 14px; color:var(--txt-300); font-weight:600; font-size:14px;
+        }
+        .row a{ color:var(--txt-300); text-decoration:none; }
+        .row a:hover{ text-decoration:underline; }
+
+        /* Botón */
+        .btn{
+            width:100%; height:52px; border:0; cursor:pointer; border-radius:18px;
+            color:#fff; font-weight:900; letter-spacing:.3px; font-size:16px;
+            background:linear-gradient(90deg, var(--accent-1), var(--accent-2));
+            box-shadow:0 16px 32px rgba(37,99,235,.33);
+            transition: transform .12s ease, filter .12s ease, box-shadow .12s ease;
+        }
+        .btn:hover{ filter:brightness(1.07); transform:translateY(-1px); }
+        .btn:active{ transform:translateY(0); box-shadow:0 12px 24px rgba(37,99,235,.28); }
+
+        @media (max-width:520px){
+            :root{ --card-w: 92vw; }
+            .row{ flex-direction:column; align-items:flex-start; gap:6px; }
+        }
+    </style>
+</h:head>
+
+<h:body styleClass="login-page">
+    <div class="login-card">
+        <h2 class="login-title">Iniciar sesión</h2>
+
+        <h:form id="loginForm">
+            <h:messages id="msgs" globalOnly="true" styleClass="messages"/>
+
+            <!-- Usuario -->
+            <div class="field">
+                <label for="username">Usuario</label>
+                <div class="control">
+                    <svg class="leading" viewBox="0 0 24 24">
+                        <path d="M12 12a5 5 0 100-10 5 5 0 000 10zm0 2c-4.4 0-8 2.2-8 5v1h16v-1c0-2.8-3.6-5-8-5z"/>
+                    </svg>
+                    <h:inputText id="username"
+                                 value="#{authController.username}"
+                                 required="true"
+                                 requiredMessage="El usuario es obligatorio"
+                                 styleClass=""
+                                 p:placeholder="Tu usuario"
+                                 p:autocomplete="username"/>
+                </div>
             </div>
+
+            <!-- Contraseña -->
+            <div class="field">
+                <label for="pass">Contraseña</label>
+                <div class="control">
+                    <svg class="leading" viewBox="0 0 24 24">
+                        <path d="M17 9h-1V7a4 4 0 10-8 0v2H7a2 2 0 00-2 2v7a2 2 0 002 2h10a2 2 0 002-2v-7a2 2 0 00-2-2zm-6 8v-3a1 1 0 112 0v3h-2zm3-8H10V7a2 2 0 114 0v2z"/>
+                    </svg>
+                    <h:inputSecret id="pass"
+                                   value="#{authController.password}"
+                                   required="true"
+                                   requiredMessage="La contraseña es obligatoria"
+                                   p:placeholder="••••••••"
+                                   p:autocomplete="current-password"/>
+                    <button type="button" class="trailing"
+                            onclick="togglePass('loginForm:pass', this)"
+                            aria-label="Mostrar u ocultar contraseña" title="Mostrar u ocultar contraseña">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 5c-5 0-9 5-9 7s4 7 9 7 9-5 9-7-4-7-9-7zm0 12a5 5 0 110-10 5 5 0 010 10zm0-8a3 3 0 100 6 3 3 0 000-6z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Extras -->
+            <div class="row">
+                <label><input type="checkbox" style="accent-color:#2563eb; margin-right:6px;"/> Recordarme</label>
+                <a href="#">¿Olvidaste tu contraseña?</a>
+            </div>
+
+            <h:commandButton value="Entrar" action="#{authController.login()}" styleClass="btn"/>
         </h:form>
-    </h:body>
-</f:view>
+    </div>
+
+    <script>
+        function togglePass(id, btn){
+            const el = document.getElementById(id);
+            if(!el) return;
+            el.type = (el.type === 'password') ? 'text' : 'password';
+            btn.title = (el.type === 'password') ? 'Mostrar contraseña' : 'Ocultar contraseña';
+        }
+    </script>
+</h:body>
 </html>

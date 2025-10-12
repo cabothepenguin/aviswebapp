@@ -1,23 +1,27 @@
 package service;
 
-import jakarta.ejb.Stateless;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
 import model.Sucursal;
 import repository.SucursalRepository;
 
 import java.util.List;
 import java.util.Optional;
 
-@ApplicationScoped  // administra transacciones si las mueves al service
+/**
+ * Servicio de negocio para sucursales.
+ * <p>Aplica validaciones mínimas y controla duplicados por nombre.</p>
+ */
+@ApplicationScoped
 public class SucursalService {
 
     @Inject
     private SucursalRepository repository;
 
-    //  (valida que no exista el nombre)
-
+    /**
+     * Agrega una sucursal validando obligatorios y nombre duplicado.
+     * @throws IllegalArgumentException si el nombre ya existe.
+     */
     public void add(Sucursal s) {
         validarObligatorios(s);
         if (repository.existsByNombre(s.getNombre())) {
@@ -25,14 +29,14 @@ public class SucursalService {
         }
         repository.addSucursal(s);
     }
-    //valida que el nombre no esté usado por otra sucursal
-    // Actualizar (valida duplicado por nombre si cambió)
 
+    /**
+     * Actualiza una sucursal validando datos y conflicto de nombre.
+     * <p>Permite el mismo nombre si corresponde a la propia sucursal.</p>
+     */
     public void update(Sucursal s) {
         validarObligatorios(s);
-
         if (repository.existsByNombre(s.getNombre())) {
-            // podrías traer la actual y comparar ids para permitir mismo nombre en el mismo código
             Sucursal actual = repository.findSucursalById(s.getCodigo());
             if (actual == null || !actual.getNombre().equalsIgnoreCase(s.getNombre())) {
                 throw new IllegalArgumentException("El nombre ya está en uso: " + s.getNombre());
@@ -41,18 +45,13 @@ public class SucursalService {
         repository.updateSucursal(s);
     }
 
-    // Eliminar
+    /** Elimina una sucursal por su código. */
+    public void eliminar(Integer codigo) { repository.deleteSucursal(codigo); }
 
-    public void eliminar(Integer codigo) {
-        repository.deleteSucursal(codigo);
-    }
+    /** Lista todas las sucursales. */
+    public List<Sucursal> listar() { return repository.getSucursales(); }
 
-    // Obtener todas
-    public List<Sucursal> listar() {
-        return repository.getSucursales();
-    }
-
-    // Buscar por ID (envolviendo en Optional)
+    /** Busca por id con {@link Optional}. */
     public Optional<Sucursal> buscarPorId(Integer codigo) {
         try {
             return Optional.ofNullable(repository.findSucursalById(codigo));
@@ -61,18 +60,17 @@ public class SucursalService {
         }
     }
 
-    // Reglas mínimas de negocio / validaciones
+    /** Valida campos obligatorios mínimos. */
     private void validarObligatorios(Sucursal s) {
         if (s == null) throw new IllegalArgumentException("La sucursal es requerida.");
         if (s.getNombre() == null || s.getNombre().isBlank())
             throw new IllegalArgumentException("El nombre de la sucursal es obligatorio.");
-
     }
 
-    public Sucursal getById(Integer id) {
-        return repository.getById(id);
-    }
+    /** Obtiene por id (alias de repositorio). */
+    public Sucursal getById(Integer id) { return repository.getById(id); }
 
+    /** Busca por código con {@link Optional}. */
     public Optional<Sucursal> buscarPorCodigo(Integer codigo) {
         if (codigo == null) return Optional.empty();
         try {
@@ -81,7 +79,4 @@ public class SucursalService {
             return Optional.empty();
         }
     }
-
-
 }
-

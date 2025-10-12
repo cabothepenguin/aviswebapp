@@ -10,122 +10,228 @@
       <title>Avis App - Principal</title>
       <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
       <h:outputStylesheet library="css" name="style.css"/>
+      <link rel="stylesheet" type="text/css"
+            href="#{request.contextPath}/resources/css/style.css"/>
    </h:head>
    <h:body>
       <div class="container">
-         <div> <!--Header app-->
-            <div style="width: 100%;display: flex;align-items: flex-start"> <!--Encabezado-->
-               <div style="flex: 0 0 60%;">
-                  <h:graphicImage library="images" name="download.svg" style="width: 100px;display: block"/>
+         <!--Header app-->
+         <div class="navbar">
+            <div class="nav-inner">
+
+               <!-- Marca -->
+               <div class="brand">
+                  <h2 class="brand-text">AVIS</h2>
                </div>
-               <div style="flex: 0 0 40%;">
-                  <h1 style="margin-right: 10px">Sistema de gestion Rentario</h1>
+
+               <!-- Menú -->
+               <nav>
+                  <ul class="menu">
+                     <li class="menu-item">
+                        <h:link value="Home"
+                                outcome="/home.xhtml?faces-redirect=true"
+                                styleClass="home-btn"/>
+                     </li>
+
+
+                     <li class="menu-item has-sub">
+                        <span class="menu-link">Usuario</span>
+                        <ul class="sub-menu">
+                           <li><h:link value="Listar"     outcome="/Usuario/list-usuario.xhtml?faces-redirect=true"/></li>
+                           <li><h:link value="Agregar"    outcome="/Usuario/add-Usuario.xhtml?faces-redirect=true"/></li>
+                           <li><h:link value="Actualizar" outcome="/Usuario/update-usuario-byUsername.xhtml?faces-redirect=true"/></li>
+                           <li><h:link value="Eliminar"   outcome="/Usuario/delete-usuario-byUsername.xhtml?faces-redirect=true"/></li>
+                        </ul>
+                     </li>
+
+                     <li class="menu-item has-sub">
+                        <span class="menu-link">Sucursales</span>
+                        <ul class="sub-menu">
+                           <li><h:link value="Listar"      outcome="/Sucursales/list-sucursal.xhtml?faces-redirect=true"/></li>
+                           <li><h:link value="Agregar"     outcome="/Sucursales/add-sucursal.xhtml?faces-redirect=true"/></li>
+                           <li><h:link value="Actualizar"  outcome="/Sucursales/update-sucursal.xhtml?faces-redirect=true"/></li>
+                        </ul>
+                     </li>
+
+                     <li class="menu-item has-sub">
+                        <span class="menu-link">Vehículos</span>
+                        <ul class="sub-menu">
+                           <li><h:link value="Listar"      outcome="/Vehiculos/list-vehiculo.xhtml?faces-redirect=true"/></li>
+                           <li><h:link value="Agregar"     outcome="/Vehiculos/add-vehiculo.xhtml?faces-redirect=true"/></li>
+                           <li><h:link value="Actualizar"  outcome="/Vehiculos/update-vehiculo.xhtml?faces-redirect=true"/></li>
+                        </ul>
+                     </li>
+
+                     <li class="menu-item has-sub">
+                        <span class="menu-link">Rentas</span>
+                        <ul class="sub-menu">
+                           <li><h:link value="Listar"      outcome="/Rentas/list-rentas.xhtml?faces-redirect=true"/></li>
+                           <li><h:link value="Agregar"     outcome="/Rentas/add-rentas.xhtml?faces-redirect=true"/></li>
+                           <li><h:link value="Actualizar"  outcome="/Rentas/update-rentas.xhtml?faces-redirect=true"/></li>
+                        </ul>
+                     </li>
+
+                     <li class="menu-item has-sub">
+                        <span class="menu-link">Categorías</span>
+                        <ul class="sub-menu">
+                           <li><h:link value="Listar"      outcome="/Categorias/list-categorias.xhtml?faces-redirect=true"/></li>
+                           <li><h:link value="Agregar"     outcome="/Categorias/add-categorias.xhtml?faces-redirect=true"/></li>
+                           <li><h:link value="Actualizar"  outcome="/Categorias/update-categorias.xhtml?faces-redirect=true"/></li>
+                        </ul>
+                     </li>
+
+                     <li class="menu-item has-sub">
+                        <span class="menu-link">Reportes</span>
+                        <ul class="sub-menu">
+                           <li><h:link value="Vehículos por categoría" outcome="/Reportes/list-ByCategoria.xhtml?faces-redirect=true"/></li>
+                           <!-- agrega más reportes aquí -->
+
+                           <li><h:link value="Vehículos por estado" outcome="/Reportes/list-EstadoCategoria.xhtml?faces-redirect=true"/></li>
+                           <!-- agrega más reportes aquí -->
+                           <li><h:link value="Vehículos por estado" outcome="/Reportes/list-EstadoRenta.xhtml?faces-redirect=true"/></li>
+                           <!-- agrega más reportes aquí -->
+
+                        </ul>
+                     </li>
+
+                  </ul>
+               </nav>
+
+            </div>
+         </div>
+
+
+
+
+          <!-- Content app -->
+          <div class="uf-wrapper">
+              <h:form id="addSucursalForm" styleClass="uf-card">
+                  <h3 class="uf-title">Agregar Sucursal</h3>
+
+                  <h:messages id="msg" globalOnly="true" styleClass="uf-messages"/>
+
+                  <div class="uf-form">
+                      <label class="uf-label" for="sucursal">Sucursal</label>
+                      <h:inputText id="sucursal" styleClass="uf-input"
+                                   value="#{sucursalController.newSucursal.nombre}"/>
+
+                      <label class="uf-label" for="encargado">Encargado</label>
+                      <h:inputText id="encargado" styleClass="uf-input"
+                                   value="#{sucursalController.newSucursal.encargado}"/>
+
+                      <label class="uf-label" for="direccion">Dirección</label>
+                      <h:inputText id="direccion" styleClass="uf-input"
+                                   value="#{sucursalController.newSucursal.direccion}"/>
+
+                      <label class="uf-label" for="telefono">Teléfono</label>
+                      <h:inputText id="telefono" styleClass="uf-input"
+                                   value="#{sucursalController.newSucursal.telefono}"/>
+
+                      <label class="uf-label" for="correo">Correo</label>
+                      <h:inputText id="correo" styleClass="uf-input"
+                                   value="#{sucursalController.newSucursal.correo}"/>
+                  </div>
+
+                  <h:commandButton value="Guardar"
+                                   action="#{sucursalController.add}"
+                                   styleClass="uf-btn"/>
+              </h:form>
+          </div>
+          <!-- Content app end -->
+
+
+
+
+
+          <!--Footer app-->
+         <div class="site-footer">
+            <hr class="site-footer__divider" />
+            <p class="site-footer__copyright">
+               Avis Costa Rica. Todos los derechos reservado&copy; 2025
+            </p>
+
+            <div class="footer container">
+               <!-- Columna: Logo y redes -->
+               <div class="footer__col footer__brand">
+                  <div class="logo">AVIS</div>
+
+                  <div class="footer__social">
+                     <a class="social social--ig" href="#" aria-label="Instagram">
+                        <img src="https://via.placeholder.com/20" alt="" />
+                     </a>
+                     <a class="social social--fb" href="#" aria-label="Facebook">
+                        <img src="https://via.placeholder.com/20" alt="" />
+                     </a>
+                     <a class="social social--li" href="#" aria-label="LinkedIn">
+                        <img src="https://via.placeholder.com/20" alt="" />
+                     </a>
+                     <a class="social social--wa" href="#" aria-label="WhatsApp">
+                        <img src="https://via.placeholder.com/20" alt="" />
+                     </a>
+                  </div>
+
+                  <p class="footer__note">Visítenos en nuestras redes sociales.</p>
+                  <div style="font-size: 30px; border-radius: 10px; ">
+
+                     <h:link value="Acerca de.." styleClass="desarrollo"
+
+                             outcome="/Desarrolladores/desarrolladores.xhtml?faces-redirect=true"/>
+
+                  </div>
+
+               </div>
+
+
+
+               <!-- Columna: Contáctenos -->
+               <div class="footer__col">
+                  <h3 class="footer__title">Contáctenos</h3>
+                  <p class="footer__text">Central de reservas: 2293-2222</p>
+                  <p class="footer__text">WhatsApp: 6244-9247</p>
+                  <p><a class="footer__link" href="mailto:reservaciones@avis.co.cr">reservaciones@avis.co.cr</a></p>
+                  <p><a class="footer__link" href="mailto:customerservice@avis.co.cr">customerservice@avis.co.cr</a></p>
+                  <p><a class="footer__link" href="#">Teléfonos de emergencia</a></p>
+               </div>
+
+               <!-- Columna: Servicio al cliente -->
+               <div class="footer__col">
+                  <h3 class="footer__title">Servicio al cliente</h3>
+                  <ul class="footer__list">
+                     <li><a class="footer__link" href="#">Guía de vehículos</a></li>
+                     <li><a class="footer__link" href="#">Extras y accesorios</a></li>
+                     <li><a class="footer__link" href="#">Coberturas adicionales</a></li>
+                     <li><a class="footer__link" href="#">Ofertas especiales</a></li>
+                     <li><a class="footer__link" href="#">Servicios corporativos</a></li>
+                     <li><a class="footer__link" href="#">Responsabilidad social empresarial</a></li>
+                  </ul>
+               </div>
+
+               <!-- Columna: Gestión de reservas -->
+               <div class="footer__col">
+                  <h3 class="footer__title">Gestión de reservas</h3>
+                  <ul class="footer__list">
+                     <li><a class="footer__link" href="#">Cotice su reserva</a></li>
+                     <li><a class="footer__link" href="#">Buscar una reserva</a></li>
+                     <li><a class="footer__link" href="#">Encontrar una oficina</a></li>
+                     <li><a class="footer__link" href="#">Preguntas frecuentes</a></li>
+                     <li><a class="footer__link" href="#">Consejos al alquilar</a></li>
+                  </ul>
+               </div>
+
+               <!-- Columna: Acerca de nosotros -->
+               <div class="footer__col">
+                  <h3 class="footer__title">Acerca de nosotros</h3>
+                  <ul class="footer__list">
+                     <li><a class="footer__link" href="#">Avis Costa Rica</a></li>
+                     <li><a class="footer__link" href="#">Políticas de cancelación</a></li>
+                     <li><a class="footer__link" href="#">Políticas de privacidad</a></li>
+                     <li><a class="footer__link" href="#">Políticas de cookies</a></li>
+                     <li><a class="footer__link" href="#">Términos y condiciones</a></li>
+                  </ul>
                </div>
             </div>
-            <div style="flex: 0 0 100%"><!--Menu-->
-               <h:form>
-                  <nav>
-                     <ul class="menu-bar">
-                        <li class="menu-item">
-                           <h:commandButton  styleClass="btn btn-primary"  value="Home" action="irAHome" />
-                        </li>
-                        <li class="menu-item">
-                           <span>Usuario</span>
-                           <ul class="sub-menu">
-                              <li class="sub-menu-item">
-                                 <h:link value="Listar" outcome="/Usuario/list-usuario.xhtml?faces-redirect=true"/>
-                              </li>
-                              <li class="sub-menu-item">
-                                 <h:link value="Agregar" outcome="/Usuario/add-Usuario.xhtml?faces-redirect=true"/>
-                              </li>
-                              <li class="sub-menu-item">
-                                 <h:link value="Actualizar" outcome="/Usuario/update-usuario.xhtml?faces-redirect=true"/>
-                              </li>
-                           </ul>
-                        </li>
-                        <li class="menu-item">
-                           <span>Sucursales</span>
-                           <ul class="sub-menu">
-                              <li class="sub-menu-item">
-                                 <h:link value="Listar" outcome="/Sucursales/list-sucursal.xhtml?faces-redirect=true"/>
-                              </li>
-                              <li class="sub-menu-item">
-                                 <h:link value="Agregar" outcome="/Sucursales/add-sucursal.xhtml?faces-redirect=true"/>
-                              </li>
-                              <li class="sub-menu-item">
-                                 <h:link value="Actualizar" outcome="/Sucursales/update-sucursal.xhtml?faces-redirect=true"/>
-                              </li>
-                           </ul>
-                        </li>
-                        <li class="menu-item">
-                           <span>Vehiculos</span>
-                           <ul class="sub-menu">
-                              <li class="sub-menu-item">
-                                 <h:link value="Listar" outcome="/courses/list-course.xhtml?faces-redirect=true"/>
-                              </li>
-                              <li class="sub-menu-item">
-                                 <h:link value="Agregar" outcome="/Vehiculos/add-vehiculo.xhtml?faces-redirect=true"/>
-                              </li>
-                              <li class="sub-menu-item">
-                                 <h:link value="Actualizar" outcome="/Vehiculos/update-vehiculo.xhtml?faces-redirect=true"/>
-                              </li>
-                           </ul>
-                        </li>
-                        <li class="menu-item">
-                           <span>Rentas</span>
-                           <ul class="sub-menu">
-                              <li class="sub-menu-item">
-                                 <h:link value="Listar" outcome="/Rentas/list-rentas.xhtml?faces-redirect=true"/>
-                              </li>
-                              <li class="sub-menu-item">
-                                 <h:link value="Agregar" outcome="/Rentas/add-rentas.xhtml?faces-redirect=true"/>
-                              </li>
-                              <li class="sub-menu-item">
-                                 <h:link value="Actualizar" outcome="/Rentas/update-rentas.xhtml?faces-redirect=true"/>
-                              </li>
-                           </ul>
-                        </li>
-                        <li class="menu-item">
-                           <span>Categorias</span>
-                           <ul class="sub-menu">
-                              <li class="sub-menu-item">
-                                 <h:link value="listar" outcome="/Categorias/list-categorias.xhtml?faces-redirect=true"/>
-                              </li>
-                              <li class="sub-menu-item">
-                                 <h:link value="Agregar" outcome="/Categorias/add-categorias.xhtml?faces-redirect=true"/>
-                              </li>
-                              <li class="sub-menu-item">
-                                 <h:link value="Actualizar" outcome="/Categorias/update-categorias.xhtml?faces-redirect=true"/>
-                              </li>
-                           </ul>
-                        </li>
-                     </ul>
-                  </nav>
-               </h:form>
-            </div><!--Menu end-->
-         </div><!--Header app end-->
-         <div style="min-height: 60vh"> <!--Content app-->
-            <h3>Agregar Sucursal</h3>
-            <h:messages id="msg" globalOnly="true"/>
-            <h:form styleClass="container">
-               <h:outputText value="Sucursal"/>
-               <h:inputText styleClass="form-control" value="#{sucursalController.newSucursal.nombre}"/>
-               <h:outputText value="Encargado"/>
-               <h:inputText styleClass="form-control" value="#{sucursalController.newSucursal.encargado}"/>
-               <h:outputText value="Direccion"/>
-               <h:inputText styleClass="form-control" value="#{sucursalController.newSucursal.direccion}"/>
-               <h:outputText value="Telefono"/>
-               <h:inputText styleClass="form-control" value="#{sucursalController.newSucursal.telefono}"/>
-               <h:outputText value="Correo"/>
-               <h:inputText styleClass="form-control" value="#{sucursalController.newSucursal.correo}"/>
-               <h:commandButton styleClass="btn btn-primary align-center" value="Guardar"
-                                action="#{sucursalController.add}"/>
-            </h:form>
-         </div><!--Content app end-->
-         <div> <!--Footer app-->
-            <hr/>
-            <p>Avis Costa Rica. Todos los derechos reservado&copy; 2025</p>
-         </div><!--Footer app end-->
+         </div>
+           <!--Footer app end-->
       </div>
    </h:body>
 </f:view>

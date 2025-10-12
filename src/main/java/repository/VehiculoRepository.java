@@ -10,6 +10,14 @@ import jakarta.transaction.Transactional;
 import model.Vehiculo;
 
 import java.util.List;
+
+/**
+ * Repositorio para la entidad {@link Vehiculo}.
+ * <p>
+ * Inserciones/actualizaciones/borrados con SQL nativo y consultas con JPQL
+ * donde se requiere materializar relaciones o mapear a entidad.
+ * </p>
+ */
 @Named
 @ApplicationScoped
 public class VehiculoRepository {
@@ -17,8 +25,10 @@ public class VehiculoRepository {
     @PersistenceContext(unitName = "avisrent-pu")
     private EntityManager em;
 
-    // ===== agregar
-
+    /**
+     * Inserta un vehículo desde un {@link VehiculoDto}.
+     * <p>Persisten la categoría como código y la imagen como bytes/nombre.</p>
+     */
     public void addVehiculo(VehiculoDto vehiculoDto) {
         try {
             em.getTransaction().begin();
@@ -45,8 +55,7 @@ public class VehiculoRepository {
         }
     }
 
-
-    // ===== Actualizar por placas
+    /** Actualiza un vehículo por su placa usando SQL nativo. */
     public void updateVehiculo(VehiculoDto vehiculoDto) {
         em.getTransaction().begin();
         String sql = "UPDATE administracion_vehiculos " +
@@ -69,15 +78,13 @@ public class VehiculoRepository {
         q.setParameter(6, vehiculoDto.getPrecio());
         q.setParameter(7, vehiculoDto.getImage());
         q.setParameter(8, vehiculoDto.getImageName());
-        q.setParameter(9, vehiculoDto.getPlaca()); //
-
+        q.setParameter(9, vehiculoDto.getPlaca());
         q.executeUpdate();
         em.getTransaction().commit();
     }
 
-
-    // ===== Eliminar por placa
-    public void deleteVehiculo(String placa) {  // Cambiar de Integer a String
+    /** Elimina un vehículo por su placa. */
+    public void deleteVehiculo(String placa) {
         em.getTransaction().begin();
         em.createNativeQuery("DELETE FROM administracion_vehiculos WHERE placa = ?")
                 .setParameter(1, placa)
@@ -85,20 +92,23 @@ public class VehiculoRepository {
         em.getTransaction().commit();
     }
 
-    // ===== Listar
+    /** Lista todos los vehículos con JPQL mapeando a entidad. */
     @SuppressWarnings("unchecked")
     public List<Vehiculo> getVehiculos() {
         return em.createQuery("SELECT v FROM Vehiculo v", Vehiculo.class)
                 .getResultList();
     }
 
-    // ===== Buscar por placa
-    public Vehiculo findVehiculoByPlaca(String placa) {  // Cambiar de Integer a String
+    /** Busca un vehículo por su placa (PK). */
+    public Vehiculo findVehiculoByPlaca(String placa) {
         return em.find(Vehiculo.class, placa);
     }
 
-    // ===== Verificar existencia por placa
-    public boolean existsByPlaca(String placa) {  // Cambiar de Integer a String
+    /**
+     * Verifica si existe un vehículo con la placa indicada.
+     * @return {@code true} si el conteo es mayor que cero.
+     */
+    public boolean existsByPlaca(String placa) {
         try {
             Long count = em.createQuery("SELECT COUNT(v) FROM Vehiculo v WHERE v.placa = :placa", Long.class)
                     .setParameter("placa", placa)
@@ -108,4 +118,39 @@ public class VehiculoRepository {
             return false;
         }
     }
+
+    /** Lista vehículos por código de categoría. */
+    public List<Vehiculo> findByCategoriaCodigo(Integer codigo) {
+        return em.createQuery(
+                "SELECT v FROM Vehiculo v WHERE v.categoria.codigo = :cod",
+                Vehiculo.class
+        ).setParameter("cod", codigo).getResultList();
+    }
+
+    /** Lista vehículos por descripción de categoría. */
+    public List<Vehiculo> findByCategoriaDescripcion(String desc) {
+        return em.createQuery(
+                "SELECT v FROM Vehiculo v WHERE v.categoria.descripcion = :desc",
+                Vehiculo.class
+        ).setParameter("desc", desc).getResultList();
+    }
+
+    /**
+     * Lista vehículos por estado normalizado (minúsculas).
+     * @param estado estado objetivo (disponible, mantenimiento, rentado).
+     */
+    @SuppressWarnings("unchecked")
+    public List<Vehiculo> findByEstado(String estado) {
+        return em.createQuery(
+                        "SELECT v FROM Vehiculo v " +
+                                "WHERE LOWER(v.estado) = :estado " +
+                                "ORDER BY v.marca, v.modelo", Vehiculo.class)
+                .setParameter("estado", estado.toLowerCase())
+                .getResultList();
+    }
+
+    // Atajos convenientes
+    public List<Vehiculo> findDisponibles()   { return findByEstado("disponible"); }
+    public List<Vehiculo> findMantenimiento() { return findByEstado("mantenimiento"); }
+    public List<Vehiculo> findRentados()      { return findByEstado("rentado"); }
 }
