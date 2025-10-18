@@ -10,7 +10,7 @@ import java.util.Optional;
 
 /**
  * Servicio de negocio para sucursales.
- * <p>Aplica validaciones mínimas y controla duplicados por nombre.</p>
+ * Valida obligatorios, normaliza nombre y controla duplicados por nombre.
  */
 @ApplicationScoped
 public class SucursalService {
@@ -18,24 +18,24 @@ public class SucursalService {
     @Inject
     private SucursalRepository repository;
 
-    /**
-     * Agrega una sucursal validando obligatorios y nombre duplicado.
-     * @throws IllegalArgumentException si el nombre ya existe.
-     */
+    /** Agrega una sucursal validando obligatorios y nombre duplicado. */
     public void add(Sucursal s) {
         validarObligatorios(s);
+        normalize(s);
         if (repository.existsByNombre(s.getNombre())) {
             throw new IllegalArgumentException("Ya existe una sucursal con el nombre: " + s.getNombre());
         }
         repository.addSucursal(s);
     }
 
-    /**
-     * Actualiza una sucursal validando datos y conflicto de nombre.
-     * <p>Permite el mismo nombre si corresponde a la propia sucursal.</p>
-     */
+    /** Actualiza una sucursal validando datos y conflicto de nombre. */
     public void update(Sucursal s) {
         validarObligatorios(s);
+        if (s.getCodigo() == null) {
+            throw new IllegalArgumentException("El código es obligatorio para actualizar la sucursal.");
+        }
+        normalize(s);
+
         if (repository.existsByNombre(s.getNombre())) {
             Sucursal actual = repository.findSucursalById(s.getCodigo());
             if (actual == null || !actual.getNombre().equalsIgnoreCase(s.getNombre())) {
@@ -46,37 +46,37 @@ public class SucursalService {
     }
 
     /** Elimina una sucursal por su código. */
-    public void eliminar(Integer codigo) { repository.deleteSucursal(codigo); }
+    public void eliminar(Integer codigo) {
+        if (codigo == null) throw new IllegalArgumentException("El código es obligatorio para eliminar.");
+        repository.deleteSucursal(codigo);
+    }
 
     /** Lista todas las sucursales. */
     public List<Sucursal> listar() { return repository.getSucursales(); }
 
-    /** Busca por id con {@link Optional}. */
+    /** Busca por id con Optional. */
     public Optional<Sucursal> buscarPorId(Integer codigo) {
-        try {
-            return Optional.ofNullable(repository.findSucursalById(codigo));
-        } catch (Exception e) {
-            return Optional.empty();
-        }
+        try { return Optional.ofNullable(repository.findSucursalById(codigo)); }
+        catch (Exception e) { return Optional.empty(); }
     }
 
-    /** Valida campos obligatorios mínimos. */
-    private void validarObligatorios(Sucursal s) {
-        if (s == null) throw new IllegalArgumentException("La sucursal es requerida.");
-        if (s.getNombre() == null || s.getNombre().isBlank())
-            throw new IllegalArgumentException("El nombre de la sucursal es obligatorio.");
-    }
-
-    /** Obtiene por id (alias de repositorio). */
+    /** Obtiene por id (alias). */
     public Sucursal getById(Integer id) { return repository.getById(id); }
 
-    /** Busca por código con {@link Optional}. */
+    /** Busca por código con Optional. */
     public Optional<Sucursal> buscarPorCodigo(Integer codigo) {
         if (codigo == null) return Optional.empty();
-        try {
-            return Optional.ofNullable(repository.findByCodigo(codigo));
-        } catch (Exception e) {
-            return Optional.empty();
-        }
+        try { return Optional.ofNullable(repository.findByCodigo(codigo)); }
+        catch (Exception e) { return Optional.empty(); }
+    }
+
+    // ---- helpers ----
+    private void validarObligatorios(Sucursal s) {
+        if (s == null) throw new IllegalArgumentException("La sucursal es requerida.");
+        if (s.getNombre() == null || s.getNombre().trim().isEmpty())
+            throw new IllegalArgumentException("El nombre de la sucursal es obligatorio.");
+    }
+    private void normalize(Sucursal s) {
+        if (s.getNombre() != null) s.setNombre(s.getNombre().trim());
     }
 }

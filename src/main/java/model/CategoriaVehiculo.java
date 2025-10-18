@@ -4,23 +4,21 @@ import jakarta.persistence.*;
 
 import java.util.Objects;
 
-@Entity(name = "administracion_categorias")
+@Entity
+@Table(name = "administracion_categorias")
 public class CategoriaVehiculo {
 
     @Id
+    @Column(name = "codigo", nullable = false)
     private Integer codigo;
 
-    @Column(name = "descripcion")
+    @Column(name = "descripcion", length = 100, nullable = false)
     private String descripcion;
 
-    @Column(name = "estado")
+    @Column(name = "estado", length = 20)
     private String estado;
 
-
-
-    public CategoriaVehiculo() {
-
-    }
+    public CategoriaVehiculo() {}
 
     public CategoriaVehiculo(Integer codigo, String descripcion, String estado) {
         this.codigo = codigo;
@@ -53,6 +51,9 @@ public class CategoriaVehiculo {
         this.estado = estado;
     }
 
+    /**
+     * equals/hashCode por ID (opcional pero recomendado)
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

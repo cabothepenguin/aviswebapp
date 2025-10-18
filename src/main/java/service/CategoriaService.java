@@ -7,10 +7,11 @@ import model.CategoriaVehiculo;
 import repository.CategoriaRepository;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Capa de servicios para operaciones de negocio sobre categorías.
- * <p>Valida reglas mínimas (duplicados) y delega al repositorio.</p>
+ * Valida duplicados y normaliza entradas.
  */
 @ApplicationScoped
 public class CategoriaService {
@@ -18,64 +19,89 @@ public class CategoriaService {
     @Inject
     private CategoriaRepository repository;
 
-    /**
-     * Crea una nueva categoría validando duplicado por descripción.
-     * @throws IllegalArgumentException si ya existe la descripción.
-     */
+    /** Crea una nueva categoría validando descripción obligatoria y duplicado (case-insensitive). */
     public void createCategoria(CategoriaVehiculoDto dto) {
-        if (repository.existsByDescripcion(dto.getDescripcion())) {
-            throw new IllegalArgumentException(
-                    "Ya existe una categoría con la descripción: " + dto.getDescripcion()
-            );
+        requireDto(dto);
+        normalize(dto);
+        if (isBlank(dto.getDescripcion())) {
+            throw new IllegalArgumentException("La descripción de la categoría es obligatoria.");
+        }
+        // Duplicado por descripción (case-insensitive)
+        CategoriaVehiculo existente = repository.findCategoryByDescripcion(dto.getDescripcion());
+        if (existente != null) {
+            throw new IllegalArgumentException("Ya existe una categoría con la descripción: " + dto.getDescripcion());
         }
         repository.addCategory(dto);
     }
 
-    /**
-     * Actualiza la categoría validando existencia y duplicado en descripción.
-     * @throws IllegalArgumentException si no existe o hay conflicto de descripción.
-     */
+    /** Actualiza validando existencia por código y conflicto de descripción. */
     public void updateCategoria(CategoriaVehiculoDto dto) {
-        CategoriaVehiculo existente = repository.findCategoryById(dto.getCodigo());
-        if (existente == null) {
+        requireDto(dto);
+        if (dto.getCodigo() == null) {
+            throw new IllegalArgumentException("El código es obligatorio para actualizar la categoría.");
+        }
+        normalize(dto);
+
+        CategoriaVehiculo actual = repository.findCategoryById(dto.getCodigo());
+        if (actual == null) {
             throw new IllegalArgumentException("La categoría con código " + dto.getCodigo() + " no existe.");
         }
-        CategoriaVehiculo otra = repository.findCategoryByDescripcion(dto.getDescripcion());
-        if (otra != null && !otra.getCodigo().equals(dto.getCodigo())) {
-            throw new IllegalArgumentException(
-                    "Ya existe otra categoría con la descripción: " + dto.getDescripcion()
-            );
+        if (!isBlank(dto.getDescripcion())) {
+            CategoriaVehiculo otra = repository.findCategoryByDescripcion(dto.getDescripcion());
+            if (otra != null && !otra.getCodigo().equals(dto.getCodigo())) {
+                throw new IllegalArgumentException("Ya existe otra categoría con la descripción: " + dto.getDescripcion());
+            }
         }
         repository.updateCategory(dto);
     }
 
     /** Elimina una categoría por código. */
-    public void deleteCategoria(Integer codigo) { repository.deleteCategory(codigo); }
+    public void deleteCategoria(Integer codigo) {
+        if (codigo == null) throw new IllegalArgumentException("El código es obligatorio para eliminar.");
+        repository.deleteCategory(codigo);
+    }
 
     /** Mapea entidad a DTO. */
     public CategoriaVehiculoDto toDto(CategoriaVehiculo model) {
-        CategoriaVehiculoDto categoriaVehiculoDto = new CategoriaVehiculoDto();
-        categoriaVehiculoDto.setCodigo(model.getCodigo());
-        categoriaVehiculoDto.setDescripcion(model.getDescripcion());
-        categoriaVehiculoDto.setEstado(model.getEstado());
-        return categoriaVehiculoDto;
+        if (model == null) return null;
+        CategoriaVehiculoDto dto = new CategoriaVehiculoDto();
+        dto.setCodigo(model.getCodigo());
+        dto.setDescripcion(model.getDescripcion());
+        dto.setEstado(model.getEstado());
+        return dto;
     }
 
     /** Lista todas las categorías. */
     public List<CategoriaVehiculo> listarCategorias() { return repository.getCategories(); }
 
     /** Busca por descripción. */
-    public CategoriaVehiculo getByDescripcion(String desc) { return repository.findCategoryByDescripcion(desc); }
+    public CategoriaVehiculo getByDescripcion(String desc) {
+        if (isBlank(desc)) return null;
+        return repository.findCategoryByDescripcion(desc.trim());
+    }
 
     /** Obtiene por id. */
     public CategoriaVehiculo getById(Integer id) { return repository.getById(id); }
 
-    /** Alias de {@link CategoriaRepository#findCategoryById(Integer)}. */
+    /** Alias. */
     public CategoriaVehiculo findById(Integer id) { return repository.findCategoryById(id); }
 
     /** Actualiza entidad administrada (vía merge). */
-    public void updateCategoria(CategoriaVehiculo categoria) { repository.update(categoria); }
+    public void updateCategoria(CategoriaVehiculo categoria) {
+        if (categoria == null || categoria.getCodigo() == null) {
+            throw new IllegalArgumentException("Categoría/código requeridos para actualizar.");
+        }
+        repository.update(categoria);
+    }
 
     /** Alias de {@link #listarCategorias()}. */
     public List<CategoriaVehiculo> getCategorias() { return listarCategorias(); }
+
+    // ---- helpers ----
+    private void requireDto(CategoriaVehiculoDto dto) { Objects.requireNonNull(dto, "El DTO de categoría no puede ser nulo"); }
+    private boolean isBlank(String s) { return s == null || s.trim().isEmpty(); }
+    private void normalize(CategoriaVehiculoDto dto) {
+        if (dto.getDescripcion() != null) dto.setDescripcion(dto.getDescripcion().trim());
+        if (dto.getEstado() != null) dto.setEstado(dto.getEstado().trim());
+    }
 }

@@ -4,133 +4,111 @@ import dto.RentasDto;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 import model.Renta;
+import model.Vehiculo;
+import model.Sucursal;
 
-import java.util.Date;
 import java.util.List;
 
-/**
- * Repositorio para la entidad {@link Renta}.
- * <p>
- * Combina SQL nativo para operaciones DML con JPQL para lecturas que
- * materializan relaciones ({@code JOIN FETCH}).
- * </p>
- */
 @ApplicationScoped
 public class RentaRepository {
 
     @PersistenceContext(unitName = "avisrent-pu")
     private EntityManager em;
 
-    /**
-     * Inserta una renta con SQL nativo.
-     * @param r DTO con datos básicos, incluyendo referencias (placa, sucursal).
-     */
+    // CREATE
+    @Transactional
     public void addRenta(RentasDto r) {
-        try {
-            em.getTransaction().begin();
-            String sql = "INSERT INTO administracion_rentas " +
-                    "(clienteNombre, vehiculoAsignado, sucursal, fechaInicio, fechafin, precioTotal, estado) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?)";
-            em.createNativeQuery(sql)
-                    .setParameter(1, r.getClienteNombre())
-                    .setParameter(2, r.getVehiculoPlaca())
-                    .setParameter(3, r.getSucursalCodigo())
-                    .setParameter(4, r.getFechaInicio())
-                    .setParameter(5, r.getFechaFin())
-                    .setParameter(6, r.getPrecioTotal())
-                    .setParameter(7, r.getEstado())
-                    .executeUpdate();
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            em.getTransaction().rollback();
-            throw new RuntimeException(e);
-        }
+        em.persist(toEntity(r));
     }
 
-    /** Actualiza una renta por número usando SQL nativo. */
+    // UPDATE
+    @Transactional
     public void updateRenta(RentasDto r) {
-        em.getTransaction().begin();
-        String sql = "UPDATE administracion_rentas SET " +
-                "clienteNombre = ?, vehiculoAsignado = ?, sucursal = ?, fechaInicio = ?, " +
-                "fechafin = ?, precioTotal = ?, estado = ? WHERE numeroRenta = ?";
-        em.createNativeQuery(sql)
-                .setParameter(1, r.getClienteNombre())
-                .setParameter(2, r.getVehiculoPlaca())
-                .setParameter(3, r.getSucursalCodigo())
-                .setParameter(4, r.getFechaInicio())
-                .setParameter(5, r.getFechaFin())
-                .setParameter(6, r.getPrecioTotal())
-                .setParameter(7, r.getEstado())
-                .setParameter(8, r.getNumeroRenta())
-                .executeUpdate();
-        em.getTransaction().commit();
+        Renta actual = em.find(Renta.class, r.getNumeroRenta());
+        if (actual == null) throw new IllegalStateException("No existe la renta #" + r.getNumeroRenta());
+
+        actual.setClienteNombre(r.getClienteNombre());
+
+        Vehiculo v = em.find(Vehiculo.class, r.getVehiculoPlaca());
+        actual.setVehiculo(v);
+
+        Sucursal s = em.find(Sucursal.class, r.getSucursalCodigo());
+        actual.setSucursal(s);
+
+        actual.setFechaInicio(r.getFechaInicio());
+        actual.setFechaFin(r.getFechaFin());
+        actual.setPrecioTotal(r.getPrecioTotal());
+        actual.setEstado(r.getEstado());
+
+        em.merge(actual);
     }
 
-    /** Elimina una renta por su número. */
+    // DELETE
+    @Transactional
     public void deleteRenta(int numeroRenta) {
-        em.getTransaction().begin();
-        em.createNativeQuery("DELETE FROM administracion_rentas WHERE numeroRenta = ?")
-                .setParameter(1, numeroRenta)
-                .executeUpdate();
-        em.getTransaction().commit();
+        Renta ref = em.find(Renta.class, numeroRenta);
+        if (ref != null) em.remove(ref);
     }
 
-    /**
-     * Lista todas las rentas con sus relaciones (vehículo y sucursal).
-     * @return lista ordenada por número de renta descendente.
-     */
-    @SuppressWarnings("unchecked")
+    // READ
     public List<Renta> getRenta() {
-        return em.createQuery(
-                "SELECT r FROM Renta r " +
-                        "JOIN FETCH r.vehiculo v " +
-                        "JOIN FETCH r.sucursal s " +
-                        "ORDER BY r.numeroRenta DESC",
-                Renta.class
-        ).getResultList();
-    }
-
-    /**
-     * Busca una renta por número con {@code JOIN FETCH}.
-     * @param numeroRenta identificador.
-     * @return entidad encontrada (lanza excepción si no existe).
-     */
-    public Renta findRentaByNumeroRenta(int numeroRenta) {
         return em.createQuery(
                         "SELECT r FROM Renta r " +
                                 "JOIN FETCH r.vehiculo v " +
                                 "JOIN FETCH r.sucursal s " +
-                                "WHERE r.numeroRenta = :n",
-                        Renta.class
-                ).setParameter("n", numeroRenta)
-                .getSingleResult();
+                                "ORDER BY r.numeroRenta DESC", Renta.class)
+                .getResultList();
     }
 
-    /**
-     * Verifica existencia por número (SQL nativo).
-     * @return {@code true} si existe al menos un registro con ese número.
-     */
+    public Renta findRentaByNumeroRenta(int numeroRenta) {
+        List<Renta> list = em.createQuery(
+                        "SELECT r FROM Renta r " +
+                                "JOIN FETCH r.vehiculo v " +
+                                "JOIN FETCH r.sucursal s " +
+                                "WHERE r.numeroRenta = :n", Renta.class)
+                .setParameter("n", numeroRenta)
+                .getResultList();
+        return list.isEmpty() ? null : list.get(0);
+    }
+
     public boolean existsBynumeroRenta(int numeroRenta) {
-        Number count = (Number) em.createNativeQuery(
-                "SELECT COUNT(*) FROM administracion_rentas WHERE numeroRenta = ?"
-        ).setParameter(1, numeroRenta).getSingleResult();
-        return count != null && count.intValue() > 0;
+        Long count = em.createQuery(
+                        "SELECT COUNT(r) FROM Renta r WHERE r.numeroRenta = :n", Long.class)
+                .setParameter("n", numeroRenta)
+                .getSingleResult();
+        return count != null && count > 0;
     }
 
-    /**
-     * Lista rentas filtradas por estado (insensible a mayúsculas).
-     * @param estado valor del estado.
-     */
     public List<Renta> findByEstado(String estado) {
         return em.createQuery(
                         "SELECT r FROM Renta r " +
                                 "JOIN FETCH r.vehiculo v " +
                                 "JOIN FETCH r.sucursal s " +
                                 "WHERE LOWER(r.estado) = LOWER(:estado) " +
-                                "ORDER BY r.fechaInicio DESC",
-                        Renta.class
-                ).setParameter("estado", estado)
+                                "ORDER BY r.fechaInicio DESC", Renta.class)
+                .setParameter("estado", estado)
                 .getResultList();
+    }
+
+    // -------- Mapper --------
+    private Renta toEntity(RentasDto dto) {
+        Renta r = new Renta();
+        r.setClienteNombre(dto.getClienteNombre());
+
+        Vehiculo v = em.find(Vehiculo.class, dto.getVehiculoPlaca());
+        r.setVehiculo(v);
+
+        Sucursal s = em.find(Sucursal.class, dto.getSucursalCodigo());
+        r.setSucursal(s);
+
+        r.setFechaInicio(dto.getFechaInicio());
+        r.setFechaFin(dto.getFechaFin());
+        r.setPrecioTotal(dto.getPrecioTotal());
+        r.setEstado(dto.getEstado());
+        // Si numeroRenta lo genera la BD, no lo toques; si no, setéalo:
+        r.setNumeroRenta(dto.getNumeroRenta());
+        return r;
     }
 }
