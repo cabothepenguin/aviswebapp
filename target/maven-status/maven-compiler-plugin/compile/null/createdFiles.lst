@@ -1,3 +1,4 @@
+service\ClienteService.class
 dto\CategoriaVehiculoDto.class
 dto\RentasDto.class
 controller\SucursalController.class
@@ -6,6 +7,7 @@ repository\UsuarioRepository.class
 model\Usuario.class
 model\Renta.class
 controller\CategoriaController.class
+utils\Validator.class
 controller\ClienteController.class
 service\UsuarioService.class
 repository\ClienteRepository.class

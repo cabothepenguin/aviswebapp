@@ -36,7 +36,7 @@ public class ClienteRepository {
     /** Lista todos los clientes (entidades). */
     public List<Cliente> getClients() {
         // OJO: usar el nombre de entidad "administracion_clientes" en JPQL
-        return em.createQuery("SELECT c FROM administracion_clientes c", Cliente.class)
+        return em.createQuery("SELECT c FROM Cliente c", Cliente.class)
                 .getResultList();
     }
 
@@ -50,7 +50,7 @@ public class ClienteRepository {
     public boolean existsByCedula(String cedula) {
         if (cedula == null || cedula.trim().isEmpty()) return false;
         Long count = em.createQuery(
-                        "SELECT COUNT(c) FROM administracion_clientes c WHERE c.cedula = :cedula", Long.class)
+                        "SELECT COUNT(c) FROM Cliente c WHERE c.cedula = :cedula", Long.class)
                 .setParameter("cedula", cedula.trim())
                 .getSingleResult();
         return count != null && count > 0;

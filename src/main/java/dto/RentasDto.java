@@ -1,5 +1,6 @@
 package dto;
 
+import model.Cliente;
 import model.Sucursal;
 import model.Vehiculo;
 
@@ -13,9 +14,12 @@ public class RentasDto {
     // Ahora trabajan con Entities en lugar de DTOs
     private Vehiculo vehiculo;
     private Sucursal sucursal;
+    private Cliente cliente;
 
     private String vehiculoPlaca;
     private Integer sucursalCodigo;
+    private String cedula;
+
 
     private Date fechaInicio;
     private Date fechaFin;

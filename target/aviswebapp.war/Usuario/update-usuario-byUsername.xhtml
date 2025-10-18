@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+
+<h:head>
+    <title>Avis App - Principal</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+    <!-- CSS externo -->
+    <h:outputStylesheet library="css" name="style.css"/>
+    <link rel="stylesheet" type="text/css"
+          href="#{request.contextPath}/resources/css/style.css"/>
+</h:head>
+
+<h:body>
+
+    <!-- Header -->
+    <div class="container">
+        <div class="navbar">
+            <div class="nav-inner">
+
+                <!-- Marca -->
+                <div class="brand">
+                    <h2 class="brand-text">AVIS</h2>
+                </div>
+
+                <!-- Menú -->
+                <nav>
+                    <ul class="menu">
+                        <li class="menu-item">
+                            <h:link value="Home"
+                                    outcome="/home.xhtml?faces-redirect=true"
+                                    styleClass="home-btn"/>
+                        </li>
+
+                        <li class="menu-item has-sub">
+                            <span class="menu-link">Usuario</span>
+                            <ul class="sub-menu">
+                                <li><h:link value="Listar"     outcome="/Usuario/list-usuario.xhtml?faces-redirect=true"/></li>
+                                <li><h:link value="Agregar"    outcome="/Usuario/add-Usuario.xhtml?faces-redirect=true"/></li>
+                                <li><h:link value="Actualizar" outcome="/Usuario/update-usuario-byUsername.xhtml?faces-redirect=true"/></li>
+                                <li><h:link value="Eliminar"   outcome="/Usuario/delete-usuario-byUsername.xhtml?faces-redirect=true"/></li>
+                            </ul>
+                        </li>
+
+                        <li class="menu-item has-sub">
+                            <span class="menu-link">Sucursales</span>
+                            <ul class="sub-menu">
+                                <li><h:link value="Listar"      outcome="/Sucursales/list-sucursal.xhtml?faces-redirect=true"/></li>
+                                <li><h:link value="Agregar"     outcome="/Sucursales/add-sucursal.xhtml?faces-redirect=true"/></li>
+                                <li><h:link value="Actualizar"  outcome="/Sucursales/update-sucursal.xhtml?faces-redirect=true"/></li>
+                            </ul>
+                        </li>
+
+                        <li class="menu-item has-sub">
+                            <span class="menu-link">Vehículos</span>
+                            <ul class="sub-menu">
+                                <li><h:link value="Listar"      outcome="/Vehiculos/list-vehiculo.xhtml?faces-redirect=true"/></li>
+                                <li><h:link value="Agregar"     outcome="/Vehiculos/add-vehiculo.xhtml?faces-redirect=true"/></li>
+                                <li><h:link value="Actualizar"  outcome="/Vehiculos/update-vehiculo.xhtml?faces-redirect=true"/></li>
+                            </ul>
+                        </li>
+
+                        <li class="menu-item has-sub">
+                            <span class="menu-link">Rentas</span>
+                            <ul class="sub-menu">
+                                <li><h:link value="Listar"      outcome="/Rentas/list-rentas.xhtml?faces-redirect=true"/></li>
+                                <li><h:link value="Agregar"     outcome="/Rentas/add-rentas.xhtml?faces-redirect=true"/></li>
+                                <li><h:link value="Actualizar"  outcome="/Rentas/update-rentas.xhtml?faces-redirect=true"/></li>
+                            </ul>
+                        </li>
+
+                        <li class="menu-item has-sub">
+                            <span class="menu-link">Categorías</span>
+                            <ul class="sub-menu">
+                                <li><h:link value="Listar"      outcome="/Categorias/list-categorias.xhtml?faces-redirect=true"/></li>
+                                <li><h:link value="Agregar"     outcome="/Categorias/add-categorias.xhtml?faces-redirect=true"/></li>
+                                <li><h:link value="Actualizar"  outcome="/Categorias/update-categorias.xhtml?faces-redirect=true"/></li>
+                            </ul>
+                        </li>
+
+                        <li class="menu-item has-sub">
+                            <span class="menu-link">Reportes</span>
+                            <ul class="sub-menu">
+                                <li><h:link value="Vehículos por categoría" outcome="/Reportes/list-ByCategoria.xhtml?faces-redirect=true"/></li>
+                                <li><h:link value="Vehículos por estado" outcome="/Reportes/list-EstadoCategoria.xhtml?faces-redirect=true"/></li>
+                                <li><h:link value="Vehículos por estado" outcome="/Reportes/list-EstadoRenta.xhtml?faces-redirect=true"/></li>
+                            </ul>
+                        </li>
+
+                    </ul>
+                </nav>
+
+            </div>
+        </div>
+    </div>
+    <!-- /Header -->
+
+    <!-- ===== FORM ===== -->
+    <h:form id="formBuscar">
+        <div class="ue-wrap">
+
+            <h2 class="ue-title">Buscar y editar usuario</h2>
+
+            <h:messages id="msg" globalOnly="true" styleClass="ue-messages"/>
+
+            <!-- Barra de búsqueda compacta -->
+            <div class="ue-search">
+                <label class="ue-label" for="user">Username:</label>
+                <h:inputText id="user"
+                             value="#{usuarioController.usernameQuery}"
+                             required="true"
+                             requiredMessage="Ingrese un username"
+                             styleClass="ue-input"
+                             pt:placeholder="ej. jdoe" />
+                <h:commandButton value="Buscar"
+                                 action="#{usuarioController.buscarPorUsername}"
+                                 styleClass="ue-btn ue-btn--primary">
+                    <f:ajax execute="@form" render="@form detalles msg"/>
+                </h:commandButton>
+                <h:commandButton value="Limpiar"
+                                 action="#{usuarioController.limpiarBusqueda}"
+                                 styleClass="ue-btn ue-btn--muted">
+                    <f:ajax render="@form detalles msg"/>
+                </h:commandButton>
+            </div>
+
+            <!-- Tarjeta de edición -->
+            <h:panelGroup id="detalles" layout="block" rendered="#{not empty usuarioController.usuarioEdit}">
+                <div class="ue-card">
+                    <div class="ue-cardHead">
+                        <div class="ue-avatar">
+                            <h:outputText value="#{empty usuarioController.usuarioEdit.username ? '?' : usuarioController.usuarioEdit.username.substring(0,1).toUpperCase()}"/>
+                        </div>
+                        <div>
+                            <div class="ue-sub">Editando</div>
+                            <strong>#{usuarioController.usuarioEdit.username}</strong>
+                        </div>
+                    </div>
+
+                    <div class="ue-grid">
+                        <div class="ue-field">
+                            <label class="ue-flabel">Username</label>
+                            <h:inputText value="#{usuarioController.usuarioEdit.username}" disabled="true" styleClass="ue-finput"/>
+                        </div>
+
+                        <div class="ue-field">
+                            <label class="ue-flabel">Correo</label>
+                            <h:inputText value="#{usuarioController.usuarioEdit.correo}" required="true"
+                                         requiredMessage="El correo es obligatorio" styleClass="ue-finput"/>
+                        </div>
+
+                        <div class="ue-field">
+                            <label class="ue-flabel">Nombre</label>
+                            <h:inputText value="#{usuarioController.usuarioEdit.nombre}" required="true"
+                                         requiredMessage="El nombre es obligatorio" styleClass="ue-finput"/>
+                        </div>
+
+                        <div class="ue-field">
+                            <label class="ue-flabel">Apellido</label>
+                            <h:inputText value="#{usuarioController.usuarioEdit.apellido}" required="true"
+                                         requiredMessage="El apellido es obligatorio" styleClass="ue-finput"/>
+                        </div>
+
+                        <div class="ue-field" style="grid-column:1 / -1;">
+                            <label class="ue-flabel">Password (opcional)</label>
+                            <h:inputSecret value="#{usuarioController.usuarioEdit.password}" styleClass="ue-finput"
+                                           pt:placeholder="Dejar en blanco para conservar"/>
+                        </div>
+                    </div>
+
+                    <div class="ue-actions">
+                        <h:commandButton value="Guardar cambios"
+                                         action="#{usuarioController.guardarCambios}"
+                                         styleClass="ue-btn ue-btn--primary">
+                            <f:ajax execute="@form" render="@form msg"/>
+                        </h:commandButton>
+
+                        <h:commandButton value="Limpiar edición"
+                                         action="#{usuarioController.limpiarBusqueda}"
+                                         styleClass="ue-btn ue-btn--muted">
+                            <f:ajax render="@form detalles msg"/>
+                        </h:commandButton>
+                    </div>
+                </div>
+            </h:panelGroup>
+
+        </div>
+    </h:form>
+
+    <!-- Footer -->
+    <div class="site-footer">
+        <hr class="site-footer__divider" />
+        <p class="site-footer__copyright">
+            Avis Costa Rica. Todos los derechos reservado @ 2025
+        </p>
+
+        <div class="footer container">
+            <!-- Columna: Logo y redes -->
+            <div class="footer__col footer__brand">
+                <div class="logo">AVIS</div>
+
+                <div class="footer__social">
+                    <a class="social social--ig" href="#" aria-label="Instagram">
+                        <img src="https://via.placeholder.com/20" alt="" />
+                    </a>
+                    <a class="social social--fb" href="#" aria-label="Facebook">
+                        <img src="https://via.placeholder.com/20" alt="" />
+                    </a>
+                    <a class="social social--li" href="#" aria-label="LinkedIn">
+                        <img src="https://via.placeholder.com/20" alt="" />
+                    </a>
+                    <a class="social social--wa" href="#" aria-label="WhatsApp">
+                        <img src="https://via.placeholder.com/20" alt="" />
+                    </a>
+                </div>
+
+                <p class="footer__note">Visítenos en nuestras redes sociales.</p>
+                <div style="font-size: 30px; border-radius: 10px;">
+                    <h:link value="Acerca de.." styleClass="desarrollo"
+                            outcome="/Desarrolladores/desarrolladores.xhtml?faces-redirect=true"/>
+                </div>
+            </div>
+
+            <!-- Columna: Contáctenos -->
+            <div class="footer__col">
+                <h3 class="footer__title">Contáctenos</h3>
+                <p class="footer__text">Central de reservas: 2293-2222</p>
+                <p class="footer__text">WhatsApp: 6244-9247</p>
+                <p><a class="footer__link" href="mailto:reservaciones@avis.co.cr">reservaciones@avis.co.cr</a></p>
+                <p><a class="footer__link" href="mailto:customerservice@avis.co.cr">customerservice@avis.co.cr</a></p>
+                <p><a class="footer__link" href="#">Teléfonos de emergencia</a></p>
+            </div>
+
+            <!-- Columna: Servicio al cliente -->
+            <div class="footer__col">
+                <h3 class="footer__title">Servicio al cliente</h3>
+                <ul class="footer__list">
+                    <li><a class="footer__link" href="#">Guía de vehículos</a></li>
+                    <li><a class="footer__link" href="#">Extras y accesorios</a></li>
+                    <li><a class="footer__link" href="#">Coberturas adicionales</a></li>
+                    <li><a class="footer__link" href="#">Ofertas especiales</a></li>
+                    <li><a class="footer__link" href="#">Servicios corporativos</a></li>
+                    <li><a class="footer__link" href="#">Responsabilidad social empresarial</a></li>
+                </ul>
+            </div>
+
+            <!-- Columna: Gestión de reservas -->
+            <div class="footer__col">
+                <h3 class="footer__title">Gestión de reservas</h3>
+                <ul class="footer__list">
+                    <li><a class="footer__link" href="#">Cotice su reserva</a></li>
+                    <li><a class="footer__link" href="#">Buscar una reserva</a></li>
+                    <li><a class="footer__link" href="#">Encontrar una oficina</a></li>
+                    <li><a class="footer__link" href="#">Preguntas frecuentes</a></li>
+                    <li><a class="footer__link" href="#">Consejos al alquilar</a></li>
+                </ul>
+            </div>
+
+            <!-- Columna: Acerca de nosotros -->
+            <div class="footer__col">
+                <h3 class="footer__title">Acerca de nosotros</h3>
+                <ul class="footer__list">
+                    <li><a class="footer__link" href="#">Avis Costa Rica</a></li>
+                    <li><a class="footer__link" href="#">Políticas de cancelación</a></li>
+                    <li><a class="footer__link" href="#">Políticas de privacidad</a></li>
+                    <li><a class="footer__link" href="#">Políticas de cookies</a></li>
+                    <li><a class="footer__link" href="#">Términos y condiciones</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /Footer -->
+
+</h:body>
+</html>
