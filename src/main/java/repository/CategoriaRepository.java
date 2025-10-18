@@ -10,119 +10,81 @@ import model.CategoriaVehiculo;
 
 import java.util.List;
 
-/**
- * Repositorio de acceso a datos para {@link CategoriaVehiculo}.
- * <p>
- * Usa SQL nativo para operaciones de inserción/actualización/borrado y
- * consultas simples. Algunas operaciones gestionan manualmente transacciones
- * mediante {@code em.getTransaction()}.
- * </p>
- *
- */
 @ApplicationScoped
 public class CategoriaRepository {
 
     @PersistenceContext(unitName = "avisrent-pu")
     private EntityManager em;
 
-    /**
-     * Inserta una nueva categoría usando SQL nativo.
-     * @param categoria DTO con descripción y estado.
-     */
-    public void addCategory(CategoriaVehiculoDto categoria) {
-        em.getTransaction().begin();
-        em.createNativeQuery(
-                        "INSERT INTO administracion_categorias (descripcion, estado) VALUES (?, ?)")
-                .setParameter(1, categoria.getDescripcion())
-                .setParameter(2, categoria.getEstado())
-                .executeUpdate();
-        em.getTransaction().commit();
+    // CREATE
+    @Transactional
+    public void addCategory(CategoriaVehiculoDto dto) {
+        em.persist(toEntity(dto));
     }
 
-    /** Actualiza una categoría por su código usando SQL nativo. */
-    public void updateCategory(CategoriaVehiculoDto categoria) {
-        try {
-            em.getTransaction().begin();
-            String jpql = "UPDATE administracion_categorias SET descripcion = ?, estado = ? WHERE codigo = ?";
-            em.createNativeQuery(jpql)
-                    .setParameter(1, categoria.getDescripcion())
-                    .setParameter(2, categoria.getEstado())
-                    .setParameter(3, categoria.getCodigo())
-                    .executeUpdate();
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            em.getTransaction().rollback();
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
+    // UPDATE
+    @Transactional
+    public void updateCategory(CategoriaVehiculoDto dto) {
+        CategoriaVehiculo actual = em.find(CategoriaVehiculo.class, dto.getCodigo());
+        if (actual == null) throw new IllegalStateException("No existe categoría con código: " + dto.getCodigo());
+
+        actual.setDescripcion(dto.getDescripcion());
+        actual.setEstado(dto.getEstado());
+
+        em.merge(actual);
     }
 
-    /** Elimina una categoría por su código. */
+    // DELETE
+    @Transactional
     public void deleteCategory(Integer codigo) {
-        em.getTransaction().begin();
-        String sql = "DELETE FROM administracion_categorias WHERE codigo = ?";
-        em.createNativeQuery(sql)
-                .setParameter(1, codigo)
-                .executeUpdate();
-        em.getTransaction().commit();
+        CategoriaVehiculo ref = em.find(CategoriaVehiculo.class, codigo);
+        if (ref != null) em.remove(ref);
     }
 
-    /**
-     * Lista todas las categorías.
-     * @return lista de entidades mapeadas a {@link CategoriaVehiculo}.
-     */
-    @SuppressWarnings("unchecked")
+    // READ
     public List<CategoriaVehiculo> getCategories() {
-        return em.createNativeQuery(
-                "SELECT codigo, descripcion, estado FROM administracion_categorias",
-                CategoriaVehiculo.class
-        ).getResultList();
+        return em.createQuery("SELECT c FROM CategoriaVehiculo c", CategoriaVehiculo.class)
+                .getResultList();
     }
 
-    /**
-     * Busca una categoría por descripción exacta.
-     * @param descripcion valor a buscar.
-     * @return entidad encontrada o {@code null} si no existe.
-     */
     public CategoriaVehiculo findCategoryByDescripcion(String descripcion) {
         try {
             return em.createQuery(
-                            "FROM administracion_categorias c WHERE c.descripcion = :desc", CategoriaVehiculo.class)
-                    .setParameter("desc", descripcion)
+                            "SELECT c FROM CategoriaVehiculo c WHERE c.descripcion = :d", CategoriaVehiculo.class)
+                    .setParameter("d", descripcion)
                     .getSingleResult();
         } catch (NoResultException e) {
             return null;
         }
     }
 
-    /** Busca una categoría por su id (clave primaria). */
     public CategoriaVehiculo findCategoryById(Integer codigo) {
         return em.find(CategoriaVehiculo.class, codigo);
     }
 
-    /**
-     * Verifica existencia por descripción (insensible a mayúsculas según BD).
-     * @param descripcion descripción a validar.
-     * @return {@code true} si existe al menos un registro.
-     */
     public boolean existsByDescripcion(String descripcion) {
-        Number count = (Number) em.createNativeQuery(
-                "SELECT COUNT(*) FROM administracion_categorias WHERE descripcion = ?"
-        ).setParameter(1, descripcion).getSingleResult();
-        return count != null && count.intValue() > 0;
+        Long count = em.createQuery(
+                        "SELECT COUNT(c) FROM CategoriaVehiculo c WHERE c.descripcion = :d", Long.class)
+                .setParameter("d", descripcion)
+                .getSingleResult();
+        return count != null && count > 0;
     }
 
-    /** Obtiene una categoría por id usando {@link EntityManager#find}. */
     public CategoriaVehiculo getById(Integer id) {
         return em.find(CategoriaVehiculo.class, id);
     }
 
-    /**
-     * Actualiza una entidad administrada mediante {@link EntityManager#merge(Object)}.
-     * Requiere contexto transaccional activo (anotado con {@link Transactional}).
-     */
     @Transactional
     public void update(CategoriaVehiculo categoria) {
         em.merge(categoria);
+    }
+
+    // -------- Mapper --------
+    private CategoriaVehiculo toEntity(CategoriaVehiculoDto dto) {
+        CategoriaVehiculo c = new CategoriaVehiculo();
+        c.setCodigo(dto.getCodigo());
+        c.setDescripcion(dto.getDescripcion());
+        c.setEstado(dto.getEstado());
+        return c;
     }
 }

@@ -3,28 +3,30 @@ package model;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
-@Entity(name = "administracion_usuarios")
 
+@Entity
+@Table(name = "administracion_usuarios")
 public class Usuario {
 
     @Id
+    @Column(name = "username", nullable = false, length = 50)
     private String username;
 
-    @Column(name = "password")
+    @Column(name = "password", nullable = false, length = 255)
     private String password;
 
-    @Column(name = "nombre")
+    @Column(name = "nombre", length = 100)
     private String nombre;
 
-    @Column(name = "apellido")
+    @Column(name = "apellido", length = 100)
     private String apellido;
 
-    @Column(name = "correo")
+    @Column(name = "correo", length = 150)
     private String correo;
 
-    public Usuario() { }
-
+    public Usuario() {}
 
     public Usuario(String username, String password, String nombre, String apellido, String correo) {
         this.username = username;
@@ -32,7 +34,6 @@ public class Usuario {
         this.nombre = nombre;
         this.apellido = apellido;
         this.correo = correo;
-
     }
 
     public String getUsername() {

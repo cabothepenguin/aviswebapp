@@ -7,7 +7,6 @@ import java.util.Date;
 
 @Entity
 @Table(name = "administracion_rentas")
-
 public class Renta {
 
     @Id
@@ -15,7 +14,7 @@ public class Renta {
     @Column(name = "numeroRenta")
     private Integer numeroRenta;
 
-    @Column(name = "clienteNombre")
+    @Column(name = "clienteNombre", length = 150)
     private String clienteNombre;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -26,8 +25,7 @@ public class Renta {
     @JoinColumn(name = "sucursal", referencedColumnName = "codigo", nullable = false)
     private Sucursal sucursal;
 
-
-    @Temporal(TemporalType.DATE)  // usa DATE; si guardas hora, cambia a TIMESTAMP
+    @Temporal(TemporalType.DATE)
     @Column(name = "fechaInicio", nullable = false)
     private Date fechaInicio;
 
@@ -38,12 +36,10 @@ public class Renta {
     @Column(name = "precioTotal")
     private Integer precioTotal;
 
-    @Column(name = "estado")
+    @Column(name = "estado", length = 20)
     private String estado;
 
-    public Renta() {
-
-    }
+    public Renta() {}
 
     public Renta(Integer numeroRenta, String clienteNombre, Vehiculo vehiculo,
                  Sucursal sucursal, Date fechaInicio, Date fechaFin,

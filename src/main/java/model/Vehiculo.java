@@ -7,8 +7,8 @@ import jakarta.persistence.*;
 public class Vehiculo {
 
     @Id
-    @Column(name = "placa", length = 20)
-    private String placa;  // Cambiar de Integer a String
+    @Column(name = "placa", length = 20, nullable = false)
+    private String placa;
 
     @Column(name = "modelo", length = 100, nullable = false)
     private String modelo;
@@ -16,10 +16,9 @@ public class Vehiculo {
     @Column(name = "marca", length = 100, nullable = false)
     private String marca;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "categoria", referencedColumnName = "codigo")
     private CategoriaVehiculo categoria;
-
 
     @Column(name = "estado", length = 20)
     private String estado;
@@ -37,9 +36,8 @@ public class Vehiculo {
     @Column(name = "nombre_imagen", length = 100)
     private String imageName;
 
-    // Constructor por defecto
-    public Vehiculo() {
-    }
+    public Vehiculo() {}
+
 
     // Getters y Setters
     public String getPlaca() { return placa; }

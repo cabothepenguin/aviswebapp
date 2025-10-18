@@ -2,30 +2,32 @@ package model;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
-@Entity(name = "administracion_sucursales")
+@Entity
+@Table(name = "administracion_sucursales")
 public class Sucursal {
+
     @Id
+    @Column(name = "codigo", nullable = false)
     private Integer codigo;
 
-    @Column(name = "nombre")
+    @Column(name = "nombre", length = 120, nullable = false)
     private String nombre;
 
-    @Column(name = "encargado")
+    @Column(name = "encargado", length = 120)
     private String encargado;
 
-    @Column(name = "direccion")
+    @Column(name = "direccion", length = 255)
     private String direccion;
 
-    @Column(name = "telefono")
+    @Column(name = "telefono", length = 30)
     private String telefono;
 
-    @Column(name = "correo")
+    @Column(name = "correo", length = 150)
     private String correo;
 
-    public Sucursal() {
-
-    }
+    public Sucursal() {}
 
     public Sucursal(Integer codigo, String nombre, String encargado,
                     String direccion, String telefono, String correo) {
