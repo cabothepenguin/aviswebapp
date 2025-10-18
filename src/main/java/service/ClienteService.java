@@ -9,12 +9,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static java.lang.System.out;
+
 public class ClienteService {
 
     @Inject
     private ClienteRepository repository;
 
-    //Crea un cliente con validaciones basicas
+    /**
+     * Crea un cliente con validaciones basicas
+     */
     public void addClient(ClienteDto dto) {
         try {
             requireDto(dto);
@@ -22,7 +26,7 @@ public class ClienteService {
 
             if(isBlank(dto.getCedula())) throw new IllegalArgumentException("Cedula no puede ser vacia");
             if(isBlank(dto.getNombre())) throw new IllegalArgumentException("Nombre no puede ser vacia");
-            if(repository.existByCedula(dto.getCedula())){
+            if(repository.existsByCedula(dto.getCedula())){
                 throw new IllegalArgumentException("Cedula ya existe"+dto.getCedula());
             }
             repository.addClient(dto);
@@ -33,14 +37,18 @@ public class ClienteService {
         }
     }
 
-    //Lista de Clientes
+    /**
+     * Lista de Clientes
+     */
     public List<ClienteDto> getClients() {
-        List<ClienteDto> dtos = new ArrayList<>();
-        repository.getClients().forEach(obj-> out.add(Dto((Cliente)obj)));
+        List<ClienteDto> out = new ArrayList<>();
+        repository.getClients().forEach(obj-> out.add(toDto((Cliente)obj)));
         return out;
     }
 
-    //Actualiza Cliente desde Dto requiere existencia previa
+    /**
+     * Actualiza Cliente desde Dto requiere existencia previa
+     */
     public void updateClient(ClienteDto dto) {
         try {
             requireDto(dto);
@@ -67,7 +75,9 @@ public class ClienteService {
         }
     }
 
-    //Helpers
+    /**
+     * Helpers
+     */
     private void requireDto(ClienteDto dto) {
         Objects.requireNonNull(dto, "El DTO del cliente no puede ser nulo.");
     }
@@ -81,6 +91,18 @@ public class ClienteService {
         if(dto.getNombre() != null) dto.setNombre(dto.getNombre().trim());
         if(dto.getTelefono()!= null)dto.setTelefono(dto.getTelefono());
         if(dto.getCorreo() != null)dto.setCorreo(dto.getCorreo().trim());
+    }
+
+    /**
+     * Mapea la entidad a DTO
+     */
+    private ClienteDto toDto(Cliente c) {
+        ClienteDto dto = new ClienteDto();
+        dto.setCedula(c.getCedula());
+        dto.setNombre(c.getNombre());
+        dto.setTelefono(c.getTelefono());
+        dto.setCorreo(c.getCorreo());
+        return dto;
     }
 
 }

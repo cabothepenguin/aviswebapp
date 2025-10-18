@@ -56,11 +56,21 @@ public class VehiculoRepository {
 
     // --------- READ ---------
     public List<Vehiculo> getVehiculos() {
-        return em.createQuery("SELECT v FROM Vehiculo v", Vehiculo.class).getResultList();
+        return em.createQuery(
+                        "SELECT v FROM Vehiculo v " +
+                                "LEFT JOIN FETCH v.categoria " +
+                                "ORDER BY v.marca, v.modelo", Vehiculo.class)
+                .getResultList();
     }
 
     public Vehiculo findVehiculoByPlaca(String placa) {
-        return em.find(Vehiculo.class, placa);
+        List<Vehiculo> list = em.createQuery(
+                        "SELECT v FROM Vehiculo v " +
+                                "LEFT JOIN FETCH v.categoria " +
+                                "WHERE v.placa = :placa", Vehiculo.class)
+                .setParameter("placa", placa)
+                .getResultList();
+        return list.isEmpty() ? null : list.get(0);
     }
 
     public boolean existsByPlaca(String placa) {
